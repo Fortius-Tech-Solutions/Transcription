@@ -16,5 +16,6 @@ export const HOSPITAL = {
   UPDATE: `${hospitalPrefix}/:id`,
   SHOW: `${hospitalPrefix}/:id`,
   DELETE: `${hospitalPrefix}/:id`,
+  ASSIGN: `${hospitalPrefix}/assign-list`,
 };
 

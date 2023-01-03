@@ -13,9 +13,9 @@
 
         <q-toolbar-title> </q-toolbar-title>
         <div class="header-profile-box">
-          <div class="logo-text">DS</div>
+          <div class="logo-text">{{ profileText }}</div>
           <div class="profile-user-name q-ml-sm">
-            <h5>Dhaval Sindhav</h5>
+            <h5>{{ user.first_name }}&nbsp; {{ user.last_name }}</h5>
           </div>
         </div>
         <div class="q-ml-sm">
@@ -46,6 +46,7 @@
           >
           </q-expansion-item>
           <q-expansion-item
+            v-if="store.isSuperAdmin"
             :to="{ name: 'user-dashboard' }"
             icon="las la-users"
             :label="$q.lang.mainLayout.sidebar.users"
@@ -53,6 +54,7 @@
           >
           </q-expansion-item>
           <q-expansion-item
+            v-if="store.isSuperAdmin"
             :label="$q.lang.mainLayout.sidebar.hospital"
             icon="las la-hospital-alt"
             class="hide_arrow"
@@ -84,13 +86,13 @@ const user = computed(() => {
 
 const profileText = computed(() => {
   if (user.value) {
-    const name = user.value.name?.split(" ");
-    return `${name[0].charAt(0)}${name[1] ? name[1]?.charAt(0) : ""}`;
+    return `${user.value.first_name.charAt(0)}${user.value.last_name.charAt(
+      0
+    )}`;
   } else {
     return "";
   }
 });
-
 const router = useRouter();
 const leftDrawerOpen = ref(false);
 

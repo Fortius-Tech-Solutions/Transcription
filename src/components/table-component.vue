@@ -5,7 +5,7 @@
       :title="title"
       :rows="rows"
       :columns="columns"
-      row-key="index"
+      :row-key="rowKey"
       v-model:pagination="pagination"
       :loading="loading"
       :filter="filter"
@@ -42,6 +42,17 @@
         </div>
       </template>
       <template v-slot:top-left>
+        <q-select
+          v-if="route.name == 'user-dashboard'"
+          hide-bottom-space
+          outlined
+          class="create-user-field-box"
+          style="min-width: 300px"
+          v-model="userTypeModel"
+          :options="userType"
+          @update:model-value="selectType(userTypeModel)"
+        />
+
         <q-input
           borderless
           dense
@@ -84,6 +95,43 @@
 
       <template #body-cell-actions="props">
         <q-td key="actions" :props="props">
+          <q-btn
+            v-if="
+              (route.name == 'user-dashboard' && userTypeModel.value == 2) ||
+              userTypeModel.value == 4
+            "
+            color="primary"
+            label="Assign Hospital"
+            size="sm"
+            no-caps
+            @click="assign(props.row, 'assign-hospital')"
+          />
+          <q-btn
+            v-if="
+              route.name == 'hospital-dashboard' || userTypeModel.value == 3
+            "
+            color="primary"
+            label="Assign Doctor"
+            size="sm"
+            no-caps
+            @click="assign(props.row, 'assign-doctor')"
+          />
+          <q-btn
+            v-if="route.name == 'hospital-dashboard'"
+            color="primary"
+            label="Assign Receptionist"
+            size="sm"
+            no-caps
+            @click="assign(props.row, 'assign-receptionist')"
+          />
+          <q-btn
+            v-if="route.name == 'user-dashboard' && userTypeModel.value == 2"
+            color="primary"
+            label="Assign Writer"
+            size="sm"
+            no-caps
+            @click="assign(props.row, 'assign-writer')"
+          />
           <q-btn
             color="secondary"
             icon="las la-pen"
@@ -171,7 +219,7 @@ import {
   defineComponent,
 } from "vue";
 import apis from "src/apis";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { userStore } from "src/stores/users";
 import notification from "src/boot/notification";
 import { useMasterStore } from "src/stores/master";
@@ -196,7 +244,7 @@ const props = defineProps({
 });
 
 const now = new Date();
-
+const router = useRouter();
 const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
 
 const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
@@ -208,6 +256,13 @@ const showReadiness = ref(false);
 const showImage = ref(false);
 const route = useRoute();
 const storeUser = userStore();
+const userType = computed(() => {
+  return storeUser.getUserType;
+});
+const userTypeModel = ref({
+  label: "Super Admin",
+  value: 1,
+});
 const tableRef = ref();
 const rows = ref([]);
 const filter = ref("");
@@ -224,9 +279,11 @@ const pagination = ref({
   rowsNumber: 10,
 });
 const master = useMasterStore();
-const selected = ref(props.selectedItem ?? []);
+const selected = ref([{ id: 3 }]);
 const image = ref();
-
+function selectType(val) {
+  refresh();
+}
 const pdfData = ref([]);
 // ************* DATE FORMATE FUNCTION ******************//
 
@@ -436,6 +493,16 @@ async function onRequest(events) {
     sortBy: sortBy,
     orderBy: descending,
   };
+
+  if (route.name == "user-dashboard") {
+    params.type = userTypeModel.value.value;
+  } else if (route.path == "/assign-doctor") {
+    params.type = 2;
+  } else if (route.path == "/assign-receptionist") {
+    params.type = 4;
+  } else if (route.path == "/assign-writer") {
+    params.type = 3;
+  }
   if (props.extraFilter) {
     for (let [key, value] of Object.entries(props.extraFilter)) {
       params[key] = props.extraFilter[key];
@@ -513,6 +580,7 @@ async function onRequest(events) {
   }
 }
 function getSelectedString() {
+  console.log(rows.value);
   return selected.value.length === 0
     ? ""
     : `${selected.value.length} record${
@@ -568,6 +636,31 @@ function refresh() {
 defineExpose({
   refresh,
 });
+
+function assign(data, item) {
+  master.data = data;
+  if (item == "assign-hospital") {
+    router.push({
+      name: "component",
+      params: { slug: "assign-hospital" },
+    });
+  } else if (item == "assign-doctor") {
+    router.push({
+      name: "component",
+      params: { slug: "assign-doctor" },
+    });
+  } else if (item == "assign-receptionist") {
+    router.push({
+      name: "component",
+      params: { slug: "assign-receptionist" },
+    });
+  } else if (item == "assign-writer") {
+    router.push({
+      name: "component",
+      params: { slug: "assign-writer" },
+    });
+  }
+}
 
 const deleteData = ref("");
 function deleteItem(item) {

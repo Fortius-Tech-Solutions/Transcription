@@ -35,11 +35,54 @@
         </div>
       </div>
     </div>
+    <div class="q-pa-md" v-if="user.usertype.id == 2">
+      <q-table
+        title="Assigned Hospitals"
+        :rows="rows"
+        :columns="columns"
+        row-key="id"
+      />
+    </div>
   </div>
 </template>
 
 <script setup>
-
+import { computed, defineAsyncComponent, ref } from "vue";
+import { useAuthStore } from "src/stores/auth";
+const userTableComponent = ref();
+const tableComponent = defineAsyncComponent(() =>
+  import("src/components/table-component")
+);
+const store = useAuthStore();
+const user = computed(() => {
+  return store.getUser;
+});
+console.log(user.value);
+const rows = computed(() => {
+  const data = [];
+  user.value.DoctorHospitals.forEach((element) => {
+    data.push(element.hospitalname);
+  });
+  return data;
+});
+const columns = [
+  {
+    name: "id",
+    label: "NO.",
+    field: "index",
+    // sortable: true,
+    align: "left",
+  },
+  {
+    name: "Name",
+    required: true,
+    label: "Name",
+    align: "left",
+    field: (row) => row.name,
+    format: (val) => `${val}`,
+    // sortable: true,
+  },
+];
 </script>
 
 <style lang="scss">

@@ -125,20 +125,20 @@ const routes = [
           requiresAuth: true,
         },
       },
-      // {
-      //   path: "/:slug",
-      //   name: "component",
-      //   component: () =>
-      //     import(
-      //       /* webpackChunkName: "dynamicComponents" */
-      //       /* webpackMode: "lazy" */
-      //       /* webpackInclude: /\.vue$/ */
-      //       "src/pages/dynamicComponents.vue"
-      //     ),
-      //   meta: {
-      //     requiresAuth: true,
-      //   },
-      // },
+      {
+        path: "/:slug",
+        name: "component",
+        component: () =>
+          import(
+            /* webpackChunkName: "[request]"  */
+            /* webpackMode: "lazy" */
+            /* webpackInclude: /\.vue$/ */
+            "src/pages/dynamicComponents.vue"
+          ),
+        meta: {
+          requiresAuth: true,
+        },
+      },
     ],
   },
 

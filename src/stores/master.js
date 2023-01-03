@@ -8,24 +8,17 @@ export const useMasterStore = defineStore("master", {
   }),
 
   getters: {
-    getLayoutType() {
-      return this.layout;
-    },
+    getData() {
+      return this.data
+    }
   },
 
   actions: {
-    async getHospital(data) {
+    async fetchSelected(data) {
       return new Promise((resolve, reject) => {
         api
-          .get("/hospital")
+          .getWithParam("/admin", data)
           .then((res) => {
-            // if (res.success) {
-            this.accessToken = res.token;
-            LocalStorage.set("access_token", this.accessToken);
-            // this.getProfile();
-            // } else {
-            // notification.error(res.message);
-            // }
             resolve(res);
           })
           .catch((error) => {
@@ -33,7 +26,5 @@ export const useMasterStore = defineStore("master", {
           });
       });
     },
-
-
   },
 });

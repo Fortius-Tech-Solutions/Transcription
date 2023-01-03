@@ -57,32 +57,26 @@ import { userStore } from "src/stores/users";
 import { USER } from "src/apis/constant";
 import { useRouter } from "vue-router";
 import notification from "src/boot/notification";
-// import { groupStore } from "src/stores/group";
+
 import moment from "moment";
 import { Loading, QSpinnerGears } from "quasar";
 
 const router = useRouter();
 const store = userStore();
-// const storeGroup = groupStore();
+
+store.fetchUserTypeList();
 const userTableComponent = ref();
 
 const tableComponent = defineAsyncComponent(() =>
   import("src/components/table-component")
 );
-// const groupOptions = ref([]);
-// storeGroup.fetchGroupList().then((res) => {
-//   if (res.success == true) {
-//     res.data.forEach((item) => {
-//       groupOptions.value.push({
-//         label: item.name,
-//         value: item.id,
-//       });
-//     });
-//   } else {
-//     notification.error(res.message);
-//   }
-// });
-
+const userType = computed(() => {
+  return store.getUserType;
+});
+const userTypeModel = ref({
+  label: "Super Admin",
+  value: 1,
+});
 const showDialog = ref(false);
 const showItemData = ref({});
 
@@ -132,6 +126,7 @@ const userGroup = ref(null);
 function applyFilter() {
   userTableComponent.value.refresh();
 }
+
 // Emitted from table component
 function deleteItem(item) {
   Loading.show({
@@ -142,9 +137,8 @@ function deleteItem(item) {
     .deleteUser(item.id)
     .then((res) => {
       if (res.success == true) {
-        applyFilter().then(() => {
-          notification.success(res.message);
-        });
+        applyFilter();
+        notification.success(res.message);
         Loading.hide();
       } else if (res.success == false) {
         notification.error(res.message);

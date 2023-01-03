@@ -100,7 +100,22 @@ export const hospitalStore = defineStore("hospital", {
           });
       });
     },
-
+    async fetchHospitalAssign(slug) {
+      return new Promise((resolve, reject) => {
+        api
+          .getWithParam(HOSPITAL.ASSIGN, { id: slug })
+          .then((res) => {
+            if (res.success) {
+              this.currentHospital = res.data;
+              resolve(res);
+            }
+            resolve(res);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
 
   },
 });

@@ -153,11 +153,14 @@ if (route.name == "edit-user") {
     .get(api.resolveApiUrl(USER.SHOW, { id: slug.value }))
     .then((res) => {
       if (res.success == true) {
-        edit_id.value = res.data.id;
-        // user_type_id = res.data.user_type_id;
-        first_name.value = res.data.first_name;
-        last_name.value = res.data.last_name;
-        email.value = res.data.email;
+        edit_id.value = res.data[0].id;
+        userTypeModel.value = {
+          label: res.data[0].usertype.name,
+          value: res.data[0].usertype.id,
+        };
+        first_name.value = res.data[0].first_name;
+        last_name.value = res.data[0].last_name;
+        email.value = res.data[0].email;
         Loading.hide();
       } else if (res.success == false) {
         notification.error(res.message);

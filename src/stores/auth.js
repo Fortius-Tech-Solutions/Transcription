@@ -20,11 +20,15 @@ export const useAuthStore = defineStore("auth", {
     getUser() {
       return this.user;
     },
-
     isLoggedIn() {
       return !!this.accessToken;
     },
-
+    isSuperAdmin() {
+      if (this.user && this.user.usertype.id == 1) {
+        return true
+      }
+      return false
+    }
   },
 
   actions: {
