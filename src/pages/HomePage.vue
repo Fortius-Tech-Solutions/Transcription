@@ -1,47 +1,32 @@
 <template>
-  <div class="q-pa-md login_form">
-    <div class="forgote-page-header">
-      <div class="home_user_header">
-        <h3 class="comman-title">Dashboard</h3>
-      </div>
-      <div class="q-pa-md main-wrapper">
-        <div class="bg-box bg-res">
-          <div class="row q-col-gutter-xl flex-direction">
-            <router-link class="col-md-3 text-black" to="/">
-              <div class="col-md-3">
-                <div class="sub-box sub-box-total">
-                  <div class="sub-img-total sub-img">
-                    <img src="~assets/images/totaluser.svg" alt="" />
-                  </div>
-                  <div class="sub-box-text q-mt-md q-pl-md">
-                    <h5 class="title">10000</h5>
-                    <p>Total Users</p>
-                  </div>
-                </div>
-              </div>
-            </router-link>
-            <router-link class="col-md-3 text-black" to="/">
-              <div class="sub-box sub-box-online">
-                <div class="sub-img-online sub-img">
-                  <img src="~assets/images/onlineuser.svg" alt="" />
-                </div>
-                <div class="sub-box-text q-mt-md q-pl-md">
-                  <h5 class="title">110</h5>
-                  <p>Doctor</p>
-                </div>
-              </div>
-            </router-link>
-          </div>
-        </div>
-      </div>
+  <div>
+    <div class="home_user_header">
+      <h3 class="comman-title">
+        Welcome {{ user.first_name }} {{ user.last_name }}
+      </h3>
     </div>
-    <div class="q-pa-md" v-if="user.usertype.id == 2">
-      <q-table
-        title="Assigned Hospitals"
-        :rows="rows"
-        :columns="columns"
-        row-key="id"
-      />
+
+    <div class="q-pa-md main-wrapper" v-if="user.user_type_id !== 1">
+      <div class="custom-tabel-box">
+        <table-component
+          v-if="user.user_type_id !== 1"
+          ref="userTableComponent"
+          :apiUrl="api ? api : null"
+          :columns="columns"
+          rowKey="id"
+          title="List"
+          createUrl="user/create"
+          @delete="deleteItem"
+          @edit="editItem"
+          @view="showItem"
+          @lock="lockUser"
+          :extra-filter="{
+            accountStatus: status,
+            group: userGroup,
+          }"
+        >
+        </table-component>
+      </div>
     </div>
   </div>
 </template>
@@ -49,6 +34,7 @@
 <script setup>
 import { computed, defineAsyncComponent, ref } from "vue";
 import { useAuthStore } from "src/stores/auth";
+import { DOCTOR, TRANSCRIPTION } from "src/apis/constant";
 const userTableComponent = ref();
 const tableComponent = defineAsyncComponent(() =>
   import("src/components/table-component")
@@ -57,32 +43,69 @@ const store = useAuthStore();
 const user = computed(() => {
   return store.getUser;
 });
-console.log(user.value);
-const rows = computed(() => {
-  const data = [];
-  user.value.DoctorHospitals.forEach((element) => {
-    data.push(element.hospitalname);
-  });
-  return data;
-});
-const columns = [
-  {
-    name: "id",
-    label: "NO.",
-    field: "index",
-    // sortable: true,
-    align: "left",
-  },
-  {
-    name: "Name",
-    required: true,
-    label: "Name",
-    align: "left",
-    field: (row) => row.name,
-    format: (val) => `${val}`,
-    // sortable: true,
-  },
-];
+const columns = ref([]);
+const api = ref("");
+if (user.value.user_type_id == 3) {
+  api.value = TRANSCRIPTION.LIST;
+  columns.value = [
+    {
+      name: "id",
+      label: "NO.",
+      field: "index",
+      // sortable: true,
+      align: "left",
+    },
+    {
+      name: "Name",
+      required: true,
+      label: "Name",
+      align: "left",
+      field: (row) =>
+        row.doctarname.first_name + " " + row.doctarname.last_name,
+      format: (val) => `${val}`,
+      // sortable: true,
+    },
+    {
+      name: "email",
+      align: "center",
+      label: "Email",
+      field: (row) => row.doctarname.email,
+      format: (val) => `${val}`,
+      // sortable: true,
+    },
+    {
+      name: "actions",
+      label: "Actions",
+      field: "actions",
+    },
+  ];
+} else if (user.value.user_type_id == 2) {
+  api.value = DOCTOR.LIST_HOSPITAL;
+
+  columns.value = [
+    {
+      name: "id",
+      label: "NO.",
+      field: "index",
+      // sortable: true,
+      align: "left",
+    },
+    {
+      name: "Name",
+      required: true,
+      label: "Name",
+      align: "left",
+      field: (row) => row.hospitalname.name,
+      format: (val) => `${val}`,
+      // sortable: true,
+    },
+    {
+      name: "actions",
+      label: "Actions",
+      field: "actions",
+    },
+  ];
+}
 </script>
 
 <style lang="scss">

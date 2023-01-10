@@ -164,7 +164,13 @@ h5.title {
       border: 1px solid #cccccc;
       border-radius: 5px;
       padding: 0px 10px;
-      margin: 10px 0 0 0;
+      margin: 0 0 0 0;
+    }
+  }
+  .q-field__control {
+    height: 32px !important;
+    .q-field__append {
+      height: 32px !important;
     }
   }
 }
@@ -499,5 +505,33 @@ img {
 .popup_main_thumb {
   img {
     width: $percentage-100;
+  }
+}
+
+.q-table__control {
+  .table_add_btn {
+    display: flex;
+    align-items: center;
+    .q-field__inner {
+      margin-top: 0 !important;
+    }
+    .q-field__control,
+    .q-field__native {
+      min-height: 32px;
+    }
+    .q-field__marginal {
+      height: 32px;
+    }
+    .q-btn {
+      margin-left: $value-10;
+    }
+    .q-field__control {
+      &::before {
+        display: none;
+      }
+      &::after {
+        display: none;
+      }
+    }
   }
 }

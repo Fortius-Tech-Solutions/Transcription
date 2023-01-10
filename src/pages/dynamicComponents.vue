@@ -221,7 +221,11 @@ if (route.params.slug == "assign-hospital") {
 function onSelection(rows, added) {
   if (added) {
     rows.forEach((item, index) => {
-      selected.value.push(item.id);
+      if (route.params.slug == "assign-writer") {
+        selected.value = [item.id];
+      } else {
+        selected.value.push(item.id);
+      }
     });
   } else {
     rows.forEach((item) => {

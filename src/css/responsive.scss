@@ -8,7 +8,7 @@
   .custom-tabel-box {
     .q-table__top {
       .q-table__title {
-        width: $value-100  !important;
+        width: $value-100 !important;
       }
 
       .q-table__control {
@@ -28,11 +28,7 @@
       }
     }
   }
-
-
 }
-
-
 
 @media (max-width: 575px) {
   .responsive-logo {
@@ -44,8 +40,8 @@
   }
 
   .align-center-box {
-    width: $percentage-100  !important;
-    padding: $value-20 $value-25 ;
+    width: $percentage-100 !important;
+    padding: $value-20 $value-25;
   }
 
   .user_account_header {
@@ -67,26 +63,26 @@
   }
 
   h3.title-auth {
-    font-size: $value-19  !important;
-    padding-bottom: $value-10  !important;
+    font-size: $value-19 !important;
+    padding-bottom: $value-10 !important;
   }
 
   //create -user//
 
   h3.comman-title {
-    margin-left: $value-17  !important;
+    margin-left: $value-17 !important;
   }
 
   //two-factor-authentication-setup//
 
   h3.title-auth-1 {
-    font-size: $value-16  !important;
-    padding-top: $value-5  !important;
-    padding-bottom: $value-20  !important;
+    font-size: $value-16 !important;
+    padding-top: $value-5 !important;
+    padding-bottom: $value-20 !important;
   }
 
   .small_title-qrscan {
-    font-size: $value-14  !important;
+    font-size: $value-14 !important;
   }
 
   p.step-line {
@@ -107,15 +103,13 @@
   //   left: 135px;
   // }
 
-
-
   .list {
     h5 {
       left: $value-65;
     }
 
     .rectengal-home-box {
-      padding-bottom: $value-10  !important;
+      padding-bottom: $value-10 !important;
       padding-left: 0;
       padding-right: 0;
 
@@ -125,7 +119,6 @@
         text-align: left;
         top: $value-3;
       }
-
     }
   }
 
@@ -139,11 +132,9 @@
     position: absolute;
     top: $value-33;
     font-size: $value-12;
-    font-weight: map-get($font-weights , "regular");
+    font-weight: map-get($font-weights, "regular");
     left: $value-85;
   }
-
-
 
   // .list-view-modified {
   //   display: none;
@@ -229,7 +220,7 @@
         .q-table__title {
           font-size: $value-18;
 
-          width: $percentage-100  !important;
+          width: $percentage-100 !important;
         }
       }
     }
@@ -260,12 +251,12 @@
         width: $value-60;
 
         i {
-          font-size: $value-35 ;
+          font-size: $value-35;
         }
       }
 
       a {
-        font-size: $value-14  !important;
+        font-size: $value-14 !important;
       }
     }
 
@@ -275,13 +266,9 @@
       }
     }
   }
-
-
-
 }
 
 @media (min-width: 500px) and (max-width: 575px) {
-
   //user-access-control
   .filter-card {
     .q-field {
@@ -303,7 +290,6 @@
       }
     }
   }
-
 }
 
 @media (min-width: 576px) and (max-width: 767px) {
@@ -314,12 +300,12 @@
         justify-content: flex-start;
 
         .sub-img {
-          width: $value-50  !important;
-          height: $value-50  !important;
+          width: $value-50 !important;
+          height: $value-50 !important;
 
           img {
-            width: $value-30  !important;
-            height: $value-30  !important;
+            width: $value-30 !important;
+            height: $value-30 !important;
           }
         }
       }
@@ -329,7 +315,7 @@
         margin-top: 0 !important;
 
         h5 {
-          font-size: $value-22  !important;
+          font-size: $value-22 !important;
         }
       }
     }
@@ -408,12 +394,7 @@
   //
 }
 
-
-
-
-
 @media (max-width: 767px) {
-
   //header
   .custom_header {
     .profile-user-name {
@@ -431,7 +412,7 @@
 
   //two-factor-authentication-setup//
   .align-center-box-auth {
-    width: $percentage-100  !important;
+    width: $percentage-100 !important;
   }
 
   .btn-conform-1 {
@@ -466,8 +447,6 @@
     font-size: $value-12;
   }
 
-
-
   .tree-responsive-class {
     padding-top: 0;
   }
@@ -499,7 +478,7 @@
     flex-direction: column;
 
     .add_user_grup_btn {
-      width: $percentage-100  !important;
+      width: $percentage-100 !important;
       justify-content: left !important;
       margin-bottom: $value-20;
       height: auto !important;
@@ -507,7 +486,7 @@
       a {
         text-align: left !important;
         display: inline-block;
-        font-size: $value-16  !important;
+        font-size: $value-16 !important;
       }
     }
 
@@ -515,7 +494,7 @@
       width: $value-85;
       text-align: center;
       flex: 0 0 auto;
-      font-size: $value-40  !important;
+      font-size: $value-40 !important;
     }
   }
 
@@ -526,7 +505,7 @@
 
   .create_user-text {
     h5 {
-      font-size: $value-20  !important;
+      font-size: $value-20 !important;
     }
   }
 
@@ -541,7 +520,7 @@
   //user-control-access
   //bg-box
   .bg-box {
-    padding: $value-20 $value-10  !important;
+    padding: $value-20 $value-10 !important;
 
     &.bg-res {
       .row {
@@ -562,13 +541,13 @@
 
     .sub-box {
       .sub-img {
-        width: $value-45  !important;
-        height: $value-45  !important;
+        width: $value-45 !important;
+        height: $value-45 !important;
       }
 
       img {
-        width: $value-24  !important;
-        height: $value-24  !important;
+        width: $value-24 !important;
+        height: $value-24 !important;
       }
 
       display: inline-block !important;
@@ -636,12 +615,11 @@
   }
 
   .custom-tabel-box {
-    .q-table__top>div {
+    .q-table__top > div {
       align-items: flex-start !important;
     }
 
     .q-table__top {
-
       justify-content: space-between;
       flex-wrap: inherit;
 
@@ -702,11 +680,7 @@
       margin-left: 0px;
       margin-right: 0px;
     }
-
-
   }
-
-
 
   // .padding-class {
   //   .col-md-2 {
@@ -723,7 +697,6 @@
       display: none !important;
     }
   }
-
 
   .grid-res-action {
     .q-btn {
@@ -830,7 +803,6 @@
         .q-field__control {
           width: $percentage-100;
         }
-
       }
 
       .status-checkbox {
@@ -839,21 +811,20 @@
         .q-checkbox {
           margin-left: 0;
         }
-
       }
     }
   }
 
   .bg-box {
-    padding: $value-16 $value-8  !important;
+    padding: $value-16 $value-8 !important;
 
     .sub-box {
       padding: $value-10;
 
       .sub-img {
         flex: 0 0 auto;
-        width: $value-45  !important;
-        height: $value-45  !important;
+        width: $value-45 !important;
+        height: $value-45 !important;
 
         img {
           height: auto;
@@ -905,12 +876,11 @@
         width: $percentage-40;
         text-align: left;
       }
-
     }
   }
 
   .create-group-responsive {
-    &>.row {
+    & > .row {
       justify-content: space-between;
 
       .col-md-8 {
@@ -930,7 +900,7 @@
   .add_option_gruop {
     .add_user_grup_btn {
       a {
-        font-size: $value-16  !important;
+        font-size: $value-16 !important;
         display: flex;
       }
     }
@@ -943,13 +913,10 @@
 //   }
 // }
 
-
-
-
 @media (min-width: 992px) {
   .add_option_gruop {
     .icon-btn {
-      margin-right: $value-11  !important;
+      margin-right: $value-11 !important;
     }
 
     a {
@@ -958,14 +925,13 @@
   }
 
   //create-group//
-  .create-group-responsive>.row {
+  .create-group-responsive > .row {
     display: flex !important;
     justify-content: space-between;
   }
 }
 
 @media (min-width: 992px) and (max-width: 1199px) {
-
   .filter-field {
     .q-field__native {
       min-height: $value-40;
@@ -973,10 +939,9 @@
   }
 
   .bg-box {
-    padding: $value-16 $value-8  !important;
+    padding: $value-16 $value-8 !important;
 
     .row {
-
       // margin: 0 -$value-15  !important;
       &.q-col-gutter-xl {
         margin-top: 0 !important;
@@ -1007,42 +972,40 @@
       }
     }
   }
-
 }
 
 @media (min-width: 1024px) and (max-width: 1199px) {
   .bg-box {
     .row {
       .col-md-3 {
-        padding-left: $value-4  !important;
-        padding-right: $value-4  !important;
+        padding-left: $value-4 !important;
+        padding-right: $value-4 !important;
       }
     }
 
-    padding-left: $value-20  !important;
-    padding-right: $value-20  !important;
+    padding-left: $value-20 !important;
+    padding-right: $value-20 !important;
 
     .sub-box {
       padding: $value-10;
 
       .sub-img {
-        width: $value-45  !important;
-        height: $value-45  !important;
+        width: $value-45 !important;
+        height: $value-45 !important;
         flex: 0 0 auto;
 
-
         img {
-          width: $value-25  !important;
-          height: $value-25  !important;
+          width: $value-25 !important;
+          height: $value-25 !important;
         }
       }
     }
 
     .sub-box-text {
-      padding-left: $value-8  !important;
+      padding-left: $value-8 !important;
 
       h5 {
-        font-size: $value-18  !important;
+        font-size: $value-18 !important;
       }
     }
   }
@@ -1094,8 +1057,6 @@
     }
   }
 }
-
-
 
 // @media (min-width: 992px) and (max-width: 1199px) {
 
@@ -1129,35 +1090,34 @@
   .bg-box {
     .row {
       .col-md-3 {
-        padding-left: $value-4  !important;
-        padding-right: $value-4  !important;
+        padding-left: $value-4 !important;
+        padding-right: $value-4 !important;
       }
     }
 
-    padding-left: $value-20  !important;
-    padding-right: $value-20  !important;
+    padding-left: $value-20 !important;
+    padding-right: $value-20 !important;
 
     .sub-box {
       padding: $value-10;
 
       .sub-img {
-        width: $value-45  !important;
-        height: $value-45  !important;
+        width: $value-45 !important;
+        height: $value-45 !important;
         flex: 0 0 auto;
 
-
         img {
-          width: $value-25  !important;
-          height: $value-25  !important;
+          width: $value-25 !important;
+          height: $value-25 !important;
         }
       }
     }
 
     .sub-box-text {
-      padding-left: $value-8  !important;
+      padding-left: $value-8 !important;
 
       h5 {
-        font-size: $value-18  !important;
+        font-size: $value-18 !important;
       }
     }
   }
@@ -1210,7 +1170,7 @@
   }
 
   .create-group-responsive {
-    &>.row {
+    & > .row {
       .filter-field {
         .hr-form {
           label.q-field {
@@ -1230,14 +1190,13 @@
   .add_option_gruop {
     .add_user_grup_btn {
       .icon-btn {
-        font-size: $value-45  !important;
+        font-size: $value-45 !important;
       }
 
       a {
-        font-size: $value-15  !important;
+        font-size: $value-15 !important;
       }
     }
-
   }
 
   .grid {
@@ -1246,7 +1205,6 @@
         font-size: $value-15;
         min-height: 0;
       }
-
 
       .responsive-home-class {
         .rectengal-home-box {
@@ -1260,7 +1218,6 @@
         }
       }
     }
-
   }
 }
 
@@ -1298,7 +1255,6 @@
       }
     }
   }
-
 }
 
 @media (min-width: 1300px) and (max-width: 1399px) {
@@ -1307,13 +1263,13 @@
       margin-left: 0;
 
       .col-md-3 {
-        padding-left: $value-4  !important;
-        padding-right: $value-4  !important;
+        padding-left: $value-4 !important;
+        padding-right: $value-4 !important;
       }
     }
 
-    padding-left: $value-20  !important;
-    padding-right: $value-20  !important;
+    padding-left: $value-20 !important;
+    padding-right: $value-20 !important;
 
     .sub-box {
       padding: $value-10;
@@ -1323,7 +1279,6 @@
         // height: $value-45  !important;
         // flex: 0 0 auto;
 
-
         // img {
         //   width: $value-25  !important;
         //   height: $value-25  !important;
@@ -1332,7 +1287,7 @@
     }
 
     .sub-box-text {
-      padding-left: $value-8  !important;
+      padding-left: $value-8 !important;
 
       // h5 {
       //   font-size: $value-18  !important;
@@ -1371,7 +1326,6 @@
       margin-left: 0;
 
       .hr-form {
-
         align-items: center !important;
         width: $percentage-49;
         margin-left: 0;
@@ -1398,13 +1352,13 @@
       margin-left: 0;
 
       .col-md-3 {
-        padding-left: $value-4  !important;
-        padding-right: $value-4  !important;
+        padding-left: $value-4 !important;
+        padding-right: $value-4 !important;
       }
     }
 
-    padding-left: $value-20  !important;
-    padding-right: $value-20  !important;
+    padding-left: $value-20 !important;
+    padding-right: $value-20 !important;
 
     .sub-box {
       padding: $value-10;
@@ -1417,7 +1371,6 @@
         margin: $value-3 0 0 0;
       }
     }
-
   }
 
   .filter-card {
@@ -1445,7 +1398,6 @@
       margin-left: 0;
 
       .hr-form {
-
         align-items: center !important;
         width: $percentage-49;
         margin-left: 0;
@@ -1460,11 +1412,11 @@
       .icon-btn {
         text-align: center !important;
         margin-right: $value-5;
-        width: $value-85  !important;
+        width: $value-85 !important;
       }
 
       a {
-        font-size: $value-18  !important;
+        font-size: $value-18 !important;
         margin-left: 0 !important;
       }
     }
@@ -1474,7 +1426,7 @@
     }
 
     //create-group//
-    .create-group-responsive>.row {
+    .create-group-responsive > .row {
       display: flex !important;
       justify-content: space-between;
     }
@@ -1483,7 +1435,7 @@
 
     //two-factor-authentication-setup//
     .align-center-box-auth {
-      width: $percentage-100  !important;
+      width: $percentage-100 !important;
     }
 
     .btn-conform-1 {
@@ -1526,5 +1478,4 @@
       }
     }
   }
-
 }

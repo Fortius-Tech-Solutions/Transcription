@@ -1,0 +1,117 @@
+//profile
+.profile-sec {
+  .profile-card {
+    background: $white;
+    border: 1px solid #cccccc;
+    border-radius: $value-30;
+    padding: $value-70;
+
+    .profile-head {
+      @include box-vr-center;
+    }
+  }
+
+  .profile-avtar {
+    border-radius: $percentage-50;
+    border: 2px solid #ccc;
+    width: $value-125;
+    height: $value-125;
+    overflow: hidden;
+    img {
+      width: $percentage-100;
+      height: $percentage-100;
+      object-fit: contain;
+    }
+  }
+
+  .view-edit-pro-btn {
+    border-radius: $value-20;
+    padding-top: $value-4;
+    padding-bottom: $value-4;
+
+    i {
+      font-size: $value-20;
+      margin-right: $value-6;
+    }
+  }
+
+  .profile-field-card {
+    background: $white;
+    border: 1px solid #cccccc;
+    border-radius: $value-15;
+
+    .profile-field {
+      h5 {
+        font-size: $value-18;
+        font-weight: map-get($font-weights, "medium");
+        margin-top: $value-7;
+        margin-bottom: $value-6;
+      }
+
+      p {
+        color: #4b4b4b;
+      }
+    }
+  }
+}
+
+//edit-profile
+.edit-pro-head {
+  position: relative;
+  display: inline-flex !important;
+}
+
+.avtar-edit-icon {
+  position: absolute;
+  bottom: $value-7;
+  right: $value-13;
+
+  .edit-pro-btn-avtar {
+    background: $white !important;
+    border: 1px solid #a5dbd5;
+    width: $value-22;
+    height: $value-22;
+    border-radius: $percentage-50;
+    padding: 0;
+    min-height: auto;
+
+    i {
+      color: $black;
+      font-size: $value-14 !important;
+    }
+  }
+}
+
+.edit-pro-btn {
+  border-radius: $value-20;
+  min-width: $value-120;
+  padding: $value-7 0;
+}
+
+.edit-avtar-field {
+  label {
+    display: block;
+  }
+
+  .q-field--outlined {
+    .q-field__control {
+      height: $value-45;
+
+      &:before {
+        background: #f2f8fd;
+        border-radius: 10px;
+        border: 1px solid #80acd0;
+      }
+    }
+
+    &.q-field--disabled {
+      .q-field__control {
+        &:before {
+          background: #f1f3f4;
+          border-radius: 10px;
+          border: none;
+        }
+      }
+    }
+  }
+}

@@ -17,7 +17,7 @@ export const userStore = defineStore("user", {
       return this.currentUser;
     },
     getUserType() {
-      let type = []
+      let type = [{ label: "All", value: '' }]
       this.userType.forEach(element => {
         type.push({ label: element.name, value: element.id })
       });

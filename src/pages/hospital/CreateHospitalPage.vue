@@ -13,6 +13,8 @@
           placeholder="Please Enter Hospital Name"
           class="create-user-field-box"
           :rules="[(val) => required(val, 'Name')]"
+          :error="errors.length > 0 ? true : false"
+          :error-message="serverValidationError(errors, 'Name')"
         />
         <!-- v-if="!slug" -->
         <div class="q-mt-lg">
@@ -24,6 +26,8 @@
             placeholder="City"
             class="create-user-field-box"
             :rules="[(val) => required(val, 'City')]"
+            :error="errors.length > 0 ? true : false"
+            :error-message="serverValidationError(errors, 'City')"
           />
         </div>
         <div class="q-mt-lg">
@@ -35,6 +39,8 @@
             placeholder="Address"
             class="create-user-field-box"
             :rules="[(val) => required(val, 'Address')]"
+            :error="errors.length > 0 ? true : false"
+            :error-message="serverValidationError(errors, 'Address')"
           />
         </div>
       </div>
@@ -51,6 +57,7 @@ import { HOSPITAL } from "src/apis/constant";
 import { hospitalStore } from "src/stores/hospital";
 import notification from "src/boot/notification";
 import { Loading, QSpinnerGears } from "quasar";
+import useServerError from "src/composables/useServerError";
 
 import { useRoute, useRouter } from "vue-router";
 import api from "src/apis/index";
@@ -62,6 +69,7 @@ const store = hospitalStore();
 const router = useRouter();
 const route = useRoute();
 const isIdle = ref(false);
+const { errors, serverValidationError } = useServerError();
 
 const tableRef = ref(null);
 const selected = ref([]);
@@ -110,9 +118,13 @@ if (route.name == "edit-hospital") {
       } else if (res.success == false) {
         notification.error(res.message);
         Loading.hide();
+        errors.value = res.errors;
       }
     })
     .catch((error) => {
+      if (error.response) {
+        errors.value = error.response.data.errors;
+      }
       console.log(error);
       Loading.hide();
     })

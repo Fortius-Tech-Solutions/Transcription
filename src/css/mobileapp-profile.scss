@@ -1,0 +1,272 @@
+.mobile-profile-page {
+  .profile-card {
+    .row {
+      margin: $value-0;
+    }
+    .mob-edit-pa {
+      input {
+        height: 32px;
+      }
+      &.mob_digit {
+        .q-field__prefix {
+          top: 3px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 300px) {
+  .mobile-profile-page {
+    .profile-sec {
+      .profile-field-card {
+        .profile-field {
+          h5 {
+            font-size: map-get($font-sizes, font-14) !important;
+          }
+        }
+      }
+    }
+
+    .edit-avtar-field {
+      .edit-field {
+        .lable-text {
+          font-size: map-get($font-sizes, font-14) !important;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 390px) {
+}
+
+@media (max-width: 575px) {
+  .mobile-profile-page {
+    .profile-sec {
+      .profile-field-card {
+        .profile-field {
+          h5 {
+            font-size: map-get($font-sizes, font-14);
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .mobile-profile-page {
+    .profile-sec {
+      .profile-card {
+        .mob-pro-col {
+          .col-md-6 {
+            padding-left: $value-0 !important;
+          }
+        }
+      }
+    }
+
+    .edit-avtar-field {
+      .edit-field {
+        .lable-text {
+          font-size: map-get($font-sizes, font-14) !important;
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  .mobile-profile-page {
+    .profile-sec {
+      .profile-field-card {
+        .profile-field {
+          h5 {
+            font-size: map-get($font-sizes, font-16);
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: 767px) and (max-width: 1024px) {
+  .mobile-profile-page {
+    .profile-sec {
+      .profile-card {
+        .row {
+          .col-sm-12 {
+            width: $percentage-49;
+          }
+        }
+      }
+    }
+
+    .edit-field:nth-child(odd) {
+      margin-right: $percentage-2;
+    }
+
+    .mob-action-btn {
+      justify-content: flex-end;
+
+      a {
+        width: auto !important;
+      }
+
+      .edit-pro-btn {
+        width: auto !important;
+      }
+    }
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1024px) {
+}
+
+@media (max-width: 1200px) {
+  .mobile-profile-page {
+    .profile-sec {
+      .profile-card {
+        border: none !important;
+        padding: $value-0;
+
+        .edit-field {
+          border: 1px solid #cccc;
+          border-radius: $value-10;
+          margin-bottom: $value-15;
+          padding: $value-10;
+        }
+
+        .mob-pro-col {
+          .col-md-6 {
+            padding-top: $value-14;
+            padding-left: $value-14;
+          }
+        }
+      }
+
+      .profile-head {
+        &.mob-pro-head {
+          margin-bottom: $value-14;
+        }
+
+        justify-content: center;
+      }
+
+      .text-right {
+        text-align: center;
+        padding-top: $value-10;
+
+        &.mob-action-btn {
+          display: flex;
+
+          .edit-pro-btn {
+            width: $percentage-50;
+          }
+
+          a {
+            width: $percentage-50;
+
+            .edit-pro-btn {
+              width: $percentage-100;
+            }
+          }
+        }
+      }
+    }
+
+    .edit-avtar-field {
+      margin-left: 0;
+
+      .edit-field {
+        &.mob-edit-pa {
+          border-radius: map-get($borderRadius, "value15");
+          padding: $value-10 $value-16;
+
+          &:last-child {
+            .q-field__control-container {
+              .q-field__prefix {
+                line-height: 0px;
+                padding: 0px $value-6 0 0;
+                position: relative;
+              }
+            }
+          }
+        }
+
+        .lable-text {
+          font-size: $value-18;
+          margin-bottom: 0;
+          margin-left: $value-0;
+          margin-right: $value-0;
+        }
+      }
+
+      .q-field--outlined {
+        .q-field__control {
+          height: $value-25;
+          padding: 0;
+        }
+
+        .q-field__control:before {
+          background: none !important;
+          border: none;
+        }
+
+        .q-field__control:after {
+          background: none !important;
+          border: none;
+        }
+
+        &.q-field--disabled {
+          .q-field__control {
+            height: $value-25;
+            padding: 0;
+          }
+
+          .q-field__control:before {
+            background: none !important;
+          }
+        }
+      }
+    }
+  }
+
+  .mobile-popup-gallery {
+    position: relative;
+    width: $percentage-100;
+    border-radius: $value-10 !important;
+
+    .gallery-popup {
+      @include hr-vr-center-between;
+      width: $value-100;
+
+      span {
+        font-size: $value-14;
+
+        &.padding-photo {
+          padding-right: $value-10;
+        }
+      }
+    }
+
+    .gallery-camara {
+      font-size: $value-24;
+    }
+
+    // .pop-head {
+    //   &::before {
+    //     content: "";
+    //     position: absolute;
+    //     width: $percentage-90;
+    //     height: $value-1;
+    //     background-color: #9d9d9dcc;
+    //     top: 62px;
+    //     display: block;
+    //   }
+    // }
+  }
+
+  //end-login-page//
+}

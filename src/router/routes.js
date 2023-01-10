@@ -139,6 +139,62 @@ const routes = [
           requiresAuth: true,
         },
       },
+      {
+        path: "/audio-list/:slug",
+        name: "audio-list",
+        component: () =>
+          import(
+            /* webpackChunkName: "audio-list" */
+            /* webpackMode: "lazy" */
+            /* webpackInclude: /\.vue$/ */
+            "src/pages/writer/audioList.vue"
+          ),
+        meta: {
+          requiresAuth: true,
+        },
+      },
+      {
+        path: "/write-script/:slug",
+        name: "write-script",
+        component: () =>
+          import(
+            /* webpackChunkName: "write-script" */
+            /* webpackMode: "lazy" */
+            /* webpackInclude: /\.vue$/ */
+            "src/pages/writer/writeScript.vue"
+          ),
+        meta: {
+          requiresAuth: true,
+        },
+      },
+      {
+        path: "/confirm-transcript/:slug",
+        name: "confirm-transcript",
+        component: () =>
+          import(
+            /* webpackChunkName: "confirm-transcript" */
+            /* webpackMode: "lazy" */
+            /* webpackInclude: /\.vue$/ */
+            "src/pages/doctor/confirmTranscription.vue"
+          ),
+        meta: {
+          requiresAuth: true,
+        },
+      },
+      {
+        path: "/confirm-script/:slug",
+        name: "confirm-script",
+        component: () =>
+          import(
+            /* webpackChunkName: "write-script" */
+            /* webpackMode: "lazy" */
+            /* webpackInclude: /\.vue$/ */
+            "src/pages/writer/writeScript.vue"
+          ),
+        meta: {
+          requiresAuth: true,
+        },
+      },
     ],
   },
 

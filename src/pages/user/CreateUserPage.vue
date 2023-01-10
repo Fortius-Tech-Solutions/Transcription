@@ -1,73 +1,146 @@
 <template>
-  <q-form @submit="onSubmit">
-    <div class="home_user_header">
-      <h3 class="comman-title">{{ slug ? "Update" : "Create" }} User</h3>
-    </div>
-    <div class="q-pa-md main-wrapper">
-      <div class="bg-box">
-        <label for="">Select User Type</label>
-        <q-select
-          hide-bottom-space
-          outlined
-          class="create-user-field-box"
-          style="min-width: 300px"
-          v-model="userTypeModel"
-          :options="userType"
-        />
-        <label for="">First Name</label>
-        <q-input
-          outlined
-          v-model="first_name"
-          :dense="dense"
-          placeholder="Please Enter First Name"
-          class="create-user-field-box"
-          :rules="[(val) => required(val, 'Name')]"
-        />
-        <label for="">Last Name</label>
-        <q-input
-          outlined
-          v-model="last_name"
-          :dense="dense"
-          placeholder="Please Enter Last Name"
-          class="create-user-field-box"
-          :rules="[(val) => required(val, 'Name')]"
-        />
-        <!-- v-if="!slug" -->
-        <div class="q-mt-lg">
-          <label for="">Email</label>
-          <q-input
-            outlined
-            v-model="email"
-            :dense="dense"
-            placeholder="Email"
-            class="create-user-field-box"
-            :rules="[(val) => required(val, 'Email'), (val) => isEmail(val)]"
-          />
+  <q-form @submit.prevent="onSubmit()">
+    <div class="container">
+      <section class="profile-sec q-mb-md">
+        <div class="home_user_header">
+          <h3 class="comman-title">{{ slug ? "Update" : "Create" }} User</h3>
         </div>
-        <div v-if="!slug" class="q-mt-lg">
-          <div class="pass-feild">
-            <label for="">Password </label>
-            <q-btn label="Generate" @click="generate()" />
+        <div class="profile-card">
+          <div class="text-center">
+            <div class="profile-head edit-pro-head mob-pro-head">
+              <div class="profile-avtar">
+                <!-- <img v-if="true" src="" alt="" /> -->
+                <img v-if="imgSrc" :src="imgSrc" alt="user" />
+                <img v-else src="~assets/images/user-avtart-img.png" alt="" />
+              </div>
+              <div class="avtar-edit-icon">
+                <input
+                  style="display: none"
+                  ref="imgInput"
+                  type="file"
+                  name="image"
+                  :accept="accept"
+                  @change="setImage"
+                />
+
+                <q-btn
+                  color="primary"
+                  icon="las la-pen"
+                  class="edit-pro-btn-avtar"
+                  @click.prevent="showFileChooser"
+                />
+              </div>
+            </div>
           </div>
-          <div>
-            <q-input
-              outlined
-              v-model="password"
-              :dense="dense"
-              placeholder="Password"
-              class="create-user-field-box"
-              :rules="[
-                (val) => required(val, 'Password'),
-                (val) => validatePassword(val),
-              ]"
+          <div class="row q-col-gutter-lg q-mt-sm edit-avtar-field">
+            <div class="col-md-6 col-sm-12 col-12 edit-field mob-edit-pa">
+              <label class="lable-text q-mb-sm q-ml-sm q-mr-sm"
+                >Select User Type</label
+              >
+              <q-select
+                outlined
+                hide-bottom-space
+                :dense="dense"
+                class="q-ml-sm q-mr-sm"
+                v-model="userTypeModel"
+                :options="userType"
+                :error="errors.length > 0 ? true : false"
+                :error-message="serverValidationError(errors, 'user_type_id')"
+              />
+            </div>
+            <div class="col-md-6 col-sm-12 col-12 edit-field mob-edit-pa">
+              <label class="lable-text q-mb-sm q-ml-sm q-mr-sm"
+                >First Name</label
+              >
+              <q-input
+                outlined
+                hide-bottom-space
+                v-model="first_name"
+                :dense="dense"
+                class="q-ml-sm q-mr-sm"
+                :rules="[(val) => required(val, 'First Name')]"
+                :error="errors.length > 0 ? true : false"
+                :error-message="serverValidationError(errors, 'first_name')"
+              >
+              </q-input>
+            </div>
+            <div class="col-md-6 col-sm-12 col-12 edit-field mob-edit-pa">
+              <label class="lable-text q-mb-sm q-ml-sm q-mr-sm"
+                >Last Name</label
+              >
+              <q-input
+                outlined
+                hide-bottom-space
+                v-model="last_name"
+                :dense="dense"
+                :placeholder="$q.lang.user.edit_profile.name.placeHolder"
+                :rules="[(val) => required(val, 'Last Name')]"
+                :error="errors.length > 0 ? true : false"
+                :error-message="serverValidationError(errors, 'last_name')"
+                class="q-ml-sm q-mr-sm"
+              >
+              </q-input>
+            </div>
+
+            <div class="col-md-6 col-sm-12 col-12 edit-field mob-edit-pa">
+              <label class="lable-text q-mb-sm q-ml-sm q-mr-sm">Email</label>
+              <q-input
+                outlined
+                hide-bottom-space
+                v-model="email"
+                :dense="dense"
+                class="q-ml-sm q-mr-sm"
+                :rules="[
+                  (val) => required(val, 'Email'),
+                  (val) => isEmail(val),
+                ]"
+                :error="errors.length > 0 ? true : false"
+                :error-message="serverValidationError(errors, 'email')"
+              >
+              </q-input>
+            </div>
+            <div
+              v-if="!slug"
+              class="col-md-6 col-sm-12 col-12 edit-field mob-edit-pa mob_digit"
+            >
+              <div class="pass-feild">
+                <label for="">Password </label>
+                <q-btn label="Generate" @click="generate()" />
+              </div>
+              <q-input
+                outlined
+                hide-bottom-space
+                v-model="password"
+                :dense="dense"
+                :rules="[
+                  (val) => required(val, 'Password'),
+                  (val) => validatePassword(val),
+                ]"
+                :error="errors.length > 0 ? true : false"
+                :error-message="serverValidationError(errors, 'password')"
+                class="q-ml-sm q-mr-sm"
+              >
+              </q-input>
+            </div>
+          </div>
+
+          <div class="text-right q-pt-lg mob-action-btn">
+            <q-btn
+              outline
+              @click="cancel"
+              color="primary"
+              :label="$q.lang.user.edit_profile.cancel_btn"
+              class="edit-pro-btn"
+            />
+            <q-btn
+              color="primary"
+              :label="$q.lang.user.edit_profile.submit_btn"
+              type="submit"
+              class="edit-pro-btn q-ml-sm"
             />
           </div>
         </div>
-      </div>
-      <div class="form_comon_btn q-mt-md q-mr-md q-mb-md">
-        <q-btn outline color="primary" label="Cancel" @click="cancel" />
-        <q-btn color="primary" type="submit" label="Submit" class="q-ml-md" />
-      </div>
+      </section>
     </div>
   </q-form>
 </template>
@@ -79,15 +152,15 @@ import { userStore } from "src/stores/users";
 import notification from "src/boot/notification";
 import { Loading, QSpinnerGears } from "quasar";
 import * as RandExp from "randexp";
-
+import useServerError from "src/composables/useServerError";
 import { useRoute, useRouter } from "vue-router";
 import api from "src/apis/index";
 import { useAuthStore } from "src/stores/auth";
 const tableComponent = defineAsyncComponent(() =>
   import("src/components/table-component")
 );
+const { errors, serverValidationError } = useServerError();
 
-const tab = ref("group");
 const storeUser = userStore();
 storeUser.fetchUserTypeList();
 const router = useRouter();
@@ -141,6 +214,27 @@ function onSelection(rows, added) {
 const slug = ref(null);
 const edit_id = ref(null);
 const selectedGroups = ref([]);
+
+const imgInput = ref("");
+const imgSrc = ref("");
+function showFileChooser() {
+  imgInput.value.click();
+}
+
+async function setImage(e) {
+  Loading.show({
+    spinner: QSpinnerGears,
+    message: "Loading...",
+  });
+  const file = e.target.files[0];
+  const render = new FileReader();
+  render.onloadend = () => {
+    imgSrc.value = render.result;
+    Loading.hide();
+  };
+  render.readAsDataURL(file);
+}
+
 // Check if current route is edit
 if (route.name == "edit-user") {
   Loading.show({
@@ -161,6 +255,7 @@ if (route.name == "edit-user") {
         first_name.value = res.data[0].first_name;
         last_name.value = res.data[0].last_name;
         email.value = res.data[0].email;
+        imgSrc.value = res.data[0].avtar;
         Loading.hide();
       } else if (res.success == false) {
         notification.error(res.message);
@@ -187,25 +282,31 @@ function cancel() {
   history.go(-1);
 }
 
-function onSubmit() {
+async function onSubmit() {
   Loading.show({
     message: "Loading...",
     spinner: QSpinnerGears,
   });
-  const data = {
-    user_type_id: userTypeModel.value.value,
-    first_name: first_name.value,
-    last_name: last_name.value,
-    email: email.value,
-  };
+
+  const formData = new FormData();
+  formData.append("user_type_id", userTypeModel.value.value);
+  formData.append("first_name", first_name.value);
+  formData.append("last_name", last_name.value);
+  formData.append("email", email.value);
 
   if (password.value) {
-    data.password = password.value;
+    formData.append("password", password.value);
+  }
+  if (imgSrc.value) {
+    const response = await fetch(imgSrc.value);
+    const blob = await response.blob();
+    const image = new File([blob], "image.png");
+    formData.append("avtar", image, "image.png");
   }
 
   if (route.name == "edit-user") {
     storeUser
-      .updateUser(data, edit_id.value)
+      .updateUser(formData, edit_id.value)
       .then((res) => {
         if (res.success == true) {
           notification.success(
@@ -223,7 +324,7 @@ function onSubmit() {
       });
   } else {
     storeUser
-      .saveNewUser(data)
+      .saveNewUser(formData)
       .then((res) => {
         console.log(data);
         if (res.success == true) {
@@ -232,9 +333,14 @@ function onSubmit() {
           );
           router.push({ name: "user-dashboard" });
           Loading.hide();
-        } else if (res.success == false) {
-          notification.error(res.message);
-          Loading.hide();
+        } else {
+          console.log(res);
+          errors.value = res.errors;
+        }
+      })
+      .catch((err) => {
+        if (err.response) {
+          errors.value = err.response.data.errors;
         }
       })
       .finally(() => {
@@ -245,6 +351,9 @@ function onSubmit() {
 </script>
 
 <style lang="scss">
+@import "src/css/user.scss";
+@import "src/css/responsive.scss";
+@import "src/css/mobileapp-profile.scss";
 // $
 .pass-feild {
   @include hr-vr-center-between;

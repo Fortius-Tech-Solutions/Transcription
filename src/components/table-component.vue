@@ -18,7 +18,7 @@
     >
       <template v-slot:top-right>
         <div class="table_add_btn">
-          <slot name="import"></slot>
+          <!-- <slot name="import"></slot>
           <q-btn
             v-if="props.type == 'report' && !props.isPdfDownload"
             dense
@@ -26,33 +26,31 @@
             icon="las la-download"
             @click="downloadPDF(reportData)"
             no-caps
-          ></q-btn>
-          <q-btn
-            v-if="createUrl"
-            dense
-            color="primary"
-            icon="las la-plus"
-            :label="$q.lang.button.create"
-            :to="createUrl"
-            no-caps
-          >
-          </q-btn>
-
+          ></q-btn> -->
+          <div>
+            <q-select
+              v-if="route.name == 'user-dashboard'"
+              v-model="userTypeModel"
+              :options="userType"
+              @update:model-value="selectType(userTypeModel)"
+            />
+          </div>
+          <div>
+            <q-btn
+              v-if="createUrl && user.user_type_id == 1"
+              dense
+              color="primary"
+              icon="las la-plus"
+              :label="$q.lang.button.create"
+              :to="createUrl"
+              no-caps
+            >
+            </q-btn>
+          </div>
           <!-- <q-btn color="primary" icon-right="archive" label="Export to csv" no-caps @click="downloadTable" /> -->
         </div>
       </template>
       <template v-slot:top-left>
-        <q-select
-          v-if="route.name == 'user-dashboard'"
-          hide-bottom-space
-          outlined
-          class="create-user-field-box"
-          style="min-width: 300px"
-          v-model="userTypeModel"
-          :options="userType"
-          @update:model-value="selectType(userTypeModel)"
-        />
-
         <q-input
           borderless
           dense
@@ -64,6 +62,7 @@
             <q-icon name="search" />
           </template>
         </q-input>
+
         <slot name="filter"></slot>
       </template>
       <template #body-cell-image="props">
@@ -133,6 +132,7 @@
             @click="assign(props.row, 'assign-writer')"
           />
           <q-btn
+            v-if="user.user_type_id == 1"
             color="secondary"
             icon="las la-pen"
             @click="$emit('edit', props.row)"
@@ -141,9 +141,29 @@
           ></q-btn>
 
           <q-btn
+            v-if="user.user_type_id == 1"
             color="red"
             icon="las la-trash-alt"
             @click="deleteItem(props.row)"
+            size="sm"
+            no-caps
+          ></q-btn>
+          <q-btn
+            v-if="user.user_type_id == 2"
+            color="primary"
+            label="Transcription"
+            :to="{
+              name: 'confirm-transcript',
+              params: { slug: props.row?.hospital_id },
+            }"
+            size="sm"
+            no-caps
+          ></q-btn>
+          <q-btn
+            v-if="user.user_type_id == 3"
+            color="primary"
+            label="Audio"
+            :to="{ name: 'audio-list', params: { slug: props.row?.doctor_id } }"
             size="sm"
             no-caps
           ></q-btn>
@@ -223,10 +243,11 @@ import { useRoute, useRouter } from "vue-router";
 import { userStore } from "src/stores/users";
 import notification from "src/boot/notification";
 import { useMasterStore } from "src/stores/master";
+import { useAuthStore } from "src/stores/auth";
 import { date, exportFile, Loading, QSpinnerGears } from "quasar";
 import moment from "moment";
 import html2pdf from "html2pdf.js";
-
+import { LocalStorage } from "quasar";
 const props = defineProps({
   columns: Array,
   apiUrl: String,
@@ -242,7 +263,10 @@ const props = defineProps({
   reportType: Object,
   isPdfDownload: Boolean,
 });
-
+const store = useAuthStore();
+const user = computed(() => {
+  return store.getUser;
+});
 const now = new Date();
 const router = useRouter();
 const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -259,10 +283,7 @@ const storeUser = userStore();
 const userType = computed(() => {
   return storeUser.getUserType;
 });
-const userTypeModel = ref({
-  label: "Super Admin",
-  value: 1,
-});
+const userTypeModel = ref({ label: "All", value: "" });
 const tableRef = ref();
 const rows = ref([]);
 const filter = ref("");
@@ -639,6 +660,7 @@ defineExpose({
 
 function assign(data, item) {
   master.data = data;
+  LocalStorage.set("data", master.data);
   if (item == "assign-hospital") {
     router.push({
       name: "component",
@@ -660,6 +682,13 @@ function assign(data, item) {
       params: { slug: "assign-writer" },
     });
   }
+}
+function setAudioWriter(data) {
+  console.log(data);
+  // router.push({
+  //   name: "component",
+  //   params: { slug: "assign-writer" },
+  // });
 }
 
 const deleteData = ref("");

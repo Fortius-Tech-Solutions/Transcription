@@ -18,4 +18,22 @@ export default {
     },
     button: "Filter",
   },
+  edit_profile: {
+    title: "Edit Profile",
+    patient_cr: "Patient CR",
+    name: {
+      label: "Name",
+      placeHolder: "Enter your Name"
+    },
+    email: {
+      label: "Email",
+      placeHolder: "Enter your email",
+    },
+    phone_no: {
+      label: "Phone Number",
+      placeHolder: "Enter Phone Number"
+    },
+    cancel_btn: "Cancel",
+    submit_btn: "Save"
+  },
 };
