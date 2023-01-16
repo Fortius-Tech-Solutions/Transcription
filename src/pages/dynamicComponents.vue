@@ -23,13 +23,15 @@
         @selected="onSelection"
       >
       </table-component>
-      <q-btn
-        color="primary"
-        type="submit"
-        :label="$q.lang.button.submit"
-        class="q-ml-md"
-        @click="assign()"
-      />
+      <div class="text-right q-mt-md">
+        <q-btn
+          color="primary"
+          type="submit"
+          :label="$q.lang.button.submit"
+          class="q-ml-md"
+          @click="assign()"
+        />
+      </div>
     </div>
   </div>
 </template>

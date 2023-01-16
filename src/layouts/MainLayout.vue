@@ -101,7 +101,8 @@ function toggleLeftDrawer() {
 }
 
 function logout() {
-  router.push({ name: "sign-in" });
-  store.logout();
+  store.logout().then((res) => {
+    router.push({ name: "sign-in" });
+  });
 }
 </script>

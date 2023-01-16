@@ -43,6 +43,7 @@ const store = useAuthStore();
 const user = computed(() => {
   return store.getUser;
 });
+console.log(user.value.user_type_id);
 const columns = ref([]);
 const api = ref("");
 if (user.value.user_type_id == 3) {

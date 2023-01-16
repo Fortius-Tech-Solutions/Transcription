@@ -326,10 +326,9 @@ async function onSubmit() {
     storeUser
       .saveNewUser(formData)
       .then((res) => {
-        console.log(data);
         if (res.success == true) {
           notification.success(
-            res.message ? res.message : "User Created Successfully !"
+            res.message ? res.message : "User Edited Successfully !"
           );
           router.push({ name: "user-dashboard" });
           Loading.hide();

@@ -1,6 +1,6 @@
 <template>
   <div class="q-pa-md main-wrapper">
-    <q-card class="q-pa-lg">
+    <q-card class="q-pa-lg" v-if="audioList.length !== 0">
       <div class="audio_list_bg" v-for="item in audioList" :key="item">
         <div class="audio_list_item">
           <div class="audio_list_col1">
@@ -60,6 +60,14 @@
             />
           </div>
         </div>
+      </div>
+    </q-card>
+    <q-card class="q-pa-lg" v-else>
+      <div class="text-center">
+        <q-btn class="not_found_icon" outline color="primary">
+          <i class="las la-exclamation-triangle"></i>
+        </q-btn>
+        <h5>Data Not Found</h5>
       </div>
     </q-card>
   </div>
@@ -302,6 +310,23 @@ h3.comman-title {
       text-overflow: ellipsis;
       max-width: 30%;
     }
+  }
+}
+
+.not_found_icon {
+  padding: 0;
+  margin-bottom: 20px;
+  i {
+    font-size: 60px;
+  }
+  &:before {
+    height: 80px;
+    border-radius: 50%;
+    width: 80px;
+    border-width: 2px;
+  }
+  .q-btn__content {
+    padding: 10px 0 0 11px;
   }
 }
 </style>

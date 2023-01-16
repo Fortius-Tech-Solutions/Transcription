@@ -40,11 +40,13 @@ export const useAuthStore = defineStore("auth", {
             if (res.success) {
               this.accessToken = res.data.token;
               LocalStorage.set("access_token", this.accessToken);
-              this.getProfile();
+              this.getProfile().then(() => {
+                resolve(res);
+              });
             } else {
               notification.error(res.message);
             }
-            resolve(res);
+
           })
           .catch((error) => {
             reject(error);
