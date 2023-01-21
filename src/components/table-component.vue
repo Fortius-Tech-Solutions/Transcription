@@ -1,82 +1,41 @@
 <template>
   <div class="">
-    <q-table
-      ref="tableRef"
-      :title="title"
-      :rows="rows"
-      :columns="columns"
-      :row-key="rowKey"
-      v-model:pagination="pagination"
-      :loading="loading"
-      :filter="filter"
-      binary-state-sort
-      @request="onRequest"
-      :selection="selectionType"
-      v-model:selected="selected"
-      :selected-rows-label="getSelectedString"
-      @selection="onSelection"
-    >
+    <q-table ref="tableRef" :title="title" :rows="rows" :columns="columns" :row-key="rowKey"
+      v-model:pagination="pagination" :loading="loading" :filter="filter" binary-state-sort @request="onRequest"
+      :selection="selectionType" v-model:selected="selected" :selected-rows-label="getSelectedString"
+      @selection="onSelection">
       <template v-slot:top-right>
         <div class="table_add_btn">
-          <!-- <slot name="import"></slot>
-          <q-btn
-            v-if="props.type == 'report' && !props.isPdfDownload"
-            dense
-            color="secondary"
-            icon="las la-download"
-            @click="downloadPDF(reportData)"
-            no-caps
-          ></q-btn> -->
           <div>
-            <q-select
-              v-if="route.name == 'user-dashboard'"
-              v-model="userTypeModel"
-              :options="userType"
-              @update:model-value="selectType(userTypeModel)"
-            />
+            <q-select v-if="route.name == 'user-dashboard'" v-model="userTypeModel" :options="userType"
+              @update:model-value="selectType(userTypeModel)" />
           </div>
           <div>
-            <q-btn
-              v-if="createUrl && user.user_type_id == 1"
-              dense
-              color="primary"
-              icon="las la-plus"
-              :label="$q.lang.button.create"
-              :to="createUrl"
-              no-caps
-            >
+            <q-btn v-if="createUrl && user.user_type_id == 1" dense color="primary" icon="las la-plus"
+              :label="$q.lang.button.create" :to="createUrl" no-caps>
             </q-btn>
           </div>
-          <!-- <q-btn color="primary" icon-right="archive" label="Export to csv" no-caps @click="downloadTable" /> -->
+          <slot name="filter"></slot>
         </div>
       </template>
       <template v-slot:top-left>
-        <q-input
-          borderless
-          dense
-          debounce="300"
-          v-model="filter"
-          placeholder="Search"
-        >
+        <q-input borderless dense debounce="300" v-model="filter" placeholder="Search">
           <template v-slot:append>
             <q-icon name="search" />
           </template>
         </q-input>
 
-        <slot name="filter"></slot>
+
       </template>
       <template #body-cell-image="props">
         <q-td key="image" :props="props">
-          <q-img
-            style="height: 80px; max-width: 80px"
-            :src="
-              props.row.image ??
-              props.row.category_icon ??
-              props.row.icon ??
-              props.row.quote_img ??
-              props.row.platform.icon
-            "
-          />
+          <q-img style="height: 80px; max-width: 80px" :src="
+            props.row.image ??
+            props.row.category_icon ??
+            props.row.icon ??
+            props.row.quote_img ??
+            props.row.platform.icon
+          " />
         </q-td>
       </template>
       <template #body-cell-emoji="props">
@@ -94,90 +53,40 @@
 
       <template #body-cell-actions="props">
         <q-td key="actions" :props="props">
-          <q-btn
-            v-if="
-              (route.name == 'user-dashboard' && userTypeModel.value == 2) ||
-              userTypeModel.value == 4
-            "
-            color="primary"
-            label="Assign Hospital"
-            size="sm"
-            no-caps
-            @click="assign(props.row, 'assign-hospital')"
-          />
-          <q-btn
-            v-if="
-              route.name == 'hospital-dashboard' || userTypeModel.value == 3
-            "
-            color="primary"
-            label="Assign Doctor"
-            size="sm"
-            no-caps
-            @click="assign(props.row, 'assign-doctor')"
-          />
-          <q-btn
-            v-if="route.name == 'hospital-dashboard'"
-            color="primary"
-            label="Assign Receptionist"
-            size="sm"
-            no-caps
-            @click="assign(props.row, 'assign-receptionist')"
-          />
-          <q-btn
-            v-if="route.name == 'user-dashboard' && userTypeModel.value == 2"
-            color="primary"
-            label="Assign Writer"
-            size="sm"
-            no-caps
-            @click="assign(props.row, 'assign-writer')"
-          />
-          <q-btn
-            v-if="user.user_type_id == 1"
-            color="secondary"
-            icon="las la-pen"
-            @click="$emit('edit', props.row)"
-            size="sm"
-            no-caps
-          ></q-btn>
+          <q-btn v-if="
+            (route.name == 'user-dashboard' && userTypeModel.value == 2) ||
+            userTypeModel.value == 4
+          " color="primary" label="Assign Hospital" size="sm" no-caps @click="assign(props.row, 'assign-hospital')" />
+          <q-btn v-if="
+            route.name == 'hospital-dashboard' || userTypeModel.value == 3
+          " color="primary" label="Assign Doctor" size="sm" no-caps @click="assign(props.row, 'assign-doctor')" />
+          <q-btn v-if="route.name == 'hospital-dashboard'" color="primary" label="Assign Receptionist" size="sm" no-caps
+            @click="assign(props.row, 'assign-receptionist')" />
+          <q-btn v-if="route.name == 'user-dashboard' && userTypeModel.value == 2" color="primary" label="Assign Writer"
+            size="sm" no-caps @click="assign(props.row, 'assign-writer')" />
+          <q-btn v-if="user.user_type_id == 1" color="secondary" icon="las la-pen" @click="$emit('edit', props.row)"
+            size="sm" no-caps></q-btn>
 
-          <q-btn
-            v-if="user.user_type_id == 1"
-            color="red"
-            icon="las la-trash-alt"
-            @click="deleteItem(props.row)"
-            size="sm"
-            no-caps
-          ></q-btn>
-          <q-btn
-            v-if="user.user_type_id == 2"
-            color="primary"
-            label="Transcription"
-            :to="{
-              name: 'confirm-transcript',
+          <q-btn v-if="user.user_type_id == 1" color="red" icon="las la-trash-alt" @click="deleteItem(props.row)"
+            size="sm" no-caps></q-btn>
+          <q-btn v-if="user.user_type_id == 2" color="primary" label="Transcription" :to="{
+            name: 'confirm-transcript',
+            params: { slug: props.row?.hospital_id },
+          }" size="sm" no-caps></q-btn>
+          <q-btn v-if="user.user_type_id == 3" color="primary" label="Audio"
+            :to="{ name: 'audio-list', params: { slug: props.row?.doctor_id } }" size="sm" no-caps></q-btn>
+          <q-btn v-if="user.user_type_id == 4 && route.name !== 'transcription-list'" color="primary"
+            label="Transcription" size="sm" no-caps :to="{
+              name: 'transcription-list',
               params: { slug: props.row?.hospital_id },
-            }"
-            size="sm"
-            no-caps
-          ></q-btn>
-          <q-btn
-            v-if="user.user_type_id == 3"
-            color="primary"
-            label="Audio"
-            :to="{ name: 'audio-list', params: { slug: props.row?.doctor_id } }"
-            size="sm"
-            no-caps
-          ></q-btn>
+            }"></q-btn>
+          <q-btn v-if="user.user_type_id == 4 && route.name == 'transcription-list'" color="secondary"
+            icon="las la-download" @click="downloadPDF(props.row)" size="sm" no-caps></q-btn>
         </q-td>
       </template>
       <template #body-cell-download="props">
         <q-td key="actions" :props="props">
-          <q-btn
-            color="secondary"
-            icon="las la-download"
-            @click="downloadPDF(props.row)"
-            size="sm"
-            no-caps
-          ></q-btn>
+          <q-btn color="secondary" icon="las la-download" @click="downloadPDF(props.row)" size="sm" no-caps></q-btn>
         </q-td>
       </template>
     </q-table>
@@ -185,14 +94,12 @@
   <q-dialog v-model="deleteDialog" class="alert-popup text-center">
     <q-card class="comman-close-popup">
       <q-card-section class="">
-        <div
-          class="
+        <div class="
             alert-popup-content
             create_project_popup
             q_custum_popup
             new_common_popup_btn
-          "
-        >
+          ">
           <div class="img-area">
             <div class="close-top-posi">
               <i class="las la-times" v-close-popup></i>
@@ -206,27 +113,15 @@
           </div>
           <q-card-actions align="center" class="bg-white text-teal">
             <q-btn outline color="primary" label="Cancel" v-close-popup />
-            <q-btn
-              color="primary"
-              label="Yes Delete It!"
-              @click="$emit('delete', deleteData)"
-              v-close-popup
-            />
+            <q-btn color="primary" label="Yes Delete It!" @click="$emit('delete', deleteData)" v-close-popup />
           </q-card-actions>
         </div>
       </q-card-section>
     </q-card>
   </q-dialog>
-
+  <!--  -->
   <div style="display: none">
-    <readinessComponent
-      v-if="showReadiness"
-      :items="pdfData"
-      id="downloadPDF"
-    />
-  </div>
-  <div style="display: none">
-    <phqComponent v-if="showPhq" :items="pdfData" id="downloadPDF" />
+    <pdfComponent v-if="showPDF" :items="pdfData" id="downloadPDF" />
   </div>
 </template>
 
@@ -248,6 +143,9 @@ import { date, exportFile, Loading, QSpinnerGears } from "quasar";
 import moment from "moment";
 import html2pdf from "html2pdf.js";
 import { LocalStorage } from "quasar";
+const pdfComponent = defineAsyncComponent(() =>
+  import("src/components/dowloadPDF.vue")
+);
 const props = defineProps({
   columns: Array,
   apiUrl: String,
@@ -275,8 +173,7 @@ const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
 
 const emit = defineEmits(["delete", "edit", "selected", "view", "lock"]);
 
-const showPhq = ref(false);
-const showReadiness = ref(false);
+const showPDF = ref(false);
 const showImage = ref(false);
 const route = useRoute();
 const storeUser = userStore();
@@ -324,52 +221,27 @@ function formatDate(date) {
 
 /////////// *************** EXPORT TO PDF *************** ///////////
 
-function exportToPDF(data, item, pageBreak) {
+function exportToPDF(data) {
   html2pdf(data, {
     margin: 0,
-    filename: `${props.title}_${
-      item.patient_cr ? item.patient_cr : formatDate(Date.now())
-    }.pdf`,
-
-    pagebreak: { after: ".sautDePage" },
+    filename: `${pdfData.value[0].patient_name}_${Date.now()}.pdf`,
     image: { type: "jpeg", quality: 0.98 },
-    html2canvas: { scale: 2, letterRendering: true },
+    html2canvas: { scale: 1, letterRendering: true },
     jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
   });
 }
-async function downloadPDF(item) {
-  //console.log(item);
-  var data = {
-    patient_id: item?.patient_id,
-    org_id: item?.org_id,
-    from_date:
-      props.reportData?.from_date ?? moment(firstDay).format("YYYY-MM-DD"),
-    to_date: props.reportData?.to_date ?? moment(lastDay).format("YYYY-MM-DD"),
-  };
-
-  if (props.reportType == "readiness") {
-    Loading.show({
-      message: "Loading...",
-      spinner: QSpinnerGears,
-    });
-    await apis.post("report/readinessRuler", data).then((res) => {
-      showReadiness.value = true;
-      fetchPdf(res, item);
-    });
-  } else if (props.reportType == "phq9") {
-    await apis.post("report/phq", data).then((res) => {
-      Loading.show({
-        message: "Loading...",
-        spinner: QSpinnerGears,
-      });
-      showPhq.value = true;
-      fetchPdf(res, item);
-    });
-  }
+async function downloadPDF(res) {
+  console.log(res);
+  Loading.show({
+    message: "Loading...",
+    spinner: QSpinnerGears,
+  });
+  showPDF.value = true;
+  fetchPdf(res);
 }
 
 function fetchPdf(res, item) {
-  pdfData.value = res.data;
+  pdfData.value.push(res);
   setTimeout(() => {
     const pageBreak = document.getElementById("mode");
 
@@ -395,104 +267,6 @@ function wrapCsvValue(val, formatFn, row) {
   formatted = formatted.split('"').join('""');
 
   return `"${formatted}"`;
-}
-
-async function downloadTable(e) {
-  Loading.show({
-    message: "Loading...",
-    spinner: QSpinnerGears,
-  });
-  const { page, rowsPerPage, sortBy, descending } = tableRef.value.pagination;
-  const filter = tableRef.value.filter;
-  const params = {
-    page: page,
-    limit: "all",
-    q: filter,
-    sortBy: sortBy,
-    orderBy: descending,
-  };
-  if (props.extraFilter) {
-    for (let [key, value] of Object.entries(props.extraFilter)) {
-      params[key] = props.extraFilter[key];
-    }
-  }
-  //console.log(tableRef.value);
-  if (props.type == "report") {
-    await apis
-      .postWithParam(
-        props.apiUrl,
-        props.reportData ?? {
-          from_date: moment(firstDay).format("YYYY-MM-DD"),
-          to_date: moment(lastDay).format("YYYY-MM-DD"),
-        },
-        { limit: totalLimit.value }
-      )
-      .then((res) => {
-        exportTable(res.data.data.data ?? res.data.data ?? res.data.res.data);
-      })
-      .finally(() => {
-        Loading.hide();
-      });
-  } else {
-    await apis
-      .getWithParam(props.apiUrl, params)
-      .then((res) => {
-        exportTable(res.data);
-      })
-      .finally(() => {
-        Loading.hide();
-      });
-  }
-}
-
-function exportTable(data) {
-  // naive encoding to csv format
-  const totalPoints = total.value
-    ? props.columns.map((col) => {
-        return wrapCsvValue(col.name == "points" ? `Total ${total.value}` : "");
-      })
-    : "";
-  const content = [
-    props.columns.map((col) => {
-      if (col.label !== "Actions") {
-        return wrapCsvValue(col.label);
-      }
-    }),
-  ]
-
-    .concat(
-      data.map((row, index) =>
-        props.columns
-          .map((col) =>
-            wrapCsvValue(
-              col.field == "index"
-                ? index + 1
-                : typeof col.field === "function"
-                ? col.field(row, index)
-                : row[col.field === void 0 ? col.name : col.field],
-              col.format,
-              row
-            )
-          )
-          .join(",")
-      )
-    )
-
-    .join("\r\n");
-  //console.log(content.concat("\n", totalPoints));
-  const status = exportFile(
-    `${props.title}-${formatDate(Date.now())}.csv`,
-    content.concat("\n", totalPoints),
-    "text/csv"
-  );
-
-  if (status !== true) {
-    $q.notify({
-      message: "Browser denied file download...",
-      color: "negative",
-      icon: "warning",
-    });
-  }
 }
 
 /////////// ***************************** ///////////
@@ -604,9 +378,8 @@ function getSelectedString() {
   console.log(rows.value);
   return selected.value.length === 0
     ? ""
-    : `${selected.value.length} record${
-        selected.value.length > 1 ? "s" : ""
-      } selected of ${rows.value.length}`;
+    : `${selected.value.length} record${selected.value.length > 1 ? "s" : ""
+    } selected of ${rows.value.length}`;
 }
 function onSelection({ rows, added }) {
   emit("selected", rows, added);

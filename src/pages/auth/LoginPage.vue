@@ -17,9 +17,9 @@
               <label class="lable-text">Email</label>
               <q-input outlined hide-bottom-space v-model="email"
                 :placeholder="$q.lang.authentication.signIn.email.placeHolder" :dense="dense" icon="las la-user" :rules="[
-  (val) => required(val, 'email'),
-  (val) => isEmail(val),
-]" :error="errors['email'] ? true : false" :error-message="serverValidationError(errors, 'email')">
+                  (val) => required(val, 'email'),
+                  (val) => isEmail(val),
+                ]" :error="errors['email'] ? true : false" :error-message="serverValidationError(errors, 'email')">
                 <template v-slot:append>
                   <q-icon name="las la-user geet-icon" />
                 </template>
@@ -28,8 +28,8 @@
             <div class="q-mb-md">
               <label class="lable-text">Password</label>
               <q-input outlined hide-bottom-space v-model="password" :placeholder="
-  $q.lang.authentication.signIn.password.placeHolder
-" :dense="dense" :type="isPwd ? 'password' : 'text'" :rules="[(val) => required(val, 'password')]"
+                $q.lang.authentication.signIn.password.placeHolder
+              " :dense="dense" :type="isPwd ? 'password' : 'text'" :rules="[(val) => required(val, 'password')]"
                 :error="errors['password'] ? true : false" :error-message="serverValidationError(errors, 'password')">
                 <template v-slot:append>
                   <div>
@@ -42,8 +42,8 @@
               <div class="q-mb-md">
                 <q-checkbox v-model="val" @click="rememberMe(val)" />
                 <b class="text-dark">{{
-    $q.lang.authentication.signIn.forgotPassword
-}}</b>
+                  $q.lang.authentication.signIn.forgotPassword
+                }}</b>
               </div>
             </div>
             <q-btn color="primary" :label="$q.lang.authentication.signIn.btn1" type="submit" class="social_login_btn" />
@@ -100,7 +100,9 @@ function onSubmit() {
   store
     .signIn(data)
     .then((res) => {
-      router.push({ name: 'home' })
+      if (res.success) {
+        router.push({ name: 'home' })
+      }
     })
     .finally(() => {
       Loading.hide();

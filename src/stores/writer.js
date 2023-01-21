@@ -21,7 +21,7 @@ export const useWriterStore = defineStore("writer", {
     async fetchAudioList(data) {
       return new Promise((resolve, reject) => {
         api
-          .post(TRANSCRIPTION.LIST_AUDIO, data)
+          .getWithParam(TRANSCRIPTION.LIST_AUDIO, data)
           .then((res) => {
             if (res.success) {
               resolve(res);

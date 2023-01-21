@@ -34,7 +34,7 @@
 <script setup>
 import { computed, defineAsyncComponent, ref } from "vue";
 import { useAuthStore } from "src/stores/auth";
-import { DOCTOR, TRANSCRIPTION } from "src/apis/constant";
+import { DOCTOR, RECEPT, TRANSCRIPTION } from "src/apis/constant";
 const userTableComponent = ref();
 const tableComponent = defineAsyncComponent(() =>
   import("src/components/table-component")
@@ -43,7 +43,6 @@ const store = useAuthStore();
 const user = computed(() => {
   return store.getUser;
 });
-console.log(user.value.user_type_id);
 const columns = ref([]);
 const api = ref("");
 if (user.value.user_type_id == 3) {
@@ -82,6 +81,32 @@ if (user.value.user_type_id == 3) {
   ];
 } else if (user.value.user_type_id == 2) {
   api.value = DOCTOR.LIST_HOSPITAL;
+
+  columns.value = [
+    {
+      name: "id",
+      label: "NO.",
+      field: "index",
+      // sortable: true,
+      align: "left",
+    },
+    {
+      name: "Name",
+      required: true,
+      label: "Name",
+      align: "left",
+      field: (row) => row.hospitalname.name,
+      format: (val) => `${val}`,
+      // sortable: true,
+    },
+    {
+      name: "actions",
+      label: "Actions",
+      field: "actions",
+    },
+  ];
+} else if (user.value.user_type_id == 4) {
+  api.value = RECEPT.LIST_HOSPITAL;
 
   columns.value = [
     {

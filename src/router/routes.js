@@ -195,6 +195,20 @@ const routes = [
           requiresAuth: true,
         },
       },
+      {
+        path: "transcription/:slug",
+        name: "transcription-list",
+        component: () =>
+          import(
+            /* webpackChunkName: "transcription" */
+            /* webpackMode: "lazy" */
+            /* webpackInclude: /\.vue$/ */
+            "src/pages/receptionist/listScript.vue"
+          ),
+        meta: {
+          requiresAuth: true,
+        },
+      },
     ],
   },
 

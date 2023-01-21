@@ -10,7 +10,7 @@
           {{ props.items[0].ts_type }}
         </div>
       </div>
-      <div class="hospital_name">
+      <div class="hospital_name" v-if="props.items[0].hospitalname">
         {{ props.items[0].hospitalname.name }}
       </div>
     </div>
