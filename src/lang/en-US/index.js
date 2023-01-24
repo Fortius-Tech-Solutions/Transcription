@@ -25,11 +25,7 @@ export default {
       hospital: "Hospital",
       doctor: "Doctor",
       receptionist: "Receptionist",
-      reports: "Reports",
-      libraryReport: "Behavioral Library Report",
-      login: "Patients Login Report",
-      vibe: "Vibe O Meter",
-      allVibe: "Vibe O Meter (All)",
+      transcription: 'Transcription'
 
     },
   },

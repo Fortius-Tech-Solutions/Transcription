@@ -106,6 +106,7 @@ function clearFilter() {
   fetchReportData.value = {};
   userTableComponent.value.refresh();
 }
+
 </script>
 
 <style lang="scss" scoped>

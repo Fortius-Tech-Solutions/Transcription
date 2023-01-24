@@ -351,6 +351,8 @@ async function onRequest(events) {
         loading.value = false;
       });
   } else {
+    params.from_date = date.formatDate(props.reportData?.from_date, 'YYYY-MM-DD');
+    params.to_date = date.formatDate(props.reportData?.to_date, 'YYYY-MM-DD');
     await apis
       .getWithParam(props.apiUrl, params)
       .then((res) => {

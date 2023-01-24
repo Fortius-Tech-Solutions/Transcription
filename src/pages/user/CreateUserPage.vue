@@ -78,7 +78,7 @@
   </q-form>
 </template>
 <script setup>
-import { copyToClipboard } from "quasar";
+import { uid, copyToClipboard } from 'quasar'
 import { ref, computed, onMounted, defineAsyncComponent } from "vue";
 import { USER } from "src/apis/constant";
 import { userStore } from "src/stores/users";
@@ -230,11 +230,14 @@ async function onSubmit() {
   if (password.value) {
     formData.append("password", password.value);
   }
-  if (imgSrc.value) {
+
+  if (imgSrc.value.startsWith('https://')) {
+    formData.append("avtar", imgSrc.value);
+  } else if (imgSrc.value) {
     const response = await fetch(imgSrc.value);
     const blob = await response.blob();
-    const image = new File([blob], "image.png");
-    formData.append("avtar", image, "image.png");
+    const image = new File([blob], `image${uid()}.png`);
+    formData.append("avtar", image, `image${uid()}.png`);
   }
 
   if (route.name == "edit-user") {

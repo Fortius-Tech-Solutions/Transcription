@@ -3,7 +3,7 @@ const hospitalPrefix = "/hospital";
 const writerPrefix = "/writer";
 const doctorPrefix = '/doctor';
 const receptionistPrefix = '/receptionist'
-
+const adminTranscription = '/admin/transcript-list'
 
 export const USER = {
   LIST: userPrefix,
@@ -51,3 +51,7 @@ export const RECEPT = {
   LIST_SCRIPT: `${receptionistPrefix}/:id`,
   DOWNLOAD: `${receptionistPrefix}/pdf-data`,
 };
+
+export const ADMIN_TRANS = {
+  LIST: adminTranscription,
+}

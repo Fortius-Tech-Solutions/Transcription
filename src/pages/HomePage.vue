@@ -8,23 +8,12 @@
 
     <div class="q-pa-md main-wrapper" v-if="user.user_type_id !== 1">
       <div class="custom-tabel-box">
-        <table-component
-          v-if="user.user_type_id !== 1"
-          ref="userTableComponent"
-          :apiUrl="api ? api : null"
-          :columns="columns"
-          rowKey="id"
-          title="List"
-          createUrl="user/create"
-          @delete="deleteItem"
-          @edit="editItem"
-          @view="showItem"
-          @lock="lockUser"
-          :extra-filter="{
+        <table-component v-if="user.user_type_id !== 1" ref="userTableComponent" :apiUrl="api ? api : null"
+          :columns="columns" rowKey="id" title="List" createUrl="user/create" @delete="deleteItem" @edit="editItem"
+          @view="showItem" @lock="lockUser" :extra-filter="{
             accountStatus: status,
             group: userGroup,
-          }"
-        >
+          }">
         </table-component>
       </div>
     </div>

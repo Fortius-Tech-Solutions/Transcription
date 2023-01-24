@@ -111,6 +111,8 @@ const routes = [
       masterRoutes("user", "user", "user", "CreateUserPage", "UserDashboard"),
       // Hospital Routes
       masterRoutes("hospital", "hospital", "hospital", "CreateHospitalPage", "HospitalDashboard"),
+      // Transcription Routes
+      masterRoutes("transcription", "transcription", "transcription", "CreateTranscriptionPage", "TranscriptionDashboard"),
       {
         path: "/",
         name: "home",
