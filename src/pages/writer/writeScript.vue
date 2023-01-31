@@ -10,102 +10,50 @@
         Transcription
       </h3>
     </div>
-    <AudioPlayer
-      :option="{
-        src: data.audio_filepath,
-        title: data.audio_name,
-        coverImage: '',
-        coverRotate: '',
-        progressBarColor: '',
-        indicatorColor: '',
-      }"
-    />
+    <AudioPlayer :option="{
+      src: data.audio_filepath,
+      title: data.audio_name,
+      coverImage: '',
+      coverRotate: '',
+      progressBarColor: '',
+      indicatorColor: '',
+    }" />
+
     <div class="q-pa-md main-wrapper">
       <div class="bg-box">
         <label for=""> Patient Name</label>
-        <q-input
-          outlined
-          v-model="patient_name"
-          :dense="dense"
-          placeholder="Please Enter Patient Name"
-          class="create-user-field-box"
-          :rules="[(val) => required(val, 'Patient Name')]"
-          :error="errors.length > 0 ? true : false"
-          :error-message="serverValidationError(errors, 'Patient Name')"
-          :readonly="router.currentRoute.value.name == 'confirm-script'"
-        />
-        <q-select
-          v-model="selectModel"
-          :options="options"
-          :dense="dense"
-          class="q-ml-sm q-mr-sm"
-          outlined
-          hide-bottom-space
-          :readonly="router.currentRoute.value.name == 'confirm-script'"
-        />
+        <q-input outlined v-model="patient_name" :dense="dense" placeholder="Please Enter Patient Name"
+          class="create-user-field-box" :rules="[(val) => required(val, 'Patient Name')]"
+          :error="errors.length > 0 ? true : false" :error-message="serverValidationError(errors, 'Patient Name')"
+          :readonly="router.currentRoute.value.name == 'confirm-script'" />
+        <q-select v-model="selectModel" :options="options" :dense="dense" class="q-ml-sm q-mr-sm" outlined
+          hide-bottom-space :readonly="router.currentRoute.value.name == 'confirm-script'" />
         <div class="q-mt-lg">
           <label for="">Gender</label>
           <div class="q-gutter-sm">
-            <q-radio
-              v-model="gender"
-              val="male"
-              label="Male"
-              :disable="router.currentRoute.value.name == 'confirm-script'"
-            />
-            <q-radio
-              v-model="gender"
-              val="female"
-              label="Female"
-              :disable="router.currentRoute.value.name == 'confirm-script'"
-            />
-            <q-radio
-              v-model="gender"
-              val="other"
-              label="Don't want to Disclose"
-              :disable="router.currentRoute.value.name == 'confirm-script'"
-            />
+            <q-radio v-model="gender" val="male" label="Male"
+              :disable="router.currentRoute.value.name == 'confirm-script'" />
+            <q-radio v-model="gender" val="female" label="Female"
+              :disable="router.currentRoute.value.name == 'confirm-script'" />
+            <q-radio v-model="gender" val="other" label="Don't want to Disclose"
+              :disable="router.currentRoute.value.name == 'confirm-script'" />
           </div>
         </div>
         <div class="q-mt-lg">
           <label for="">Transcription</label>
-          <q-input
-            type="textarea"
-            :readonly="router.currentRoute.value.name == 'confirm-script'"
-            outlined
-            v-model="transcription"
-            :dense="dense"
-            placeholder="Please Enter Transcription"
-            :rules="[(val) => required(val, 'Transcription')]"
-            :error="errors.length > 0 ? true : false"
-            :error-message="serverValidationError(errors, 'Transcription')"
-          />
+          <q-input type="textarea" :readonly="router.currentRoute.value.name == 'confirm-script'" outlined
+            v-model="transcription" :dense="dense" placeholder="Please Enter Transcription"
+            :rules="[(val) => required(val, 'Transcription')]" :error="errors.length > 0 ? true : false"
+            :error-message="serverValidationError(errors, 'Transcription')" />
         </div>
       </div>
-      <div
-        class="form_comon_btn q-mt-md q-mr-md q-mb-md"
-        v-if="router.currentRoute.value.name !== 'confirm-script'"
-      >
+      <div class="form_comon_btn q-mt-md q-mr-md q-mb-md" v-if="router.currentRoute.value.name !== 'confirm-script'">
         <q-btn outline color="primary" label="Cancel" @click="cancel" />
-        <q-btn
-          color="primary"
-          label="Save as Draft"
-          class="q-ml-md"
-          @click="onSubmit('Draft')"
-        />
-        <q-btn
-          color="primary"
-          label="Save & Confirmed"
-          class="q-ml-md"
-          @click="onSubmit('Confirmed')"
-        />
+        <q-btn color="primary" label="Save as Draft" class="q-ml-md" @click="onSubmit('Draft')" />
+        <q-btn color="primary" label="Save & Confirmed" class="q-ml-md" @click="onSubmit('Confirmed')" />
       </div>
       <div v-else class="form_comon_btn q-mt-md q-mr-md q-mb-md">
-        <q-btn
-          color="primary"
-          label="Confirmed"
-          class="q-ml-md"
-          @click="confirmScript()"
-        />
+        <q-btn color="primary" label="Confirmed" class="q-ml-md" @click="confirmScript()" />
       </div>
     </div>
   </q-form>
@@ -137,6 +85,7 @@ const user = computed(() => authStore.getUser);
 const draftStatus = computed(() => {
   return store.getDraftStatus;
 });
+
 const data = computed(() => {
   if (router.currentRoute.value.name == "confirm-script") {
     return doctorStore.getData;
@@ -242,6 +191,7 @@ function cancel() {
 <style lang="scss">
 // $
 @import "vue3-audio-player/dist/style.css";
+
 .pass-feild {
   @include hr-vr-center-between;
 }

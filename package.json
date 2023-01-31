@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.15.9",
+    "@quasar/quasar-ui-qmediaplayer": "^1.4.1",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "dotenv": "^16.0.1",

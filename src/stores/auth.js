@@ -4,6 +4,7 @@ import notification from "src/boot/notification";
 import { LocalStorage } from "quasar";
 
 
+
 //TODO Prefix set for API
 const API_PREFIX_1 = "auth"; // API_PREFIX_1 for auth
 const LOGIN = API_PREFIX_1 + "/login";
@@ -57,10 +58,14 @@ export const useAuthStore = defineStore("auth", {
 
     async logout() {
       return new Promise((resolve, reject) => {
-        api.get(LOGOUT);
-        LocalStorage.remove("access_token");
-        LocalStorage.remove("user");
-        LocalStorage.remove("email");
+        api.get(LOGOUT).then((res) => {
+          LocalStorage.remove("access_token");
+          LocalStorage.remove("user");
+          LocalStorage.remove("email");
+          resolve(res);
+        }).catch((error) => {
+          reject(error);
+        });
       });
     },
 
