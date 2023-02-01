@@ -41,9 +41,14 @@
         </div>
         <div class="q-mt-lg">
           <label for="">Transcription</label>
-          <q-input type="textarea" :readonly="router.currentRoute.value.name == 'confirm-script'" outlined
+          <!-- <q-input type="textarea" :readonly="router.currentRoute.value.name == 'confirm-script'" outlined
             v-model="transcription" :dense="dense" placeholder="Please Enter Transcription"
             :rules="[(val) => required(val, 'Transcription')]" :error="errors.length > 0 ? true : false"
+            :error-message="serverValidationError(errors, 'Transcription')" /> -->
+          <q-editor v-model="transcription" :dense="dense"
+            :readonly="router.currentRoute.value.name == 'confirm-script'" :definitions="{
+              bold: { label: 'Bold', icon: null, tip: 'My bold tooltip' }
+            }" :rules="[(val) => required(val, 'Transcription')]" :error="errors.length > 0 ? true : false"
             :error-message="serverValidationError(errors, 'Transcription')" />
         </div>
       </div>
