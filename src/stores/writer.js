@@ -6,7 +6,8 @@ import notification from "src/boot/notification";
 export const useWriterStore = defineStore("writer", {
   state: () => ({
     data: LocalStorage.getItem("data") ?? [],
-    draft: ''
+    draft: '',
+    audioList: []
   }),
   getters: {
     getData() {
@@ -14,6 +15,9 @@ export const useWriterStore = defineStore("writer", {
     },
     getDraftStatus() {
       return this.draft
+    },
+    getAudioList() {
+      return this.audioList
     }
   },
 
@@ -24,6 +28,9 @@ export const useWriterStore = defineStore("writer", {
           .getWithParam(TRANSCRIPTION.LIST_AUDIO, data)
           .then((res) => {
             if (res.success) {
+              const audioList = this.getAudioList;
+              const audio = audioList.concat(...res.data.data);
+              this.audioList = audio;
               resolve(res);
             }
             resolve(res);
