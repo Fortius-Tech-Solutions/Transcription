@@ -24,8 +24,6 @@
             <q-icon name="search" />
           </template>
         </q-input>
-
-
       </template>
       <template #body-cell-image="props">
         <q-td key="image" :props="props">
@@ -56,7 +54,8 @@
           <q-btn v-if="
             (route.name == 'user-dashboard' && userTypeModel.value == 2) ||
             userTypeModel.value == 4
-          " color="primary" label="Assign Hospital" size="sm" no-caps @click="assign(props.row, 'assign-hospital')" />
+          " color="primary" label="Assign Hospital" size="sm" no-caps
+            @click="assign(props.row, 'assign-hospital')" />
           <q-btn v-if="
             route.name == 'hospital-dashboard' || userTypeModel.value == 3
           " color="primary" label="Assign Doctor" size="sm" no-caps @click="assign(props.row, 'assign-doctor')" />
@@ -73,8 +72,14 @@
             name: 'confirm-transcript',
             params: { slug: props.row?.hospital_id },
           }" size="sm" no-caps></q-btn>
-          <q-btn v-if="user.user_type_id == 3" color="primary" label="Audio"
-            :to="{ name: 'audio-list', params: { slug: props.row?.doctor_id } }" size="sm" no-caps></q-btn>
+          <!-- <q-btn
+              v-if="user.user_type_id == 3"
+              color="primary"
+              label="Audio"
+              :to="{ name: 'audio-list', params: { slug: props.row?.doctor_id } }"
+              size="sm"
+              no-caps
+            ></q-btn> -->
           <q-btn v-if="user.user_type_id == 4 && route.name !== 'transcription-list'" color="primary"
             label="Transcription" size="sm" no-caps :to="{
               name: 'transcription-list',
@@ -94,12 +99,7 @@
   <q-dialog v-model="deleteDialog" class="alert-popup text-center">
     <q-card class="comman-close-popup">
       <q-card-section class="">
-        <div class="
-            alert-popup-content
-            create_project_popup
-            q_custum_popup
-            new_common_popup_btn
-          ">
+        <div class="alert-popup-content create_project_popup q_custum_popup new_common_popup_btn">
           <div class="img-area">
             <div class="close-top-posi">
               <i class="las la-times" v-close-popup></i>
@@ -351,8 +351,11 @@ async function onRequest(events) {
         loading.value = false;
       });
   } else {
-    params.from_date = date.formatDate(props.reportData?.from_date, 'YYYY-MM-DD');
-    params.to_date = date.formatDate(props.reportData?.to_date, 'YYYY-MM-DD');
+    params.from_date = date.formatDate(
+      props.reportData?.from_date,
+      "YYYY-MM-DD"
+    );
+    params.to_date = date.formatDate(props.reportData?.to_date, "YYYY-MM-DD");
     await apis
       .getWithParam(props.apiUrl, params)
       .then((res) => {

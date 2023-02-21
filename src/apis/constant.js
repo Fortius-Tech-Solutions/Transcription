@@ -14,7 +14,7 @@ export const USER = {
 };
 
 export const HOSPITAL = {
-  LIST: hospitalPrefix,
+  LIST: `${hospitalPrefix}/hospital-list`,
   SAVE: hospitalPrefix,
   UPDATE: `${hospitalPrefix}/:id`,
   SHOW: `${hospitalPrefix}/:id`,
@@ -23,8 +23,8 @@ export const HOSPITAL = {
 };
 
 export const TRANSCRIPTION = {
-  LIST: writerPrefix,
-  LIST_AUDIO: `${writerPrefix}/audio-list`,
+  LIST: `${writerPrefix}/dashboard`,
+  LIST_AUDIO: `${writerPrefix}/list`,
   SAVE: `${writerPrefix}/:id`,
   UPDATE: `${writerPrefix}/:id`,
   SHOW: `${writerPrefix}/:id`,
@@ -36,8 +36,8 @@ export const TRANSCRIPTION = {
 
 export const DOCTOR = {
   LIST: doctorPrefix,
-  LIST_HOSPITAL: `${doctorPrefix}/hospital-list`,
-  LIST_SCRIPT: `${doctorPrefix}/script-list`,
+  LIST_HOSPITAL: `${doctorPrefix}/status-data`,
+  LIST_SCRIPT: `${doctorPrefix}/list`,
   CONFIRM: `${doctorPrefix}/confirmed-transcripting/:id`,
   DOWNLOAD: `${doctorPrefix}/pdf-data`,
   SAVE: `${doctorPrefix}/:id`,

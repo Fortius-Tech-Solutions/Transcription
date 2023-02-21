@@ -128,6 +128,34 @@ const routes = [
         },
       },
       {
+        path: "/writer-dashboard",
+        name: "writer-dashboard",
+        component: () =>
+          import(
+            /* webpackChunkName: "writer-dashboard" */
+            /* webpackMode: "lazy" */
+            /* webpackInclude: /\.vue$/ */
+            "src/pages/writer/writer-dashboard.vue"
+          ),
+        meta: {
+          requiresAuth: true,
+        },
+      },
+      {
+        path: "/doctor-dashboard",
+        name: "doctor-dashboard",
+        component: () =>
+          import(
+            /* webpackChunkName: "doctor-dashboard" */
+            /* webpackMode: "lazy" */
+            /* webpackInclude: /\.vue$/ */
+            "src/pages/doctor/doctor-dashboard.vue"
+          ),
+        meta: {
+          requiresAuth: true,
+        },
+      },
+      {
         path: "/:slug",
         name: "component",
         component: () =>

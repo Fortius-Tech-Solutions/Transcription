@@ -3,7 +3,7 @@
     <div class="container">
       <section class="profile-sec q-mb-md">
         <div class="home_user_header">
-          <h3 class="comman-title">{{ slug? "Update": "Create" }} User</h3>
+          <h3 class="comman-title">{{ slug ? "Update" : "Create" }} User</h3>
         </div>
         <div class="profile-card">
           <div class="text-center">
@@ -54,7 +54,7 @@
             </div>
             <div v-if="!slug" class="col-md-6 col-sm-12 col-12 edit-field mob-edit-pa mob_digit">
               <div class="pass-feild">
-                <label for="">Password </label>
+                <label class="lable-text q-mb-sm q-ml-sm q-mr-sm" for="">Password </label>
                 <q-btn label="Generate" @click="generate()" />
               </div>
               <q-input outlined hide-bottom-space v-model="password" :dense="dense" :rules="[
@@ -231,7 +231,7 @@ async function onSubmit() {
     formData.append("password", password.value);
   }
 
-  if (imgSrc.value.startsWith('https://')) {
+  if (imgSrc.value?.startsWith('https://')) {
     formData.append("avtar", imgSrc.value);
   } else if (imgSrc.value) {
     const response = await fetch(imgSrc.value);
@@ -348,5 +348,14 @@ h3.comman-title {
       height: $value-45;
     }
   }
+}
+
+.profile-card .q-field--auto-height .q-field__control,
+.profile-card .q-field--auto-height .q-field__native {
+  min-height: auto;
+}
+
+.profile-card .q-field__marginal {
+  height: auto;
 }
 </style>

@@ -7,7 +7,8 @@ export const useWriterStore = defineStore("writer", {
   state: () => ({
     data: LocalStorage.getItem("data") ?? [],
     draft: '',
-    audioList: []
+    audioList: [],
+    list: []
   }),
   getters: {
     getData() {
@@ -18,10 +19,31 @@ export const useWriterStore = defineStore("writer", {
     },
     getAudioList() {
       return this.audioList
+    },
+    getList() {
+      return this.list
     }
   },
 
   actions: {
+    async fetchList() {
+      return new Promise((resolve, reject) => {
+        api
+          .getWithParam(TRANSCRIPTION.LIST)
+          .then((res) => {
+            if (res.success) {
+              const list = this.getList;
+              const wrt = list.concat(...res.data);
+              this.list = wrt;
+              resolve(res);
+            }
+            resolve(res);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
     async fetchAudioList(data) {
       return new Promise((resolve, reject) => {
         api

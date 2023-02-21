@@ -1,28 +1,18 @@
 <template>
- <div>
+  <div>
     <div class="home_user_header">
       <h3 class="comman-title">Transcription List</h3>
     </div>
 
     <div class="q-pa-md main-wrapper">
       <div class="custom-tabel-box">
-        <table-component
-          ref="userTableComponent"
-          :apiUrl="ADMIN_TRANS.LIST"
-          :columns="columns"
-          rowKey="id"
-          title="List"
-          :reportData="fetchReportData"
-          @delete="deleteItem"
-          @edit="editItem"
-          @view="showItem"
-          @lock="lockUser"
+        <table-component ref="userTableComponent" :apiUrl="ADMIN_TRANS.LIST" :columns="columns" rowKey="id" title="List"
+          :reportData="fetchReportData" @delete="deleteItem" @edit="editItem" @view="showItem" @lock="lockUser"
           :extra-filter="{
             accountStatus: status,
             group: userGroup,
-          }"
-        >
-        <template v-slot:filter>
+          }">
+          <template v-slot:filter>
             <q-btn color="primary" @click="calender = true" :label="
               dateRange?.from
                 ? dateRange.from + ' to ' + dateRange.to
@@ -44,12 +34,12 @@
 <script setup>
 import { computed, defineAsyncComponent, ref } from "vue";
 import { hospitalStore } from "src/stores/hospital";
-import {ADMIN_TRANS } from "src/apis/constant";
+import { ADMIN_TRANS } from "src/apis/constant";
 import { useRouter } from "vue-router";
 import notification from "src/boot/notification";
 
 import moment from "moment";
-import { Loading, QSpinnerGears } from "quasar";
+import { Loading, QSpinnerGears, date } from "quasar";
 
 const router = useRouter();
 const store = hospitalStore();
@@ -97,7 +87,7 @@ const columns = [
     name: "Doctor Name",
     align: "center",
     label: "Doctor Name",
-    field: (row) => row.doctorname.first_name+' '+row.doctorname.last_name,
+    field: (row) => row.doctorname.first_name + ' ' + row.doctorname.last_name,
     format: (val) => `${val}`,
     // sortable: true,
   },
@@ -113,7 +103,7 @@ const columns = [
     name: "created at",
     align: "center",
     label: "Created At",
-    field: (row) => row.created_at,
+    field: (row) => date.formatDate(row.created_at, "DD-MM-YYYY"),
     format: (val) => `${val}`,
     // sortable: true,
   },

@@ -2,46 +2,89 @@
   <q-layout view="lHh Lpr lFf">
     <q-header elevated class="custom_header">
       <q-toolbar>
-        <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
+        <!-- <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" /> -->
 
-        <q-toolbar-title> </q-toolbar-title>
-        <div class="header-profile-box">
-          <q-avatar v-if="user.avtar" rounded>
-            <img :src="user.avtar">
-          </q-avatar>
-          <div v-else class="logo-text">{{ profileText }}</div>
-          <div class="profile-user-name q-ml-sm">
-            <h5>{{ user.first_name }}&nbsp; {{ user.last_name }}</h5>
+        <!-- <q-toolbar-title> </q-toolbar-title> -->
+
+        <div>
+          <a href="#" class="header_logo"><img src="~assets/images/logo.png" alt="" />
+          </a>
+        </div>
+        <div>
+          <ul class="header_nav">
+            <li v-if="store.isSuperAdmin">
+              <router-link :to="{ name: 'home' }">{{ $q.lang.mainLayout.sidebar.home }}</router-link>
+            </li>
+            <li v-if="store.isSuperAdmin">
+              <router-link :to="{ name: 'user-dashboard' }" icon="las la-users">{{ $q.lang.mainLayout.sidebar.users
+              }}</router-link>
+            </li>
+            <li v-if="store.isSuperAdmin">
+              <router-link :to="{ name: 'hospital-dashboard' }">{{ $q.lang.mainLayout.sidebar.hospital }}</router-link>
+            </li>
+            <li v-if="store.isSuperAdmin">
+              <router-link :to="{ name: 'transcription-dashboard' }">{{ $q.lang.mainLayout.sidebar.transcription
+              }}</router-link>
+            </li>
+          </ul>
+          <!-- <q-list>
+                            <q-list class="sidbar-collaps-right-border">
+                              <q-expansion-item :to="{ name: 'home' }" icon="home" :label="$q.lang.mainLayout.sidebar.home"
+                                class="hide_arrow">
+                              </q-expansion-item>
+                              <q-expansion-item v-if="store.isSuperAdmin" :to="{ name: 'user-dashboard' }" icon="las la-users"
+                                :label="$q.lang.mainLayout.sidebar.users" class="hide_arrow">
+                              </q-expansion-item>
+                              <q-expansion-item v-if="store.isSuperAdmin" :label="$q.lang.mainLayout.sidebar.hospital"
+                                icon="las la-hospital-alt" class="hide_arrow" :to="{ name: 'hospital-dashboard' }">
+                              </q-expansion-item>
+                              <q-expansion-item v-if="store.isSuperAdmin" :label="$q.lang.mainLayout.sidebar.transcription"
+                                icon="las la-hospital-alt" class="hide_arrow" :to="{ name: 'transcription-dashboard' }">
+                              </q-expansion-item>
+                            </q-list>
+                          </q-list> -->
+        </div>
+
+        <div class="header_col3">
+          <div class="header-profile-box">
+            <q-avatar v-if="user.avtar" rounded>
+              <img :src="user.avtar">
+            </q-avatar>
+            <div v-else class="logo-text">{{ profileText }}</div>
+            <div class="profile-user-name q-ml-sm">
+              <h5>{{ user.first_name }}&nbsp; {{ user.last_name }}</h5>
+            </div>
+          </div>
+          <div class="q-ml-sm">
+            <q-btn dense color="primary" :label="$q.lang.mainLayout.profileDropdown.label3" @click="logout" />
           </div>
         </div>
-        <div class="q-ml-sm">
-          <q-btn flat dense round color="primary" :label="$q.lang.mainLayout.profileDropdown.label3" @click="logout" />
-        </div>
+
       </q-toolbar>
     </q-header>
 
     <!-- <Sidebar /> -->
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
-      <q-list>
-        <q-item-label header class="logo_sidebar">
-          <img src="~assets/images/logo.png" alt="" />
-        </q-item-label>
-        <q-list class="sidbar-collaps-right-border">
-          <q-expansion-item :to="{ name: 'home' }" icon="home" :label="$q.lang.mainLayout.sidebar.home"
-            class="hide_arrow">
-          </q-expansion-item>
-          <q-expansion-item v-if="store.isSuperAdmin" :to="{ name: 'user-dashboard' }" icon="las la-users"
-            :label="$q.lang.mainLayout.sidebar.users" class="hide_arrow">
-          </q-expansion-item>
-          <q-expansion-item v-if="store.isSuperAdmin" :label="$q.lang.mainLayout.sidebar.hospital"
-            icon="las la-hospital-alt" class="hide_arrow" :to="{ name: 'hospital-dashboard' }">
-          </q-expansion-item>
-          <q-expansion-item v-if="store.isSuperAdmin" :label="$q.lang.mainLayout.sidebar.transcription"
-            icon="las la-hospital-alt" class="hide_arrow" :to="{ name: 'transcription-dashboard' }">
-          </q-expansion-item>
-        </q-list>
-      </q-list>
-    </q-drawer>
+    <!-- <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
+                                                                                <q-list>
+                                                                                  <q-item-label header class="logo_sidebar">
+                                                                                    <img src="~assets/images/logo.png" alt="" />
+                                                                                  </q-item-label>
+                                                                                  <q-list class="sidbar-collaps-right-border">
+                                                                                    <q-expansion-item :to="{ name: 'home' }" icon="home" :label="$q.lang.mainLayout.sidebar.home"
+                                                                                      class="hide_arrow">
+                                                                                    </q-expansion-item>
+                                                                                    <q-expansion-item v-if="store.isSuperAdmin" :to="{ name: 'user-dashboard' }" icon="las la-users"
+                                                                                      :label="$q.lang.mainLayout.sidebar.users" class="hide_arrow">
+                                                                                    </q-expansion-item>
+                                                                                    <q-expansion-item v-if="store.isSuperAdmin" :label="$q.lang.mainLayout.sidebar.hospital"
+                                                                                      icon="las la-hospital-alt" class="hide_arrow" :to="{ name: 'hospital-dashboard' }">
+                                                                                    </q-expansion-item>
+                                                                                    <q-expansion-item v-if="store.isSuperAdmin" :label="$q.lang.mainLayout.sidebar.transcription"
+                                                                                      icon="las la-hospital-alt" class="hide_arrow" :to="{ name: 'transcription-dashboard' }">
+                                                                                    </q-expansion-item>
+                                                                                  </q-list>
+                                                                                </q-list>
+                                                                              </q-drawer> -->
 
     <q-page-container>
       <router-view v-slot="{ Component, route }" :key="$route.fullPath">

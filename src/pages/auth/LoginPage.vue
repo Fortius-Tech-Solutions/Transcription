@@ -51,8 +51,8 @@
             <div class="text-center">
               <p class="login-bottom-text">
                 <!-- <router-link :to="{ name: 'forgot-password' }">{{
-                  $q.lang.authentication.signIn.subtitle4
-                }}</router-link> -->
+                          $q.lang.authentication.signIn.subtitle4
+                        }}</router-link> -->
               </p>
             </div>
           </div>
@@ -64,7 +64,7 @@
 </template>
 
 <script setup>
-import { defineAsyncComponent, ref } from "vue";
+import { defineAsyncComponent, ref, computed } from "vue";
 
 import useServerError from "src/composables/useServerError";
 import { useAuthStore } from "src/stores/auth";
@@ -82,7 +82,9 @@ const email = ref("");
 const password = ref("");
 const store = useAuthStore();
 const router = useRouter();
-
+const user = computed(() => {
+  return store.getUser;
+});
 function rememberMe(val) {
   console.log(val);
 }
@@ -101,7 +103,13 @@ function onSubmit() {
     .signIn(data)
     .then((res) => {
       if (res.success) {
-        router.push({ name: 'home' })
+        if (user.value.user_type_id == 3) {
+          router.push({ name: 'writer-dashboard' })
+        } else if (user.value.user_type_id == 2) {
+          router.push({ name: 'doctor-dashboard' })
+        } else {
+          router.push({ name: 'home' })
+        }
       }
     })
     .finally(() => {

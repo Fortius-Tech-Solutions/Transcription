@@ -14,6 +14,7 @@
           <div class="col1">
             <div class="td_col1">Audio Name</div>
             <div class="td_col2">Patient Name</div>
+            <div class="td_col3">Hospital Name</div>
           </div>
           <div class="col2">Action</div>
         </div>
@@ -38,6 +39,10 @@
                   </div>
                   <div class="audo_patient_name">
                     <p><b>{{ item.patient_name }}</b></p>
+
+                  </div>
+                  <div class="audo_hospital_name">
+                    <p>{{ item.hospital_name }}</p>
                   </div>
                 </div>
               </div>
@@ -46,13 +51,13 @@
                   padding="sm" @click="downloadPdf(item.id)" />
                 <q-btn v-if="item.name == 'Confirmed'" color="green" label="Publish" class="q-ml-sm"
                   @click="publishAudio(item)" />
-                <q-chip :color="
-                  item.name == 'Confirmed' || item.name == 'Published'
-                    ? 'green'
-                    : item.name == 'Pending'
-                      ? 'red'
-                      : 'yellow'
-                " :label="item.name" />
+                <!-- <q-chip :color="
+                                                  item.name == 'Confirmed' || item.name == 'Published'
+                                                    ? 'green'
+                                                    : item.name == 'Pending'
+                                                      ? 'red'
+                                                      : 'yellow'
+                                                " :label="item.name" /> -->
 
                 <q-btn round color="secondary" icon="las la-edit" class="q-ml-sm" padding="sm"
                   :disable="item.name !== 'Pending'" @click="setTranscription(item)" />
@@ -93,7 +98,7 @@ import AudioPlayer from "vue3-audio-player";
 import api from "src/apis/index";
 import { TRANSCRIPTION, DOCTOR } from "src/apis/constant";
 import { ref, computed, defineAsyncComponent } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { onBeforeRouteLeave, useRoute, useRouter } from "vue-router";
 import { useWriterStore } from "src/stores/writer";
 import { Loading, QSpinnerGears, date, LocalStorage } from "quasar";
 import moment from "moment";
@@ -109,7 +114,7 @@ const pdfData = ref([]);
 const calender = ref(false);
 const dateRange = ref(null);
 const store = useWriterStore();
-console.log(route.params.slug);
+
 Loading.show({
   spinner: QSpinnerGears,
   message: "Loading...",
@@ -119,13 +124,15 @@ const scrollList = ref(null);
 const currentPage = ref(1);
 const limit = ref(6);
 const loading = ref(true);
+
 function fetchAudio() {
   const data = {
     from_date: dateRange.value?.from,
     to_date: dateRange.value?.to,
     limit: limit.value,
     page: currentPage.value,
-    user_id: route.params.slug
+    userId: route.params.slug.split('/')[0],
+    statusId: route.params.slug.split('/')[1]
   };
   return store.fetchAudioList(data)
 }
@@ -213,19 +220,34 @@ function exportToPDF(data) {
 }
 
 function selectDate() {
+  Loading.show({
+    spinner: QSpinnerGears,
+    message: "Loading...",
+  });
   currentPage.value = 1;
+  loading.value = true;
   store.audioList = []
   onLoadAudioList()
-  console.log('Date Filter', dateRange.value);
 }
 function clearFilter() {
+  Loading.show({
+    spinner: QSpinnerGears,
+    message: "Loading...",
+  });
   dateRange.value = null;
   store.audioList = []
   currentPage.value = 1;
+  loading.value = true;
   scrollList.value.reset();
   scrollList.value.resume();
   scrollList.value.trigger();
 }
+
+onBeforeRouteLeave((to, from, next) => {
+  console.log("leave");
+  store.audioList = []
+  next();
+});
 </script>
 
 <style lang="scss">
@@ -407,10 +429,11 @@ h3.comman-title {
 }
 
 .audo_patient_name {
-  padding-left: 60px;
+  padding-left: 58px;
 
   display: flex;
   align-items: center;
+  min-width: 150px;
 
   p {
     margin: 0;
@@ -439,16 +462,31 @@ h3.comman-title {
 
   .col1 {
     display: flex;
-    width: 50%;
+    width: 80%;
 
     .td_col1 {
-      width: 73%;
+      width: 44%;
+    }
+
+    .td_col3 {
+      padding-left: 60px;
     }
   }
 
   .col2 {
     width: 14%;
     text-align: center;
+  }
+}
+
+.audo_hospital_name {
+  padding-left: 56px;
+
+  display: flex;
+  align-items: center;
+
+  p {
+    margin: 0;
   }
 }
 </style>

@@ -4,8 +4,8 @@
       <h3 class="comman-title">
         {{
           router.currentRoute.value.name !== "confirm-script"
-            ? "Create"
-            : "Confirm"
+          ? "Create"
+          : "Confirm"
         }}
         Transcription
       </h3>
@@ -26,8 +26,8 @@
           class="create-user-field-box" :rules="[(val) => required(val, 'Patient Name')]"
           :error="errors.length > 0 ? true : false" :error-message="serverValidationError(errors, 'Patient Name')"
           :readonly="router.currentRoute.value.name == 'confirm-script'" />
-        <q-select v-model="selectModel" :options="options" :dense="dense" class="q-ml-sm q-mr-sm" outlined
-          hide-bottom-space :readonly="router.currentRoute.value.name == 'confirm-script'" />
+        <q-select v-model="selectModel" :options="options" :dense="dense" class="" outlined hide-bottom-space
+          :readonly="router.currentRoute.value.name == 'confirm-script'" />
         <div class="q-mt-lg">
           <label for="">Gender</label>
           <div class="q-gutter-sm">
@@ -41,8 +41,8 @@
         </div>
         <div class="q-mt-lg">
           <label for="">Transcription</label>
-          <q-editor v-model="transcription" :dense="dense"
-            :readonly="router.currentRoute.value.name == 'confirm-script'" :definitions="{
+          <q-editor v-model="transcription" :dense="dense" :readonly="router.currentRoute.value.name == 'confirm-script'"
+            :definitions="{
               bold: { label: 'Bold', icon: null, tip: 'My bold tooltip' }
             }" :rules="[(val) => required(val, 'Transcription')]" :error="errors.length > 0 ? true : false"
             :error-message="serverValidationError(errors, 'Transcription')" />

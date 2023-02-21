@@ -18,6 +18,8 @@
               <h6>{{ item.TSType }}</h6>
             </div>
             <div class="right">
+
+              <div class="hospital_name">{{ item.hospital_name }}</div>
               <ul class="date_time">
                 <li>
                   <q-btn v-if="item.name == 'Published'" round color="primary" icon="las la-download" class="q-ml-sm"
@@ -85,8 +87,10 @@ const verifyList = ref("");
 const user = computed(() => {
   return authStore.getUser;
 });
+
 const data = ref({
-  user_id: user.value.id,
+  hospitalId: route.params.slug.split('/')[0],
+  statusId: route.params.slug.split('/')[1]
 });
 Loading.show({
   spinner: QSpinnerGears,
@@ -382,5 +386,12 @@ h3.comman-title {
   .q-btn__content {
     padding: 10px 0 0 11px;
   }
+}
+
+.hospital_name {
+  text-align: right;
+  font-size: 18px;
+  font-weight: 500;
+  color: #000;
 }
 </style>
