@@ -54,8 +54,7 @@
           <q-btn v-if="
             (route.name == 'user-dashboard' && userTypeModel.value == 2) ||
             userTypeModel.value == 4
-          " color="primary" label="Assign Hospital" size="sm" no-caps
-            @click="assign(props.row, 'assign-hospital')" />
+          " color="primary" label="Assign Hospital" size="sm" no-caps @click="assign(props.row, 'assign-hospital')" />
           <q-btn v-if="
             route.name == 'hospital-dashboard' || userTypeModel.value == 3
           " color="primary" label="Assign Doctor" size="sm" no-caps @click="assign(props.row, 'assign-doctor')" />
@@ -72,14 +71,6 @@
             name: 'confirm-transcript',
             params: { slug: props.row?.hospital_id },
           }" size="sm" no-caps></q-btn>
-          <!-- <q-btn
-              v-if="user.user_type_id == 3"
-              color="primary"
-              label="Audio"
-              :to="{ name: 'audio-list', params: { slug: props.row?.doctor_id } }"
-              size="sm"
-              no-caps
-            ></q-btn> -->
           <q-btn v-if="user.user_type_id == 4 && route.name !== 'transcription-list'" color="primary"
             label="Transcription" size="sm" no-caps :to="{
               name: 'transcription-list',
@@ -119,7 +110,7 @@
       </q-card-section>
     </q-card>
   </q-dialog>
-  <!--  -->
+  <!-- style="display: none" -->
   <div style="display: none">
     <pdfComponent v-if="showPDF" :items="pdfData" id="downloadPDF" />
   </div>
@@ -231,7 +222,6 @@ function exportToPDF(data) {
   });
 }
 async function downloadPDF(res) {
-  console.log(res);
   Loading.show({
     message: "Loading...",
     spinner: QSpinnerGears,
@@ -463,10 +453,7 @@ function assign(data, item) {
 }
 function setAudioWriter(data) {
   console.log(data);
-  // router.push({
-  //   name: "component",
-  //   params: { slug: "assign-writer" },
-  // });
+
 }
 
 const deleteData = ref("");

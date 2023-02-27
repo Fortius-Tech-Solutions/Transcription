@@ -201,7 +201,6 @@ function cancel() {
   @include box-vr-center;
 
   .add_user_grup_btn {
-    // background: #d9d9d9;
     width: 33.33%;
     height: $value-86;
     margin-right: $percentage-2;

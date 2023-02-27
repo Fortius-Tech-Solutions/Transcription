@@ -48,17 +48,9 @@
               </div>
               <div class="audio_list_action">
                 <q-btn v-if="item.name == 'Published'" round color="primary" icon="las la-download" class="q-ml-sm"
-                  padding="sm" @click="downloadPdf(item.id)" />
+                  padding="sm" @click="downloadPDF(item)" />
                 <q-btn v-if="item.name == 'Confirmed'" color="green" label="Publish" class="q-ml-sm"
                   @click="publishAudio(item)" />
-                <!-- <q-chip :color="
-                                                  item.name == 'Confirmed' || item.name == 'Published'
-                                                    ? 'green'
-                                                    : item.name == 'Pending'
-                                                      ? 'red'
-                                                      : 'yellow'
-                                                " :label="item.name" /> -->
-
                 <q-btn round color="secondary" icon="las la-edit" class="q-ml-sm" padding="sm"
                   :disable="item.name !== 'Pending'" @click="setTranscription(item)" />
               </div>
@@ -83,6 +75,7 @@
 
 
   </div>
+  <!-- style="display: none" -->
   <div style="display: none">
     <pdfComponent v-if="showPDF" :items="pdfData" id="downloadPDF" />
   </div>
@@ -183,26 +176,17 @@ function publishAudio(item) {
     });
 }
 
-function downloadPdf(id) {
+async function downloadPDF(res) {
   Loading.show({
-    spinner: QSpinnerGears,
     message: "Loading...",
+    spinner: QSpinnerGears,
   });
-  api
-    .getWithParam(DOCTOR.DOWNLOAD, { id: id })
-    .then((res) => {
-      if (res.success) {
-        console.log(res);
-        showPDF.value = true;
-        fetchPdf(res);
-      }
-    })
-    .catch((err) => console.log(err))
-    .finally(() => Loading.hide());
+  showPDF.value = true;
+  fetchPdf(res);
 }
 
 async function fetchPdf(res) {
-  pdfData.value = res.data;
+  pdfData.value.push(res);
   setTimeout(() => {
     exportToPDF(document.getElementById("downloadPDF"));
     Loading.hide();
@@ -398,13 +382,6 @@ h3.comman-title {
       }
     }
 
-    // .audio_heading {
-    //   margin: 0;
-    //   white-space: nowrap;
-    //   overflow: hidden;
-    //   text-overflow: ellipsis;
-    //   max-width: 30%;
-    // }
   }
 }
 

@@ -1,13 +1,6 @@
 <template>
   <q-layout view="hHh Lpr fFf">
-    <!-- Be sure to play with the Layout demo on docs -->
     <q-page-container>
-      <!-- <div class="q-pa-md">
-        <div class="authentication-container">
-          <logo />
-        </div>
-      </div> -->
-      <!-- This is where pages get injected -->
       <router-view :key="$route.fullPath" />
     </q-page-container>
   </q-layout>
@@ -32,22 +25,7 @@ const profileText = computed(() => {
     return "";
   }
 });
-// alert("sa");
-// import EssentialLink from "components/EssentialLink.vue";
-// import Sidebar from "src/layouts/MainSidebar.vue";
 
-// const linksList = [
-//   {
-//     title: "Home",
-//     icon: "home",
-//     link: "#",
-//   },
-//   {
-//     title: "User access control",
-//     icon: "las la-user",
-//     link: "#",
-//   },
-// ];
 const router = useRouter();
 const leftDrawerOpen = ref(false);
 
@@ -58,7 +36,7 @@ function changePassword() {
   router.push({ name: "change-password" });
 }
 function changeTwoFactor() {
-  // LocalStorage.set("isTwoFactor", false);
+
   router.push({ name: "change-two-factor-security" });
 }
 function logout() {

@@ -44,7 +44,7 @@ const columns = [
     name: "id",
     label: "NO.",
     field: "index",
-    // sortable: true,
+
     align: "left",
   },
   {
@@ -54,7 +54,7 @@ const columns = [
     align: "left",
     field: (row) => row.patient_name,
     format: (val) => `${val}`,
-    // sortable: true,
+
   },
   {
     name: "type",
@@ -62,7 +62,7 @@ const columns = [
     label: "Type",
     field: (row) => row.TSType,
     format: (val) => `${val}`,
-    // sortable: true,
+
   },
   {
     name: "audio name",
@@ -71,7 +71,7 @@ const columns = [
     align: "left",
     field: (row) => row.audio_name,
     format: (val) => `${val}`,
-    // sortable: true,
+
   },
   {
     name: "duration",
@@ -80,7 +80,7 @@ const columns = [
     align: "left",
     field: (row) => row.audio_duration,
     format: (val) => `${val}`,
-    // sortable: true,
+
   },
   {
     name: "actions",
@@ -109,6 +109,4 @@ function clearFilter() {
 
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

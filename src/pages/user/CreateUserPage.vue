@@ -168,7 +168,7 @@ async function setImage(e) {
   render.readAsDataURL(file);
 }
 
-// Check if current route is edit
+
 if (route.name == "edit-user") {
   Loading.show({
     message: "Loading...",
@@ -299,7 +299,7 @@ async function onSubmit() {
   @include box-vr-center;
 
   .add_user_grup_btn {
-    // background: #d9d9d9;
+
     width: 33.33%;
     height: $value-86;
     margin-right: $percentage-2;

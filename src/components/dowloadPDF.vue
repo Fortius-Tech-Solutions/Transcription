@@ -1,84 +1,85 @@
 <template>
-  <div class="patient_pdf_bg">
-    <div class="patient_pdf_head">
-      <div class="patient_info">
-        <div class="patient_pdf_head_name">
-          <h4>{{ props.items[0].patient_name }}</h4>
-          <span>{{ props.items[0].gender }}</span>
-        </div>
-        <div class="patient_type">
-          {{ props.items[0].ts_type }}
-        </div>
+  <div style="margin: 0 auto; width: 700px; background-color: #fff;">
+    <div style="display: flex;">
+      <div style="width: 550px; display: inline-block; padding-right: 25px; padding-top: 20px;">
+        <table
+          style="margin: 0; width: 100%; padding: 0; font-size: 14px; color: #000; font-family: Arial, Helvetica, sans-serif;">
+          <thead>
+            <tr>
+              <th style="text-align: left; border-bottom: 2px solid #4270c4; padding-bottom: 5px;">
+                <h2 style="margin: 0 0 2px 0; font-size: 18px; color: #4270c4;">{{ props.items[0].first_name }} {{
+                  props.items[0].last_name
+                }}</h2>
+                <!-- <p style="margin: 0 0 2px 0; font-size: 14px; color: #919191; font-weight: normal;">
+                  MBBS, MS (Masters in General Surgery), FRACS</p>
+                <p style="margin: 0 0 2px 0; font-size: 14px; color: #919191; font-weight: normal; color: #4270c4;">
+                  GENERAL &amp; COLORECTAL SURGERY | GI ENDOSCOPY</p>
+                <span style="color: #919191; font-weight: normal;">ABN 776 498 230 12</span> -->
+              </th>
+            </tr>
+          </thead>
+          <tbody style="padding-top: 20px;">
+            <tr>
+              <td style="padding-top: 20px;">
+                {{ date.formatDate(props.items[0].updated_at, 'DD-MM-YYYY') }}
+              </td>
+            </tr>
+            <tr>
+              <td style="font-weight: 600; padding-top: 20px;">RE: {{ props.items[0].patient_name }}</td>
+            </tr>
+            <tr>
+              <td style="padding-top: 5px;">DOB – </td>
+            </tr>
+            <tr>
+              <td style="padding-top: 5px;">Mob. - </td>
+            </tr>
+            <tr>
+              <td style="padding-top: 5px;">Medicare No. – </td>
+            </tr>
+            <tr>
+              <td style="padding-top: 20px; line-height: 24px;">{{ props.items[0].transcription }}</td>
+            </tr>
+            <tr>
+              <td style="padding-top: 30px;">Thank you for your ongoing care and referral.</td>
+            </tr>
+            <tr>
+              <td style="padding-top: 5px;">Kind Regards</td>
+            </tr>
+            <tr>
+              <td style="padding-top: 40px;">
+                <h5 style="margin: 0 0 5px 0; font-size: 16px;">{{ props.items[0].first_name }} {{
+                  props.items[0].last_name
+                }}
+                </h5>
+                <!-- <span>MBBS, MS (Masters in General Surgery), FRACS<br /> Provider No. 5191136K</span> -->
+              </td>
+            </tr>
+            <tr>
+              <td style="padding-top: 20px; line-height: 22px;">
+                All Correspondence for Shepparton:<br />
+                <a style="color: inherit; text-decoration: none;"
+                  href="mailto:reception@drgaurangshahsurgical.com.au">reception@drgaurangshahsurgical.com.au</a><br />
+                <a style="color: inherit; text-decoration: none;"
+                  href="mailto:reception@drgaurangshahsurgical.com.au">accounts@drgaurangshahsurgical.com.au</a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-      <div class="hospital_name" v-if="props.items[0].hospitalname">
-        {{ props.items[0].hospitalname.name }}
+      <div style="width: 200px; display: inline-block; padding: 15px; background-color: #ddeaf6; margin-top: 20px;">
+        <img style="max-width: 100%;" src="~src/assets/images/pdf-right-image.jpg" alt="">
       </div>
-    </div>
-    <div class="patient_pdf_detail">
-      <p>{{ props.items[0].transcription }}</p>
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
-import moment from "moment";
+import { date } from "quasar";
 
 const props = defineProps({
   items: Object,
 });
 </script>
 
-<style lang="scss">
-@page {
-  margin: 30px;
-}
-.patient_pdf_bg {
-  margin: 20px auto 0 auto;
-  width: 650px;
-  border: 1px solid #ccc;
-  padding: 20px;
-}
-.patient_pdf_detail {
-  display: block;
-  p {
-    text-align: justify;
-    margin: 0;
-  }
-}
-
-.patient_pdf_head_name {
-  display: flex;
-  h4 {
-    margin: 0;
-    font-size: 18px;
-    font-weight: 400;
-  }
-  span {
-    display: inline-block;
-    background: #ce3538;
-    color: #fff;
-    font-size: 14px;
-    padding: 2px 10px 0px 10px;
-    line-height: normal;
-    border-radius: 50px;
-    margin-left: 10px;
-  }
-}
-.patient_pdf_head {
-  margin-bottom: 15px;
-  display: flex;
-  justify-content: space-between;
-  .patient_type {
-    margin: 0;
-    font-size: 14px;
-    color: #d67206;
-    font-weight: 500;
-    margin-top: 5px;
-  }
-  .hospital_name {
-    font-weight: 500;
-    font-size: 16px;
-  }
-}
-</style>
+<style lang="scss"></style>

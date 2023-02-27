@@ -35,33 +35,6 @@ const user = computed(() => {
 });
 const columns = ref([]);
 const api = ref("");
-// if (user.value.user_type_id == 2) {
-//   api.value = DOCTOR.LIST_HOSPITAL;
-
-//   columns.value = [
-//     {
-//       name: "id",
-//       label: "NO.",
-//       field: "index",
-//       // sortable: true,
-//       align: "left",
-//     },
-//     {
-//       name: "Name",
-//       required: true,
-//       label: "Name",
-//       align: "left",
-//       field: (row) => row.hospitalname.name,
-//       format: (val) => `${val}`,
-//       // sortable: true,
-//     },
-//     {
-//       name: "actions",
-//       label: "Actions",
-//       field: "actions",
-//     },
-//   ];
-// } else
 if (user.value.user_type_id == 4) {
   api.value = RECEPT.LIST_HOSPITAL;
 
@@ -70,7 +43,7 @@ if (user.value.user_type_id == 4) {
       name: "id",
       label: "NO.",
       field: "index",
-      // sortable: true,
+
       align: "left",
     },
     {
@@ -80,7 +53,7 @@ if (user.value.user_type_id == 4) {
       align: "left",
       field: (row) => row.hospitalname.name,
       format: (val) => `${val}`,
-      // sortable: true,
+
     },
     {
       name: "actions",

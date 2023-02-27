@@ -55,7 +55,7 @@ const columns = [
     name: "id",
     label: "NO.",
     field: "index",
-    // sortable: true,
+
     align: "left",
   },
   {
@@ -65,7 +65,7 @@ const columns = [
     align: "left",
     field: (row) => row.patient_name,
     format: (val) => `${val}`,
-    // sortable: true,
+
   },
   {
     name: "TS Type",
@@ -73,7 +73,7 @@ const columns = [
     label: "TS Type",
     field: (row) => row.ts_type,
     format: (val) => `${val}`,
-    // sortable: true,
+
   },
   {
     name: "Gender",
@@ -81,7 +81,7 @@ const columns = [
     label: "Gender",
     field: (row) => row.gender,
     format: (val) => `${val}`,
-    // sortable: true,
+
   },
   {
     name: "Doctor Name",
@@ -89,7 +89,7 @@ const columns = [
     label: "Doctor Name",
     field: (row) => row.doctorname.first_name + ' ' + row.doctorname.last_name,
     format: (val) => `${val}`,
-    // sortable: true,
+
   },
   {
     name: "Hospital Name",
@@ -97,7 +97,7 @@ const columns = [
     label: "Hospital Name",
     field: (row) => row.hospitalname.name,
     format: (val) => `${val}`,
-    // sortable: true,
+
   },
   {
     name: "created at",
@@ -105,7 +105,7 @@ const columns = [
     label: "Created At",
     field: (row) => date.formatDate(row.created_at, "DD-MM-YYYY"),
     format: (val) => `${val}`,
-    // sortable: true,
+
   },
 
 ];

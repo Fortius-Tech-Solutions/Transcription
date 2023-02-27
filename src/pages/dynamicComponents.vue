@@ -1,36 +1,17 @@
 <template>
   <div class="q-pa-md main-wrapper">
     <div class="custom-tabel-box">
-      <table-component
-        ref="userTableComponent"
-        :apiUrl="api"
-        :columns="columns"
-        rowKey="id"
-        :title="$q.lang.user.table_title"
-        createUrl="user/create"
-        @delete="deleteItem"
-        @edit="editItem"
-        @view="showItem"
-        @lock="lockUser"
-        :extra-filter="{
+      <table-component ref="userTableComponent" :apiUrl="api" :columns="columns" rowKey="id"
+        :title="$q.lang.user.table_title" createUrl="user/create" @delete="deleteItem" @edit="editItem" @view="showItem"
+        @lock="lockUser" :extra-filter="{
           accountStatus: status,
           group: userGroup,
-        }"
-        :selectionType="
-          route.params.slug == 'assign-writer' ? 'single' : 'multiple'
-        "
-        :selectedItem="selectedAssign"
-        @selected="onSelection"
-      >
+        }" :selectionType="
+  route.params.slug == 'assign-writer' ? 'single' : 'multiple'
+" :selectedItem="selectedAssign" @selected="onSelection">
       </table-component>
       <div class="text-right q-mt-md">
-        <q-btn
-          color="primary"
-          type="submit"
-          :label="$q.lang.button.submit"
-          class="q-ml-md"
-          @click="assign()"
-        />
+        <q-btn color="primary" type="submit" :label="$q.lang.button.submit" class="q-ml-md" @click="assign()" />
       </div>
     </div>
   </div>
@@ -156,7 +137,7 @@ if (route.params.slug == "assign-hospital") {
       name: "id",
       label: "NO.",
       field: "index",
-      // sortable: true,
+
       align: "left",
     },
     {
@@ -166,7 +147,7 @@ if (route.params.slug == "assign-hospital") {
       align: "left",
       field: (row) => row.name,
       format: (val) => `${val}`,
-      // sortable: true,
+
     },
     {
       name: "Address",
@@ -174,7 +155,7 @@ if (route.params.slug == "assign-hospital") {
       label: "Address",
       field: (row) => row.address,
       format: (val) => `${val}`,
-      // sortable: true,
+
     },
     {
       name: "City",
@@ -182,7 +163,7 @@ if (route.params.slug == "assign-hospital") {
       label: "City",
       field: (row) => row.city,
       format: (val) => `${val}`,
-      // sortable: true,
+
     },
   ];
   api.value = HOSPITAL.LIST;
@@ -197,7 +178,7 @@ if (route.params.slug == "assign-hospital") {
       name: "id",
       label: "NO.",
       field: "index",
-      // sortable: true,
+
       align: "left",
     },
     {
@@ -207,7 +188,7 @@ if (route.params.slug == "assign-hospital") {
       align: "left",
       field: (row) => row.first_name + " " + row.last_name,
       format: (val) => `${val}`,
-      // sortable: true,
+
     },
     {
       name: "email",
@@ -215,7 +196,7 @@ if (route.params.slug == "assign-hospital") {
       label: "Email",
       field: (row) => row.email,
       format: (val) => `${val}`,
-      // sortable: true,
+
     },
   ];
 }
@@ -339,5 +320,4 @@ function assign() {
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

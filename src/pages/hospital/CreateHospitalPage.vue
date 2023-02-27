@@ -6,42 +6,21 @@
     <div class="q-pa-md main-wrapper">
       <div class="bg-box">
         <label for=""> Name</label>
-        <q-input
-          outlined
-          v-model="name"
-          :dense="dense"
-          placeholder="Please Enter Hospital Name"
-          class="create-user-field-box"
-          :rules="[(val) => required(val, 'Name')]"
-          :error="errors.length > 0 ? true : false"
-          :error-message="serverValidationError(errors, 'Name')"
-        />
+        <q-input outlined v-model="name" :dense="dense" placeholder="Please Enter Hospital Name"
+          class="create-user-field-box" :rules="[(val) => required(val, 'Name')]"
+          :error="errors.length > 0 ? true : false" :error-message="serverValidationError(errors, 'Name')" />
         <!-- v-if="!slug" -->
         <div class="q-mt-lg">
           <label for="">City</label>
-          <q-input
-            outlined
-            v-model="city"
-            :dense="dense"
-            placeholder="City"
-            class="create-user-field-box"
-            :rules="[(val) => required(val, 'City')]"
-            :error="errors.length > 0 ? true : false"
-            :error-message="serverValidationError(errors, 'City')"
-          />
+          <q-input outlined v-model="city" :dense="dense" placeholder="City" class="create-user-field-box"
+            :rules="[(val) => required(val, 'City')]" :error="errors.length > 0 ? true : false"
+            :error-message="serverValidationError(errors, 'City')" />
         </div>
         <div class="q-mt-lg">
           <label for="">Address</label>
-          <q-input
-            outlined
-            v-model="address"
-            :dense="dense"
-            placeholder="Address"
-            class="create-user-field-box"
-            :rules="[(val) => required(val, 'Address')]"
-            :error="errors.length > 0 ? true : false"
-            :error-message="serverValidationError(errors, 'Address')"
-          />
+          <q-input outlined v-model="address" :dense="dense" placeholder="Address" class="create-user-field-box"
+            :rules="[(val) => required(val, 'Address')]" :error="errors.length > 0 ? true : false"
+            :error-message="serverValidationError(errors, 'Address')" />
         </div>
       </div>
       <div class="form_comon_btn q-mt-md q-mr-md q-mb-md">
@@ -98,7 +77,7 @@ function onSelection(rows, added) {
 const slug = ref(null);
 const edit_id = ref(null);
 
-// Check if current route is edit
+
 if (route.name == "edit-hospital") {
   Loading.show({
     message: "Loading...",
@@ -206,7 +185,7 @@ function onSubmit() {
   @include box-vr-center;
 
   .add_user_grup_btn {
-    // background: #d9d9d9;
+
     width: 33.33%;
     height: $value-86;
     margin-right: $percentage-2;

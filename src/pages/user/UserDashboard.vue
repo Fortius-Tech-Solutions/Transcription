@@ -6,22 +6,12 @@
 
     <div class="q-pa-md main-wrapper">
       <div class="custom-tabel-box">
-        <table-component
-          ref="userTableComponent"
-          :apiUrl="USER.LIST"
-          :columns="columns"
-          rowKey="id"
-          :title="$q.lang.user.table_title"
-          createUrl="user/create"
-          @delete="deleteItem"
-          @edit="editItem"
-          @view="showItem"
-          @lock="lockUser"
-          :extra-filter="{
+        <table-component ref="userTableComponent" :apiUrl="USER.LIST" :columns="columns" rowKey="id"
+          :title="$q.lang.user.table_title" createUrl="user/create" @delete="deleteItem" @edit="editItem" @view="showItem"
+          @lock="lockUser" :extra-filter="{
             accountStatus: status,
             group: userGroup,
-          }"
-        >
+          }">
         </table-component>
       </div>
     </div>
@@ -85,7 +75,7 @@ const columns = [
     name: "id",
     label: "NO.",
     field: "index",
-    // sortable: true,
+
     align: "left",
   },
   {
@@ -95,7 +85,7 @@ const columns = [
     align: "left",
     field: (row) => row.first_name + " " + row.last_name,
     format: (val) => `${val}`,
-    // sortable: true,
+
   },
   {
     name: "email",
@@ -103,7 +93,7 @@ const columns = [
     label: "Email",
     field: (row) => row.email,
     format: (val) => `${val}`,
-    // sortable: true,
+
   },
   {
     name: "Type",
@@ -111,7 +101,7 @@ const columns = [
     label: "Type",
     field: (row) => row.usertype.name,
     format: (val) => `${val}`,
-    // sortable: true,
+
   },
   {
     name: "actions",
@@ -127,7 +117,7 @@ function applyFilter() {
   userTableComponent.value.refresh();
 }
 
-// Emitted from table component
+
 function deleteItem(item) {
   Loading.show({
     message: "Loading...",

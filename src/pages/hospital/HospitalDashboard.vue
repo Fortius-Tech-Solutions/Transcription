@@ -6,22 +6,12 @@
 
     <div class="q-pa-md main-wrapper">
       <div class="custom-tabel-box">
-        <table-component
-          ref="userTableComponent"
-          :apiUrl="HOSPITAL.LIST"
-          :columns="columns"
-          rowKey="id"
-          :title="$q.lang.hospital.table_title"
-          createUrl="hospital/create"
-          @delete="deleteItem"
-          @edit="editItem"
-          @view="showItem"
-          @lock="lockUser"
-          :extra-filter="{
+        <table-component ref="userTableComponent" :apiUrl="HOSPITAL.LIST" :columns="columns" rowKey="id"
+          :title="$q.lang.hospital.table_title" createUrl="hospital/create" @delete="deleteItem" @edit="editItem"
+          @view="showItem" @lock="lockUser" :extra-filter="{
             accountStatus: status,
             group: userGroup,
-          }"
-        >
+          }">
         </table-component>
       </div>
     </div>
@@ -78,7 +68,7 @@ const columns = [
     name: "id",
     label: "NO.",
     field: "index",
-    // sortable: true,
+
     align: "left",
   },
   {
@@ -88,7 +78,7 @@ const columns = [
     align: "left",
     field: (row) => row.name,
     format: (val) => `${val}`,
-    // sortable: true,
+
   },
   {
     name: "Address",
@@ -96,7 +86,7 @@ const columns = [
     label: "Address",
     field: (row) => row.address,
     format: (val) => `${val}`,
-    // sortable: true,
+
   },
   {
     name: "City",
@@ -104,7 +94,7 @@ const columns = [
     label: "City",
     field: (row) => row.city,
     format: (val) => `${val}`,
-    // sortable: true,
+
   },
   {
     name: "actions",
@@ -119,7 +109,7 @@ const userGroup = ref(null);
 function applyFilter() {
   userTableComponent.value.refresh();
 }
-// Emitted from table component
+
 function deleteItem(item) {
   Loading.show({
     message: "Loading...",
