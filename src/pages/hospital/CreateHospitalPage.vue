@@ -156,7 +156,7 @@ function onSubmit() {
     store
       .saveNewHospital(data)
       .then((res) => {
-        console.log(data);
+
         if (res.success == true) {
           notification.success(
             res.message ? res.message : "Hospital Created Successfully !"

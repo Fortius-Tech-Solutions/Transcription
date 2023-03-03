@@ -161,7 +161,7 @@ function publishAudio(item) {
       status_id: "4",
     })
     .then((res) => {
-      console.log(res);
+
       audioList.value.forEach((element, index, object) => {
         if (element.id == item.id) {
           element.name = "Published";
@@ -229,7 +229,7 @@ function clearFilter() {
 
 onBeforeRouteLeave((to, from, next) => {
   console.log("leave");
-  store.audioList = []
+  store.resetList()
   next();
 });
 </script>

@@ -34,7 +34,7 @@ const store = useMasterStore();
 const storeUser = userStore();
 const storeHospital = hospitalStore();
 const data = computed(() => store.getData);
-console.log(data.value);
+
 const selectedAssign = ref([]);
 const selected = ref([]);
 const api = ref("");

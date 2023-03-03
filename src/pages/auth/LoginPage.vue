@@ -86,7 +86,7 @@ const user = computed(() => {
   return store.getUser;
 });
 function rememberMe(val) {
-  console.log(val);
+
 }
 
 function onSubmit() {

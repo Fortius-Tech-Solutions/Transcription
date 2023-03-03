@@ -7,7 +7,8 @@ export const useDoctorStore = defineStore("doctor", {
   state: () => ({
     data: LocalStorage.getItem("data") ?? [],
     draft: '',
-    list: []
+    list: [],
+    transcriptionList: []
   }),
   getters: {
     getData() {
@@ -16,7 +17,9 @@ export const useDoctorStore = defineStore("doctor", {
     getList() {
       return this.list
     },
-
+    getTranscriptionList() {
+      return this.transcriptionList
+    }
   },
 
   actions: {
@@ -45,6 +48,9 @@ export const useDoctorStore = defineStore("doctor", {
           .getWithParam(DOCTOR.LIST_SCRIPT, data)
           .then((res) => {
             if (res.success) {
+              const transList = this.getTranscriptionList;
+              const trans = transList.concat(...res.data.data);
+              this.transcriptionList = trans;
               resolve(res);
             }
             resolve(res);
@@ -54,5 +60,12 @@ export const useDoctorStore = defineStore("doctor", {
           });
       });
     },
+
+    async resetList() {
+      this.list = [];
+      this.transcriptionList = [];
+    }
+
+
   },
 });

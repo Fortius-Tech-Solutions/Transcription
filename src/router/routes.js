@@ -198,6 +198,20 @@ const routes = [
         },
       },
       {
+        path: "/script-view",
+        name: "script-view",
+        component: () =>
+          import(
+            /* webpackChunkName: "script-view" */
+            /* webpackMode: "lazy" */
+            /* webpackInclude: /\.vue$/ */
+            "src/pages/transcription/script-view.vue"
+          ),
+        meta: {
+          requiresAuth: true,
+        },
+      },
+      {
         path: "/confirm-transcript/:slug",
         name: "confirm-transcript",
         component: () =>

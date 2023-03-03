@@ -27,32 +27,26 @@
                       <h5 class="hospital_name">{{ item.hospital_name }}</h5>
                     </div>
                     <q-badge class="date_counter" rounded color="primary">
-                      Total: {{ item.total }}
+                      Total: {{ item.total ?? 0 }}
                     </q-badge>
                   </div>
                   <div class="number_counter_row">
                     <div class="number_counter_item bg1">
                       <router-link :to="{ name: 'audio-list', params: { slug: item.user_id + '/' + 1 } }">
                         <p>New</p>
-                        <h6>{{ item.new_status }}</h6>
+                        <h6>{{ item.new_status ?? 0 }}</h6>
                       </router-link>
                     </div>
                     <div class="number_counter_item bg2">
                       <router-link :to="{ name: 'audio-list', params: { slug: item.user_id + '/' + 2 } }">
                         <p>Pending</p>
-                        <h6>{{ item.verify_status }}</h6>
+                        <h6>{{ item.verify_status ?? 0 }}</h6>
                       </router-link>
                     </div>
                     <div class="number_counter_item bg3">
                       <router-link :to="{ name: 'audio-list', params: { slug: item.user_id + '/' + 3 } }">
-                        <p>Confirmed</p>
-                        <h6>{{ item.confirm_status }}</h6>
-                      </router-link>
-                    </div>
-                    <div class="number_counter_item bg4">
-                      <router-link :to="{ name: 'audio-list', params: { slug: item.user_id + '/' + 4 } }">
-                        <p>Publised</p>
-                        <h6>{{ item.publish_status }}</h6>
+                        <p>Published</p>
+                        <h6>{{ item.confirm_status ?? 0 }}</h6>
                       </router-link>
                     </div>
                   </div>
@@ -153,8 +147,8 @@ function clearFilter() {
 
 onBeforeRouteLeave((to, from, next) => {
   console.log("leave");
-  writer.list = []
-  writer.audioList = []
+  writer.resetList()
+  clearFilter()
   next();
 });
 </script>
@@ -227,7 +221,7 @@ onBeforeRouteLeave((to, from, next) => {
   .number_counter_item {
     background: #ccc;
     display: inline-block;
-    width: 23.5%;
+    width: 32%;
     text-align: center;
     padding: 10px 5px;
     border-radius: 10px;

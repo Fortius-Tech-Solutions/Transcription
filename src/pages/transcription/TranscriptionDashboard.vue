@@ -107,7 +107,11 @@ const columns = [
     format: (val) => `${val}`,
 
   },
-
+  {
+    name: "actions",
+    label: "Actions",
+    field: "actions",
+  },
 ];
 
 function selectDate() {

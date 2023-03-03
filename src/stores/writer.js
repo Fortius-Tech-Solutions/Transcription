@@ -8,7 +8,8 @@ export const useWriterStore = defineStore("writer", {
     data: LocalStorage.getItem("data") ?? [],
     draft: '',
     audioList: [],
-    list: []
+    list: [],
+    tsType: LocalStorage.getItem('ts-type') ?? []
   }),
   getters: {
     getData() {
@@ -22,6 +23,9 @@ export const useWriterStore = defineStore("writer", {
     },
     getList() {
       return this.list
+    },
+    getTsTypeList() {
+      return this.tsType
     }
   },
 
@@ -107,6 +111,31 @@ export const useWriterStore = defineStore("writer", {
             reject(error);
           });
       });
+    },
+    async fetchTsType() {
+      return new Promise((resolve, reject) => {
+        api
+          .getWithParam(TRANSCRIPTION.TS_TYPE)
+          .then((res) => {
+            if (res.success) {
+              res.data.forEach(element => {
+                this.tsType.push({ value: element.id, label: element.name })
+              });
+              this.tsType.push({ value: 'other', label: 'other' })
+              LocalStorage.set('ts-type', this.tsType)
+              resolve(res);
+            }
+            resolve(res);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
+    async resetList() {
+      this.audioList = [];
+      this.list = [];
+      this.tsType = [];
     }
   },
 });

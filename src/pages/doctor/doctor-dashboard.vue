@@ -27,7 +27,7 @@
                       <h5 class="hospital_name">{{ item.address }} , {{ item.city }}</h5>
                     </div>
                     <q-badge class="date_counter" rounded color="primary">
-                      Total: {{ item.Pending + item.Verify + item.Confirmed + item.Published }}
+                      Total: {{ item.Pending + item.Verify + item.Confirmed }}
                     </q-badge>
                   </div>
                   <div class="number_counter_row">
@@ -39,7 +39,7 @@
                         }
                       }">
                         <p>New</p>
-                        <h6>{{ item.Pending }}</h6>
+                        <h6>{{ item.Pending ?? 0 }}</h6>
                       </router-link>
                     </div>
                     <div class="number_counter_item bg2">
@@ -50,29 +50,18 @@
                         }
                       }">
                         <p>Pending</p>
-                        <h6>{{ item.Verify }}</h6>
-                      </router-link>
-                    </div>
-                    <div class="number_counter_item bg3">
-                      <router-link :to="{
-                        name: 'confirm-transcript', params: {
-                          slug: item.id
-                            + '/' + 3
-                        }
-                      }">
-                        <p>Confirmed</p>
-                        <h6>{{ item.Confirmed }}</h6>
+                        <h6>{{ item.Verify ?? 0 }}</h6>
                       </router-link>
                     </div>
                     <div class="number_counter_item bg4">
                       <router-link :to="{
                         name: 'confirm-transcript', params: {
                           slug: item.id
-                            + '/' + 4
+                            + '/' + 3
                         }
                       }">
                         <p>Published</p>
-                        <h6>{{ item.Published }}</h6>
+                        <h6>{{ item.Confirmed ?? 0 }}</h6>
                       </router-link>
                     </div>
                   </div>
@@ -90,11 +79,11 @@
       </q-card>
     </div>
   </div>
-  <q-dialog v-model="calender">
+  <!-- <q-dialog v-model="calender">
     <q-date v-model="dateRange" range>
       <q-btn label="Submit" @click="selectDate" v-close-popup type="submit" color="primary" />
     </q-date>
-  </q-dialog>
+  </q-dialog> -->
 </template>
 
 <script setup>
@@ -113,8 +102,8 @@ const scrollList = ref(null);
 const currentPage = ref(1);
 const limit = ref(6);
 const loading = ref(true);
-const calender = ref(false);
-const dateRange = ref(null);
+// const calender = ref(false);
+// const dateRange = ref(null);
 const list = computed(() => doctor.getList)
 Loading.show({
   spinner: QSpinnerGears,
@@ -138,8 +127,8 @@ function onLoadList(index, done) {
 
 function fetchList() {
   const data = {
-    from_date: dateRange.value?.from,
-    to_date: dateRange.value?.to,
+    // from_date: dateRange.value?.from,
+    // to_date: dateRange.value?.to,
     limit: limit.value,
     page: currentPage.value,
   };
@@ -163,7 +152,7 @@ function clearFilter() {
     spinner: QSpinnerGears,
     message: "Loading...",
   });
-  dateRange.value = null;
+  // dateRange.value = null;
   doctor.list = []
   currentPage.value = 1;
   loading.value = true;
@@ -174,8 +163,8 @@ function clearFilter() {
 
 onBeforeRouteLeave((to, from, next) => {
   console.log("leave");
-  doctor.list = []
-  doctor.audioList = []
+  doctor.resetList()
+  clearFilter()
   next();
 });
 </script>
@@ -248,7 +237,7 @@ onBeforeRouteLeave((to, from, next) => {
   .number_counter_item {
     background: #ccc;
     display: inline-block;
-    width: 23.5%;
+    width: 32%;
     text-align: center;
     padding: 10px 5px;
     border-radius: 10px;

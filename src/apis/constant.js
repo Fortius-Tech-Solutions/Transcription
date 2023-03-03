@@ -30,6 +30,7 @@ export const TRANSCRIPTION = {
   SHOW: `${writerPrefix}/:id`,
   DELETE: `${writerPrefix}/:id`,
   AUDIO_Delete: `/doctor/:id`,
+  TS_TYPE: `${writerPrefix}/transcript-type-list`,
 };
 
 

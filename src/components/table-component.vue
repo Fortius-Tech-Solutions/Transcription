@@ -62,11 +62,11 @@
             @click="assign(props.row, 'assign-receptionist')" />
           <q-btn v-if="route.name == 'user-dashboard' && userTypeModel.value == 2" color="primary" label="Assign Writer"
             size="sm" no-caps @click="assign(props.row, 'assign-writer')" />
-          <q-btn v-if="user.user_type_id == 1" color="secondary" icon="las la-pen" @click="$emit('edit', props.row)"
-            size="sm" no-caps></q-btn>
+          <q-btn v-if="user.user_type_id == 1 && route.name !== 'transcription-dashboard'" color="secondary"
+            icon="las la-pen" @click="$emit('edit', props.row)" size="sm" no-caps></q-btn>
 
-          <q-btn v-if="user.user_type_id == 1" color="red" icon="las la-trash-alt" @click="deleteItem(props.row)"
-            size="sm" no-caps></q-btn>
+          <q-btn v-if="user.user_type_id == 1 && route.name !== 'transcription-dashboard'" color="red"
+            icon="las la-trash-alt" @click="deleteItem(props.row)" size="sm" no-caps></q-btn>
           <q-btn v-if="user.user_type_id == 2" color="primary" label="Transcription" :to="{
             name: 'confirm-transcript',
             params: { slug: props.row?.hospital_id },
@@ -77,6 +77,10 @@
               params: { slug: props.row?.hospital_id },
             }"></q-btn>
           <q-btn v-if="user.user_type_id == 4 && route.name == 'transcription-list'" color="secondary"
+            icon="las la-download" @click="downloadPDF(props.row)" size="sm" no-caps></q-btn>
+          <q-btn v-if="user.user_type_id == 1 && route.name == 'transcription-dashboard'" color="primary" label="View"
+            @click="showTrans(props.row)" size="sm" no-caps></q-btn>
+          <q-btn v-if="user.user_type_id == 1 && route.name == 'transcription-dashboard'" color="secondary"
             icon="las la-download" @click="downloadPDF(props.row)" size="sm" no-caps></q-btn>
         </q-td>
       </template>
@@ -134,6 +138,7 @@ import { date, exportFile, Loading, QSpinnerGears } from "quasar";
 import moment from "moment";
 import html2pdf from "html2pdf.js";
 import { LocalStorage } from "quasar";
+import { useWriterStore } from "src/stores/writer";
 const pdfComponent = defineAsyncComponent(() =>
   import("src/components/dowloadPDF.vue")
 );
@@ -153,6 +158,7 @@ const props = defineProps({
   isPdfDownload: Boolean,
 });
 const store = useAuthStore();
+const writerStore = useWriterStore();
 const user = computed(() => {
   return store.getUser;
 });
@@ -229,7 +235,10 @@ async function downloadPDF(res) {
   showPDF.value = true;
   fetchPdf(res);
 }
-
+async function showTrans(data) {
+  writerStore.data = data
+  router.push({ name: 'script-view' })
+}
 function fetchPdf(res, item) {
   pdfData.value.push(res);
   setTimeout(() => {
@@ -324,7 +333,7 @@ async function onRequest(events) {
           previousTotal.value++;
         });
 
-        console.log(res.data.data);
+
 
         totalLimit.value = res.data.meta.total;
 
@@ -370,7 +379,7 @@ async function onRequest(events) {
   }
 }
 function getSelectedString() {
-  console.log(rows.value);
+
   return selected.value.length === 0
     ? ""
     : `${selected.value.length} record${selected.value.length > 1 ? "s" : ""
@@ -452,7 +461,7 @@ function assign(data, item) {
   }
 }
 function setAudioWriter(data) {
-  console.log(data);
+
 
 }
 

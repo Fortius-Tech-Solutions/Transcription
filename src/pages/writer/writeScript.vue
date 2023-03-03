@@ -1,51 +1,64 @@
 <template>
+  <!-- <form autocorrect="on" autocapitalize="off" autocomplete="off" spellcheck="true">
+    <q-editor model="editor" />
+  </form> -->
+  <div class="home_user_header">
+    <h3 class="comman-title">
+      {{
+        router.currentRoute.value.name !== "confirm-script"
+        ? "Create"
+        : "Confirm"
+      }}
+      Transcription
+    </h3>
+  </div>
+  <AudioPlayer ref="audioRef" :option="{
+    src: data.audio_filepath,
+    title: data.audio_name,
+    coverImage: '',
+    coverRotate: '',
+    progressBarColor: '',
+    indicatorColor: '',
+    autoplay: false
+  }" />
   <q-form>
-    <div class="home_user_header">
-      <h3 class="comman-title">
-        {{
-          router.currentRoute.value.name !== "confirm-script"
-          ? "Create"
-          : "Confirm"
-        }}
-        Transcription
-      </h3>
-    </div>
-    <AudioPlayer :option="{
-      src: data.audio_filepath,
-      title: data.audio_name,
-      coverImage: '',
-      coverRotate: '',
-      progressBarColor: '',
-      indicatorColor: '',
-    }" />
-
     <div class="q-pa-md main-wrapper">
       <div class="bg-box">
         <label for=""> Patient Name</label>
         <q-input outlined v-model="patient_name" :dense="dense" placeholder="Please Enter Patient Name"
-          class="create-user-field-box" :rules="[(val) => required(val, 'Patient Name')]"
-          :error="errors.length > 0 ? true : false" :error-message="serverValidationError(errors, 'Patient Name')"
-          :readonly="router.currentRoute.value.name == 'confirm-script'" />
-        <q-select v-model="selectModel" :options="options" :dense="dense" class="" outlined hide-bottom-space
-          :readonly="router.currentRoute.value.name == 'confirm-script'" />
-        <div class="q-mt-lg">
-          <label for="">Gender</label>
-          <div class="q-gutter-sm">
-            <q-radio v-model="gender" val="male" label="Male"
-              :disable="router.currentRoute.value.name == 'confirm-script'" />
-            <q-radio v-model="gender" val="female" label="Female"
-              :disable="router.currentRoute.value.name == 'confirm-script'" />
-            <q-radio v-model="gender" val="other" label="Don't want to Disclose"
-              :disable="router.currentRoute.value.name == 'confirm-script'" />
+          :disable="data.isNew" class="create-user-field-box" :rules="[(val) => required(val, 'Patient Name')]"
+          :error="errors.length > 0 ? true : false" :error-message="serverValidationError(errors, 'Patient Name')" />
+        <q-select v-model="selectModel" :options="options" :dense="dense" class="select_drop" outlined hide-bottom-space
+          label="Select Type" :disable="data.isNew" />
+        <div v-if="selectModel?.value == 'other'" class="q-mt-md">
+          <label for="">Enter Other Type</label>
+          <div class="btn_input_box">
+            <q-input v-model="otherType" :dense="dense" outlined type="text" />
+            <q-btn class="q-ml-md" color="primary" label="Add Type" @click="onSubmitType" />
           </div>
         </div>
         <div class="q-mt-lg">
+          <label for="">Gender</label>
+          <div class="q-gutter-sm">
+            <q-radio v-model="gender" val="male" label="Male" :disable="data.isNew" />
+            <q-radio v-model="gender" val="female" label="Female" :disable="data.isNew" />
+            <q-radio v-model="gender" val="other" label="Don't want to Disclose" :disable="data.isNew" />
+          </div>
+        </div>
+        <div class="q-mb-md q-mt-md">
+          <label class=" q-mr-md" for="">Date of Service</label>
+          <q-btn color="primary" icon="las la-calendar" @click="calender = true" :label="dateRange ?? 'Select Date'"
+            :disable="data.isNew" />
+          <q-btn v-if="dateRange" @click="clearFilter" icon="la la-times" />
+        </div>
+        <div class="q-mt-lg">
           <label for="">Transcription</label>
-          <q-editor v-model="transcription" :dense="dense" :readonly="router.currentRoute.value.name == 'confirm-script'"
-            :definitions="{
+          <form autocorrect="on" autocapitalize="off" autocomplete="off" spellcheck="true">
+            <q-editor v-model="transcription" :dense="dense" :definitions="{
               bold: { label: 'Bold', icon: null, tip: 'My bold tooltip' }
             }" :rules="[(val) => required(val, 'Transcription')]" :error="errors.length > 0 ? true : false"
-            :error-message="serverValidationError(errors, 'Transcription')" />
+              :error-message="serverValidationError(errors, 'Transcription')" :disable="data.isNew" />
+          </form>
         </div>
       </div>
       <div class="form_comon_btn q-mt-md q-mr-md q-mb-md" v-if="router.currentRoute.value.name !== 'confirm-script'">
@@ -58,14 +71,20 @@
       </div>
     </div>
   </q-form>
+  <q-dialog v-model="calender">
+    <q-date v-model="dateRange" :options="dateOptions">
+      <q-btn label="Submit" v-close-popup color="primary" />
+    </q-date>
+  </q-dialog>
 </template>
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import AudioPlayer from "vue3-audio-player";
 import notification from "src/boot/notification";
 import { Loading, QSpinnerGears } from "quasar";
+import { date } from 'quasar'
 import useServerError from "src/composables/useServerError";
-import { useRoute, useRouter } from "vue-router";
+import { onBeforeRouteLeave, useRoute, useRouter } from "vue-router";
 import { useWriterStore } from "src/stores/writer";
 import { DOCTOR, TRANSCRIPTION } from "src/apis/constant";
 import api from "src/apis/index";
@@ -73,20 +92,34 @@ import { useDoctorStore } from "src/stores/doctor";
 import { useAuthStore } from "src/stores/auth";
 const router = useRouter();
 const route = useRoute();
+const editor = ref('');
+const calender = ref(false);
+const dateRange = ref(null);
 const store = useWriterStore();
 const authStore = useAuthStore();
 const doctorStore = useDoctorStore();
 const { errors, serverValidationError } = useServerError();
-const options = ref(["operation", "child neurology", "opd"]);
+const options = computed(() => store.getTsTypeList)
 const selectModel = ref(null);
 const patient_name = ref(null);
 const gender = ref(null);
 const transcription = ref(null);
+const audioRef = ref(null);
+const otherType = ref('')
 const user = computed(() => authStore.getUser);
 const draftStatus = computed(() => {
   return store.getDraftStatus;
 });
 
+onMounted(() => {
+  Loading.show({
+    message: "Loading...",
+    spinner: QSpinnerGears,
+  });
+  store.fetchTsType().finally(() => {
+    Loading.hide();
+  });
+})
 const data = computed(() => {
   if (router.currentRoute.value.name == "confirm-script") {
     return doctorStore.getData;
@@ -126,10 +159,15 @@ if (draftStatus.value == 1) {
       Loading.hide();
     });
 } else if (router.currentRoute.value.name == "confirm-script") {
-  selectModel.value = data.value.TSType;
   patient_name.value = data.value.patient_name;
   gender.value = data.value.gender;
   transcription.value = data.value.transcription;
+  dateRange.value = data.value.date_of_service.split('T')[0]
+  options.value.forEach(element => {
+    if (element.value == data.value.TSType_id) {
+      selectModel.value = element
+    }
+  });
 }
 
 function onSubmit(type) {
@@ -141,7 +179,8 @@ function onSubmit(type) {
     patient_name: patient_name.value,
     gender: gender.value,
     transcription: transcription.value,
-    TSType: selectModel.value,
+    TSType_id: selectModel.value.value,
+    date_of_service: dateRange.value
   };
   if (type === "Draft") {
     data.draft = "draft";
@@ -167,10 +206,16 @@ function onSubmit(type) {
 }
 
 function confirmScript() {
+  console.log(data.value);
   const confirmData = {
     user_id: user.value.id,
     hospital_id: data.value.hospital_id,
     status_id: "3",
+    patient_name: patient_name.value,
+    gender: gender.value,
+    transcription: transcription.value,
+    TSType_id: selectModel.value.value,
+    date_of_service: dateRange.value
   };
   api
     .post(
@@ -183,10 +228,45 @@ function confirmScript() {
       }
     });
 }
+function dateOptions(dateRange) {
+  return dateRange <= date.formatDate(Date.now(), 'YYYY/MM/DD')
+}
+function onSubmitType() {
+  Loading.show({
+    message: "Loading...",
+    spinner: QSpinnerGears,
+  });
+  const data = {
+    name: otherType.value
+  }
+  api
+    .post('writer/add-ts-type', data)
+    .then((res) => {
+      if (res.success) {
+        store.tsType = [];
+        store.fetchTsType()
+        selectModel.value = ''
+      }
+    }).finally(() => {
+      Loading.hide();
+    });;
+}
+
+function clearFilter() {
+  dateRange.value = null;
+}
 
 function cancel() {
   history.go(-1);
 }
+
+onBeforeRouteLeave((to, from, next) => {
+  console.log("leave");
+  store.resetList()
+  doctorStore.resetList()
+  clearFilter()
+  next();
+});
 </script>
 
 <style lang="scss">
@@ -248,6 +328,25 @@ h3.comman-title {
     .q-field__control {
       height: $value-45;
     }
+  }
+}
+
+.btn_input_box {
+  display: flex;
+}
+
+.q-field--outlined .q-field__control {
+  height: 45px;
+  min-height: 45px;
+}
+
+.q-field__marginal {
+  height: 45px;
+}
+
+.select_drop {
+  .q-field__label {
+    top: 14px;
   }
 }
 </style>

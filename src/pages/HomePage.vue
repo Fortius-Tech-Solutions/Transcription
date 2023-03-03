@@ -132,7 +132,7 @@ if (user.value.user_type_id == 4) {
   .number_counter_item {
     background: #ccc;
     display: inline-block;
-    width: 23.5%;
+    width: 32%;
     text-align: center;
     padding: 10px 5px;
     border-radius: 10px;

@@ -14,6 +14,7 @@ const ME = "/user/me";
 export const useAuthStore = defineStore("auth", {
   state: () => ({
     user: LocalStorage.getItem("user") || "",
+    userRoles: JSON.parse(LocalStorage.getItem("roles")) | "",
     accessToken: LocalStorage.getItem("access_token") || "",
   }),
 
@@ -29,6 +30,9 @@ export const useAuthStore = defineStore("auth", {
         return true
       }
       return false
+    },
+    isRole() {
+      return this.userRoles
     }
   },
 
@@ -62,6 +66,7 @@ export const useAuthStore = defineStore("auth", {
           LocalStorage.remove("access_token");
           LocalStorage.remove("user");
           LocalStorage.remove("email");
+          LocalStorage.remove("roles");
           resolve(res);
         }).catch((error) => {
           reject(error);
@@ -76,7 +81,10 @@ export const useAuthStore = defineStore("auth", {
           .then((res) => {
             if (res.success) {
               this.user = res.data[0];
+              this.userRoles = res.data[0]?.usertype?.name
               LocalStorage.set("user", this.user);
+              LocalStorage.set("roles", JSON.stringify(this.userRoles));
+
             } else {
               notification.error(res.message);
             }

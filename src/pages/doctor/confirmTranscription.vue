@@ -1,62 +1,68 @@
 <template>
   <div class="q-pa-md main-wrapper">
-    <q-card class="q-pa-lg" v-if="verifyList.length !== 0">
-      <div class="patient_trans_list_bg" v-for="item in verifyList" :key="item">
-        <div class="patient_trans_list" @click="
-          item.name == 'Confirmed' || item.name == 'Published'
-            ? null
-            : confirmScript(item)
-        ">
-          <div class="paient_trans_head">
-            <div class="left">
-              <h2>
-                {{ item.patient_name }}
-                <q-chip dense color="primary" text-color="white">
-                  {{ item.gender }}
-                </q-chip>
-              </h2>
-              <h6>{{ item.TSType }}</h6>
-            </div>
-            <div class="right">
+    <q-infinite-scroll @load="onLoadList" :offset="250" scroll-target="body" ref="scrollList">
+      <q-card class="q-pa-lg" v-if="verifyList.length !== 0">
+        <div class="patient_trans_list_bg" v-for="item in verifyList" :key="item">
+          <div class="patient_trans_list" @click="
+            item.name == 'Confirmed' || item.name == 'Published'
+              ? null
+              : confirmScript(item)
+          ">
+            <div class="paient_trans_head">
+              <div class="left">
+                <h2>
+                  {{ item.patient_name }}
+                  <q-chip dense color="primary" text-color="white">
+                    {{ item.gender }}
+                  </q-chip>
+                </h2>
+                <h6>{{ item.TSType_name }}</h6>
+              </div>
+              <div class="right">
 
-              <div class="hospital_name">{{ item.hospital_name }}</div>
-              <ul class="date_time">
-                <li>
-                  <q-btn v-if="item.name == 'Published'" round color="primary" icon="las la-download" class="q-ml-sm"
-                    padding="sm" @click="downloadPDF(item)" />
-                </li>
-                <li>
-                  <q-chip :color="
-                    item.name == 'Confirmed' || item.name == 'Published'
-                      ? 'green'
-                      : item.name == 'Pending'
-                        ? 'red'
-                        : 'yellow'
-                  " :label="item.name" />
-                </li>
-                <li>
-                  Duration: <b>{{ item.audio_duration }}</b>
-                </li>
-                <li>
-                  Updated at: <b>{{ item.updated_at.split("T")[0] }}</b>
-                </li>
-              </ul>
+                <div class="hospital_name">{{ item.hospital_name }}</div>
+                <ul class="date_time">
+                  <li>
+                    <q-btn v-if="item.name == 'Published'" round color="primary" icon="las la-download" class="q-ml-sm"
+                      padding="sm" @click="downloadPDF(item)" />
+                  </li>
+                  <li>
+                    <q-chip :color="
+                      item.name == 'Confirmed' || item.name == 'Published'
+                        ? 'green'
+                        : item.name == 'Pending'
+                          ? 'red'
+                          : 'yellow'
+                    " :label="item.name" />
+                  </li>
+                  <li>
+                    Duration: <b>{{ item.audio_duration }}</b>
+                  </li>
+                  <li>
+                    Updated at: <b>{{ item.updated_at.split("T")[0] }}</b>
+                  </li>
+                </ul>
+              </div>
             </div>
+            <p class="paient_trans_para" v-html="item.transcription">
+            </p>
           </div>
-          <p class="paient_trans_para">
-            {{ item.transcription }}
-          </p>
         </div>
-      </div>
-    </q-card>
-    <q-card class="q-pa-lg" v-else>
-      <div class="text-center">
-        <q-btn class="not_found_icon" outline color="primary">
-          <i class="las la-exclamation-triangle"></i>
-        </q-btn>
-        <h5>Data Not Found</h5>
-      </div>
-    </q-card>
+      </q-card>
+      <q-card class="q-pa-lg" v-else-if="!loading">
+        <div class="text-center">
+          <q-btn class="not_found_icon" outline color="primary">
+            <i class="las la-exclamation-triangle"></i>
+          </q-btn>
+          <h5>Data Not Found</h5>
+        </div>
+      </q-card>
+      <template v-slot:loading>
+        <div class="row justify-center q-my-md">
+          <q-spinner-dots color="primary" size="40px" />
+        </div>
+      </template>
+    </q-infinite-scroll>
   </div>
 
   <div style="display: none">
@@ -68,7 +74,7 @@
 import api from "src/apis/index";
 import { DOCTOR } from "src/apis/constant";
 import { ref, computed, defineAsyncComponent } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { onBeforeRouteLeave, useRoute, useRouter } from "vue-router";
 import { Loading, QSpinnerGears } from "quasar";
 import { useDoctorStore } from "src/stores/doctor";
 import { useAuthStore } from "src/stores/auth";
@@ -83,7 +89,13 @@ const router = useRouter();
 const route = useRoute();
 const store = useDoctorStore();
 const authStore = useAuthStore();
-const verifyList = ref("");
+const scrollList = ref(null);
+const currentPage = ref(1);
+const limit = ref(6);
+const loading = ref(true);
+const verifyList = computed(() => {
+  return store.getTranscriptionList;
+});
 const user = computed(() => {
   return authStore.getUser;
 });
@@ -96,21 +108,40 @@ Loading.show({
   spinner: QSpinnerGears,
   message: "Loading...",
 });
-store
-  .fetchTranscriptionList(data.value)
-  .then((res) => {
-    if (res.success) {
-      console.log(res.data.data);
-      verifyList.value = res.data.data;
+
+function onLoadList(index, done) {
+  fetchList().then((res) => {
+    if (res.success && res.data.data.length > 0) {
+      currentPage.value = currentPage.value + 1;
+      done();
+    } else {
+      loading.value = false;
+      done(true);
     }
-  })
-  .catch((err) => {
-    console.log(err);
-  })
-  .finally(() => Loading.hide());
+  }).catch((err) => {
+    done(true);
+  }).finally(() => {
+    Loading.hide();
+  });
+}
+
+function fetchList() {
+  const data = {
+    // from_date: dateRange.value?.from,
+    // to_date: dateRange.value?.to,
+    hospitalId: route.params.slug.split('/')[0],
+    statusId: route.params.slug.split('/')[1],
+    limit: limit.value,
+    page: currentPage.value,
+  };
+  return store.fetchTranscriptionList(data)
+}
+
 
 function confirmScript(item) {
-  item.hospital_id = route.params.slug;
+  console.log(item);
+  item.hospital_id = route.params.slug.split('/')[0],
+    item.isNew = route.params.slug.split('/')[1] == 1 ? true : false
   store.data = item;
   router.push({ name: "confirm-script", params: { slug: item.id } });
 }
@@ -141,6 +172,25 @@ function exportToPDF(data) {
     jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
   });
 }
+function clearFilter() {
+  Loading.show({
+    spinner: QSpinnerGears,
+    message: "Loading...",
+  });
+  // dateRange.value = null;
+  store.transcriptionList = []
+  currentPage.value = 1;
+  loading.value = true;
+  scrollList.value.reset();
+  scrollList.value.resume();
+  scrollList.value.trigger();
+}
+onBeforeRouteLeave((to, from, next) => {
+  console.log("leave");
+  store.resetList()
+  clearFilter()
+  next();
+});
 </script>
 
 <style lang="scss" scoped>

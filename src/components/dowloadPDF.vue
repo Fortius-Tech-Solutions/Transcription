@@ -7,14 +7,10 @@
           <thead>
             <tr>
               <th style="text-align: left; border-bottom: 2px solid #4270c4; padding-bottom: 5px;">
-                <h2 style="margin: 0 0 2px 0; font-size: 18px; color: #4270c4;">{{ props.items[0].first_name }} {{
-                  props.items[0].last_name
-                }}</h2>
-                <!-- <p style="margin: 0 0 2px 0; font-size: 14px; color: #919191; font-weight: normal;">
-                  MBBS, MS (Masters in General Surgery), FRACS</p>
-                <p style="margin: 0 0 2px 0; font-size: 14px; color: #919191; font-weight: normal; color: #4270c4;">
-                  GENERAL &amp; COLORECTAL SURGERY | GI ENDOSCOPY</p>
-                <span style="color: #919191; font-weight: normal;">ABN 776 498 230 12</span> -->
+                <h2 style="margin: 0 0 2px 0; font-size: 18px; color: #4270c4;">{{ props.items[0].first_name ??
+                  props.items[0].doctorname.first_name }} {{
+    props.items[0].last_name ?? props.items[0].doctorname.last_name
+  }}</h2>
               </th>
             </tr>
           </thead>
@@ -37,7 +33,7 @@
               <td style="padding-top: 5px;">Medicare No. – </td>
             </tr>
             <tr>
-              <td style="padding-top: 20px; line-height: 24px;">{{ props.items[0].transcription }}</td>
+              <td style="padding-top: 20px; line-height: 24px;" v-html="props.items[0].transcription"></td>
             </tr>
             <tr>
               <td style="padding-top: 30px;">Thank you for your ongoing care and referral.</td>
@@ -47,11 +43,11 @@
             </tr>
             <tr>
               <td style="padding-top: 40px;">
-                <h5 style="margin: 0 0 5px 0; font-size: 16px;">{{ props.items[0].first_name }} {{
-                  props.items[0].last_name
-                }}
+                <h5 style="margin: 0 0 5px 0; font-size: 16px;">{{ props.items[0].first_name ??
+                  props.items[0].doctorname.first_name }} {{
+    props.items[0].last_name ?? props.items[0].doctorname.last_name
+  }}
                 </h5>
-                <!-- <span>MBBS, MS (Masters in General Surgery), FRACS<br /> Provider No. 5191136K</span> -->
               </td>
             </tr>
             <tr>
