@@ -221,7 +221,7 @@ function formatDate(date) {
 function exportToPDF(data) {
   html2pdf(data, {
     margin: 0,
-    filename: `${pdfData.value[0].patient_name}_${Date.now()}.pdf`,
+    filename: `${pdfData.value[0].patient_name}_${date.formatDate(pdfData.value[0].date_of_service, 'DD-MM-YYYY')}.pdf`,
     image: { type: "jpeg", quality: 0.98 },
     html2canvas: { scale: 1, letterRendering: true },
     jsPDF: { unit: "in", format: "a4", orientation: "portrait" },

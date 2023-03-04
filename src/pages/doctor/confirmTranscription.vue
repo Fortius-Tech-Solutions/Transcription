@@ -75,7 +75,7 @@ import api from "src/apis/index";
 import { DOCTOR } from "src/apis/constant";
 import { ref, computed, defineAsyncComponent } from "vue";
 import { onBeforeRouteLeave, useRoute, useRouter } from "vue-router";
-import { Loading, QSpinnerGears } from "quasar";
+import { Loading, QSpinnerGears, date } from "quasar";
 import { useDoctorStore } from "src/stores/doctor";
 import { useAuthStore } from "src/stores/auth";
 import moment from "moment";
@@ -166,7 +166,7 @@ async function fetchPdf(res) {
 function exportToPDF(data) {
   html2pdf(data, {
     margin: 0,
-    filename: `${pdfData.value[0].patient_name}_${Date.now()}.pdf`,
+    filename: `${pdfData.value[0].patient_name}_${date.formatDate(pdfData.value[0].date_of_service, 'DD-MM-YYYY')}.pdf`,
     image: { type: "jpeg", quality: 0.98 },
     html2canvas: { scale: 1, letterRendering: true },
     jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
