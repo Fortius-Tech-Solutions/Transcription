@@ -1,11 +1,10 @@
 <template>
   <div class="q-pa-md main-wrapper">
     <div class="datefilter_box">
-      <q-btn color="primary" @click="calender = true" :label="
-        dateRange?.from
-          ? dateRange.from + ' to ' + dateRange.to
-          : dateRange ?? 'Select Date'
-      " />
+      <q-btn color="primary" @click="calender = true" :label="dateRange?.from
+        ? dateRange.from + ' to ' + dateRange.to
+        : dateRange ?? 'Select Date'
+        " />
       <q-btn v-if="dateRange" @click="clearFilter" icon="la la-times" />
     </div>
     <q-infinite-scroll @load="onLoadAudioList" :offset="250" scroll-target="body" ref="scrollList">
@@ -49,6 +48,8 @@
               <div class="audio_list_action">
                 <q-btn v-if="item.name == 'Published'" round color="primary" icon="las la-download" class="q-ml-sm"
                   padding="sm" @click="downloadPDF(item)" />
+                <q-btn round color="blue" icon="las la-download" class="q-ml-sm" padding="sm" :href="item.audio_filepath"
+                  download />
                 <q-btn v-if="item.name == 'Confirmed'" color="green" label="Publish" class="q-ml-sm"
                   @click="publishAudio(item)" />
                 <q-btn round color="secondary" icon="las la-edit" class="q-ml-sm" padding="sm"
