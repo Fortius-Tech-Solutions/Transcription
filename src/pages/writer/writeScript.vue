@@ -13,14 +13,14 @@
     </h3>
   </div>
   <AudioPlayer ref="audioRef" :option="{
-    src: data.audio_filepath,
-    title: data.audio_name,
-    coverImage: '',
-    coverRotate: '',
-    progressBarColor: '',
-    indicatorColor: '',
-    autoplay: false
-  }" />
+        src: data.audio_filepath,
+        title: data.audio_name,
+        coverImage: '',
+        coverRotate: '',
+        progressBarColor: '',
+        indicatorColor: '',
+        autoplay: false
+      }" />
   <q-form>
     <div class="q-pa-md main-wrapper">
       <div class="bg-box">
@@ -137,7 +137,7 @@ if (draftStatus.value == 1) {
     .get(api.resolveApiUrl(TRANSCRIPTION.SAVE, { id: route.params.slug }))
     .then((res) => {
       if (res.success == true) {
-        selectModel.value = res.data[0].ts_type;
+        selectModel.value = res.data[0].TSType_id;
         patient_name.value = res.data[0].patient_name;
         gender.value = res.data[0].gender;
         transcription.value = res.data[0].transcription;
@@ -224,7 +224,7 @@ function confirmScript() {
     )
     .then((res) => {
       if (res.success) {
-        history.go(-1);
+        history.go(-2);
       }
     });
 }

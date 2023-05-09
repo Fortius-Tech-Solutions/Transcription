@@ -52,7 +52,7 @@ const data = computed(() => {
 });
 
 const options = ref(["operation", "child neurology", "opd"]);
-const selectModel = ref(data.value.ts_type);
+const selectModel = ref(data.value.TSType_id);
 const patient_name = ref(data.value.patient_name);
 const gender = ref(data.value.gender);
 const transcription = ref(data.value.transcription);

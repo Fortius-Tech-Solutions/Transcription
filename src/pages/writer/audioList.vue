@@ -46,10 +46,10 @@
                 </div>
               </div>
               <div class="audio_list_action">
-                <q-btn v-if="item.name == 'Published'" round color="primary" icon="las la-download" class="q-ml-sm"
-                  padding="sm" @click="downloadPDF(item)" />
-                <q-btn round color="blue" icon="las la-download" class="q-ml-sm" padding="sm" :href="item.audio_filepath"
-                  download />
+                <q-btn v-if="item.name == 'Published'" title="Report Download" round color="primary"
+                  icon="las la-download" class="q-ml-sm" padding="sm" @click="downloadPDF(item)" />
+                <q-btn round color="blue" icon="las la-download" title="Audio Download" class="q-ml-sm" padding="sm"
+                  :href="item.audio_filepath" download />
                 <q-btn v-if="item.name == 'Confirmed'" color="green" label="Publish" class="q-ml-sm"
                   @click="publishAudio(item)" />
                 <q-btn round color="secondary" icon="las la-edit" class="q-ml-sm" padding="sm"

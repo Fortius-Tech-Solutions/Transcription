@@ -7,7 +7,7 @@
             item.name == 'Confirmed' || item.name == 'Published'
               ? null
               : confirmScript(item)
-          ">
+            ">
             <div class="paient_trans_head">
               <div class="left">
                 <h2>
@@ -24,16 +24,15 @@
                 <ul class="date_time">
                   <li>
                     <q-btn v-if="item.name == 'Published'" round color="primary" icon="las la-download" class="q-ml-sm"
-                      padding="sm" @click="downloadPDF(item)" />
+                      padding="sm" @click="downloadPDF(item)" title="Report Download" />
                   </li>
                   <li>
-                    <q-chip :color="
-                      item.name == 'Confirmed' || item.name == 'Published'
+                    <q-chip :color="item.name == 'Confirmed' || item.name == 'Published'
                         ? 'green'
                         : item.name == 'Pending'
                           ? 'red'
                           : 'yellow'
-                    " :label="item.name" />
+                      " :label="item.name" />
                   </li>
                   <li>
                     Duration: <b>{{ item.audio_duration }}</b>
