@@ -74,12 +74,14 @@
               name: 'transcription-list',
               params: { slug: props.row?.hospital_id },
             }"></q-btn>
-          <q-btn v-if="user.user_type_id == 4 && route.name == 'transcription-list'" color="secondary"
-            icon="las la-download" @click="downloadPDF(props.row)" size="sm" no-caps title="Report Download"></q-btn>
+
           <q-btn v-if="user.user_type_id == 1 && route.name == 'transcription-dashboard'" color="primary" label="View"
             @click="showTrans(props.row)" size="sm" no-caps></q-btn>
-          <q-btn v-if="user.user_type_id == 1 && route.name == 'transcription-dashboard'" color="secondary"
-            icon="las la-download" @click="downloadPDF(props.row)" size="sm" no-caps title="Report Download"></q-btn>
+
+          <q-btn
+            v-if="user.user_type_id == 4 && route.name == 'transcription-list' || user.user_type_id == 1 && route.name == 'transcription-dashboard'"
+            color="secondary" icon="las la-download" @click="downloadPDF(props.row)" size="sm" no-caps
+            title="Report Download"></q-btn>
         </q-td>
       </template>
       <template #body-cell-download="props">
@@ -220,7 +222,7 @@ function formatDate(date) {
 function exportToPDF(data) {
   html2pdf(data, {
     margin: 0,
-    filename: `${pdfData.value[0].patient_name}_${date.formatDate(pdfData.value[0].date_of_service, 'DD-MM-YYYY')}.pdf`,
+    filename: `${pdfData.value.patient_name}_${date.formatDate(pdfData.value.date_of_service, 'DD-MM-YYYY')}.pdf`,
     image: { type: "jpeg", quality: 0.98 },
     html2canvas: { scale: 1, letterRendering: true },
     jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
@@ -239,7 +241,7 @@ async function showTrans(data) {
   router.push({ name: 'script-view' })
 }
 function fetchPdf(res, item) {
-  pdfData.value.push(res);
+  pdfData.value = res;
   setTimeout(() => {
     const pageBreak = document.getElementById("mode");
 

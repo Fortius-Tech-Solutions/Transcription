@@ -71,7 +71,7 @@ const columns = [
     name: "TS Type",
     align: "center",
     label: "TS Type",
-    field: (row) => row.ts_type,
+    field: (row) => row.name,
     format: (val) => `${val}`,
 
   },

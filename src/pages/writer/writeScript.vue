@@ -100,6 +100,7 @@ const authStore = useAuthStore();
 const doctorStore = useDoctorStore();
 const { errors, serverValidationError } = useServerError();
 const options = computed(() => store.getTsTypeList)
+console.log(options.value);
 const selectModel = ref(null);
 const patient_name = ref(null);
 const gender = ref(null);
@@ -136,8 +137,12 @@ if (draftStatus.value == 1) {
   api
     .get(api.resolveApiUrl(TRANSCRIPTION.SAVE, { id: route.params.slug }))
     .then((res) => {
+      console.log(res.data);
       if (res.success == true) {
-        selectModel.value = res.data[0].TSType_id;
+        selectModel.value = {
+          label: res.data[0].transcript_name,
+          value: res.data[0].TSType_id
+        };
         patient_name.value = res.data[0].patient_name;
         gender.value = res.data[0].gender;
         transcription.value = res.data[0].transcription;

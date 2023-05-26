@@ -28,10 +28,10 @@
                   </li>
                   <li>
                     <q-chip :color="item.name == 'Confirmed' || item.name == 'Published'
-                        ? 'green'
-                        : item.name == 'Pending'
-                          ? 'red'
-                          : 'yellow'
+                      ? 'green'
+                      : item.name == 'Pending'
+                        ? 'red'
+                        : 'yellow'
                       " :label="item.name" />
                   </li>
                   <li>
@@ -155,7 +155,7 @@ async function downloadPDF(res) {
 }
 
 async function fetchPdf(res) {
-  pdfData.value.push(res);
+  pdfData.value = res;
   setTimeout(() => {
     exportToPDF(document.getElementById("downloadPDF"));
     Loading.hide();
@@ -165,7 +165,7 @@ async function fetchPdf(res) {
 function exportToPDF(data) {
   html2pdf(data, {
     margin: 0,
-    filename: `${pdfData.value[0].patient_name}_${date.formatDate(pdfData.value[0].date_of_service, 'DD-MM-YYYY')}.pdf`,
+    filename: `${pdfData.value.patient_name}_${date.formatDate(pdfData.value.date_of_service, 'DD-MM-YYYY')}.pdf`,
     image: { type: "jpeg", quality: 0.98 },
     html2canvas: { scale: 1, letterRendering: true },
     jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
