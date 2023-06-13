@@ -154,8 +154,11 @@ function clearFilter() {
   });
   // dateRange.value = null;
   doctor.list = []
+  list.value = []
   currentPage.value = 1;
   loading.value = true;
+  // scrollList.value.refresh();
+
   scrollList.value.reset();
   scrollList.value.resume();
   scrollList.value.trigger();
@@ -163,8 +166,9 @@ function clearFilter() {
 
 onBeforeRouteLeave((to, from, next) => {
   console.log("leave");
+  doctor.list = []
+  list.value = []
   doctor.resetList()
-  clearFilter()
   next();
 });
 </script>

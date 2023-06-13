@@ -10,7 +10,7 @@ const API_PREFIX_1 = "auth"; // API_PREFIX_1 for auth
 const LOGIN = API_PREFIX_1 + "/login";
 const LOGOUT = API_PREFIX_1 + "/logout";
 const ME = "/user/me";
-
+const CHANGE_PASSWORD = "/user/change-password";
 export const useAuthStore = defineStore("auth", {
   state: () => ({
     user: LocalStorage.getItem("user") || "",
@@ -53,6 +53,19 @@ export const useAuthStore = defineStore("auth", {
               resolve(res);
             }
 
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
+
+    async changePassword(data) {
+      return new Promise((resolve, reject) => {
+        api
+          .post(CHANGE_PASSWORD, data)
+          .then((res) => {
+            resolve(res);
           })
           .catch((error) => {
             reject(error);

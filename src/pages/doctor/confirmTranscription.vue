@@ -187,7 +187,7 @@ function clearFilter() {
 onBeforeRouteLeave((to, from, next) => {
   console.log("leave");
   store.resetList()
-  clearFilter()
+
   next();
 });
 </script>

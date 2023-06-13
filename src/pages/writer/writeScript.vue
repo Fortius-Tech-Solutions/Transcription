@@ -269,7 +269,6 @@ onBeforeRouteLeave((to, from, next) => {
   console.log("leave");
   store.resetList()
   doctorStore.resetList()
-  clearFilter()
   next();
 });
 </script>

@@ -148,7 +148,6 @@ function clearFilter() {
 onBeforeRouteLeave((to, from, next) => {
   console.log("leave");
   writer.resetList()
-  clearFilter()
   next();
 });
 </script>

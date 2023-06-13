@@ -5,72 +5,75 @@
         <div class="home_user_header">
           <h3 class="comman-title">{{ slug ? "Update" : "Create" }} User</h3>
         </div>
-        <div class="profile-card">
-          <div class="text-center">
-            <div class="profile-head edit-pro-head mob-pro-head">
-              <div class="profile-avtar">
-                <!-- <img v-if="true" src="" alt="" /> -->
-                <img v-if="imgSrc" :src="imgSrc" alt="user" />
-                <img v-else src="~assets/images/user-avtart-img.png" alt="" />
-              </div>
-              <div class="avtar-edit-icon">
-                <input style="display: none" ref="imgInput" type="file" name="image" :accept="accept"
-                  @change="setImage" />
+        <div class="q-pa-md main-wrapper">
 
-                <q-btn color="primary" icon="las la-pen" class="edit-pro-btn-avtar" @click.prevent="showFileChooser" />
+          <div class="profile-card">
+            <div class="text-center">
+              <div class="profile-head edit-pro-head mob-pro-head">
+                <div class="profile-avtar">
+                  <!-- <img v-if="true" src="" alt="" /> -->
+                  <img v-if="imgSrc" :src="imgSrc" alt="user" />
+                  <img v-else src="~assets/images/user-avtart-img.png" alt="" />
+                </div>
+                <div class="avtar-edit-icon">
+                  <input style="display: none" ref="imgInput" type="file" name="image" :accept="accept"
+                    @change="setImage" />
+
+                  <q-btn color="primary" icon="las la-pen" class="edit-pro-btn-avtar" @click.prevent="showFileChooser" />
+                </div>
               </div>
             </div>
-          </div>
-          <div class="row q-col-gutter-lg q-mt-sm edit-avtar-field">
-            <div class="col-md-6 col-sm-12 col-12 edit-field mob-edit-pa">
-              <label class="lable-text q-mb-sm q-ml-sm q-mr-sm">Select User Type</label>
-              <q-select outlined hide-bottom-space :dense="dense" class="q-ml-sm q-mr-sm" v-model="userTypeModel"
-                :options="userType" :error="errors.length > 0 ? true : false"
-                :error-message="serverValidationError(errors, 'user_type_id')" />
-            </div>
-            <div class="col-md-6 col-sm-12 col-12 edit-field mob-edit-pa">
-              <label class="lable-text q-mb-sm q-ml-sm q-mr-sm">First Name</label>
-              <q-input outlined hide-bottom-space v-model="first_name" :dense="dense" class="q-ml-sm q-mr-sm"
-                :rules="[(val) => required(val, 'First Name')]" :error="errors.length > 0 ? true : false"
-                :error-message="serverValidationError(errors, 'first_name')">
-              </q-input>
-            </div>
-            <div class="col-md-6 col-sm-12 col-12 edit-field mob-edit-pa">
-              <label class="lable-text q-mb-sm q-ml-sm q-mr-sm">Last Name</label>
-              <q-input outlined hide-bottom-space v-model="last_name" :dense="dense"
-                :placeholder="$q.lang.user.edit_profile.name.placeHolder" :rules="[(val) => required(val, 'Last Name')]"
-                :error="errors.length > 0 ? true : false" :error-message="serverValidationError(errors, 'last_name')"
-                class="q-ml-sm q-mr-sm">
-              </q-input>
-            </div>
-
-            <div class="col-md-6 col-sm-12 col-12 edit-field mob-edit-pa">
-              <label class="lable-text q-mb-sm q-ml-sm q-mr-sm">Email</label>
-              <q-input outlined hide-bottom-space v-model="email" :dense="dense" class="q-ml-sm q-mr-sm" :rules="[
-                (val) => required(val, 'Email'),
-                (val) => isEmail(val),
-              ]" :error="errors.length > 0 ? true : false" :error-message="serverValidationError(errors, 'email')">
-              </q-input>
-            </div>
-            <div v-if="!slug" class="col-md-6 col-sm-12 col-12 edit-field mob-edit-pa mob_digit">
-              <div class="pass-feild">
-                <label class="lable-text q-mb-sm q-ml-sm q-mr-sm" for="">Password </label>
-                <q-btn label="Generate" @click="generate()" />
+            <div class="row q-col-gutter-lg q-mt-sm edit-avtar-field">
+              <div class="col-md-6 col-sm-12 col-12 edit-field mob-edit-pa">
+                <label class="lable-text q-mb-sm q-ml-sm q-mr-sm">Select User Type</label>
+                <q-select outlined hide-bottom-space :dense="dense" class="q-ml-sm q-mr-sm" v-model="userTypeModel"
+                  :options="userType" :error="errors.length > 0 ? true : false"
+                  :error-message="serverValidationError(errors, 'user_type_id')" />
               </div>
-              <q-input outlined hide-bottom-space v-model="password" :dense="dense" :rules="[
-                (val) => required(val, 'Password'),
-                (val) => validatePassword(val),
-              ]" :error="errors.length > 0 ? true : false" :error-message="serverValidationError(errors, 'password')"
-                class="q-ml-sm q-mr-sm">
-              </q-input>
-            </div>
-          </div>
+              <div class="col-md-6 col-sm-12 col-12 edit-field mob-edit-pa">
+                <label class="lable-text q-mb-sm q-ml-sm q-mr-sm">First Name</label>
+                <q-input outlined hide-bottom-space v-model="first_name" :dense="dense" class="q-ml-sm q-mr-sm"
+                  :rules="[(val) => required(val, 'First Name')]" :error="errors.length > 0 ? true : false"
+                  :error-message="serverValidationError(errors, 'first_name')">
+                </q-input>
+              </div>
+              <div class="col-md-6 col-sm-12 col-12 edit-field mob-edit-pa">
+                <label class="lable-text q-mb-sm q-ml-sm q-mr-sm">Last Name</label>
+                <q-input outlined hide-bottom-space v-model="last_name" :dense="dense"
+                  :placeholder="$q.lang.user.edit_profile.name.placeHolder" :rules="[(val) => required(val, 'Last Name')]"
+                  :error="errors.length > 0 ? true : false" :error-message="serverValidationError(errors, 'last_name')"
+                  class="q-ml-sm q-mr-sm">
+                </q-input>
+              </div>
 
-          <div class="text-right q-pt-lg mob-action-btn">
-            <q-btn outline @click="cancel" color="primary" :label="$q.lang.user.edit_profile.cancel_btn"
-              class="edit-pro-btn" />
-            <q-btn color="primary" :label="$q.lang.user.edit_profile.submit_btn" type="submit"
-              class="edit-pro-btn q-ml-sm" />
+              <div class="col-md-6 col-sm-12 col-12 edit-field mob-edit-pa">
+                <label class="lable-text q-mb-sm q-ml-sm q-mr-sm">Email</label>
+                <q-input outlined hide-bottom-space v-model="email" :dense="dense" class="q-ml-sm q-mr-sm" :rules="[
+                  (val) => required(val, 'Email'),
+                  (val) => isEmail(val),
+                ]" :error="errors.length > 0 ? true : false" :error-message="serverValidationError(errors, 'email')">
+                </q-input>
+              </div>
+              <div v-if="!slug" class="col-md-6 col-sm-12 col-12 edit-field mob-edit-pa mob_digit">
+                <div class="pass-feild">
+                  <label class="lable-text q-mb-sm q-ml-sm q-mr-sm" for="">Password </label>
+                  <q-btn label="Generate" @click="generate()" />
+                </div>
+                <q-input outlined hide-bottom-space v-model="password" :dense="dense" :rules="[
+                  (val) => required(val, 'Password'),
+                  (val) => validatePassword(val),
+                ]" :error="errors.length > 0 ? true : false" :error-message="serverValidationError(errors, 'password')"
+                  class="q-ml-sm q-mr-sm">
+                </q-input>
+              </div>
+            </div>
+
+            <div class="text-right q-pt-lg mob-action-btn">
+              <q-btn outline @click="cancel" color="primary" :label="$q.lang.user.edit_profile.cancel_btn"
+                class="edit-pro-btn" />
+              <q-btn color="primary" :label="$q.lang.user.edit_profile.submit_btn" type="submit"
+                class="edit-pro-btn q-ml-sm" />
+            </div>
           </div>
         </div>
       </section>

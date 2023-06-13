@@ -65,7 +65,7 @@ export default {
       "After scanning the QR code image, the app will display a code that you can enter below.",
   },
   changePassword: {
-    title: "Change your Password",
+    title: "Change Password",
     subtitle: "8-character minimum ; case sensitive",
     current_Password: {
       label: "Current Password",

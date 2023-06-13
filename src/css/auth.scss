@@ -1,14 +1,14 @@
 .authentication-container {
   width: auto;
-  max-width: $value-470  !important;
+  max-width: $value-470 !important;
   margin: 0 auto;
 }
 
 .align-center-box {
-  width: $percentage-100  !important;
+  width: $percentage-100 !important;
   display: inline-block;
   background-color: rgb(85 38 124 / 6%);
-  padding: $value-30 $value-25 ;
+  padding: $value-30 $value-25;
 
   a {
     text-decoration: none;
@@ -21,7 +21,7 @@
 }
 
 .login_form .q-field {
-  margin-top: $value-6  !important;
+  margin-top: $value-6 !important;
 }
 
 .header-logo {
@@ -47,7 +47,7 @@
 }
 
 .text-dark {
-  color: $primary  !important;
+  color: $primary !important;
 }
 
 h3.title {
@@ -184,10 +184,10 @@ p.step-line {
 .align-center-box-auth {
   border: $value-2 solid #55267c;
   border-radius: map-get($borderRadius, "value7");
-  width: $percentage-80  !important;
+  width: $percentage-80 !important;
   margin-right: auto;
   margin-left: auto;
-  padding: $value-30 $value-25 ;
+  padding: $value-30 $value-25;
 }
 
 .small-title-verification {
@@ -200,4 +200,9 @@ p.step-line {
 
 .nameLogo {
   text-transform: uppercase;
+}
+.alert-txt {
+  font-size: map-get($font-sizes, font-14);
+  color: #ce3538;
+  margin-bottom: $value-10;
 }

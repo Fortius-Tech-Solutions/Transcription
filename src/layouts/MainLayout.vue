@@ -36,12 +36,27 @@
               <img :src="user.avtar" />
             </q-avatar>
             <div v-else class="logo-text">{{ profileText }}</div>
-            <div class="profile-user-name q-ml-sm">
+            <!-- <div class="profile-user-name q-ml-sm">
               <h5>{{ user.first_name }}&nbsp; {{ user.last_name }}</h5>
-            </div>
+            </div> -->
           </div>
-          <div class="q-ml-sm">
-            <q-btn dense color="primary" :label="$q.lang.mainLayout.profileDropdown.label3" @click="logout" />
+          <div class="header-profile-dropdown">
+            <q-btn-dropdown :label="user.first_name + ' ' + user.last_name" text-color="black">
+              <q-list class="my-account-info">
+                <q-separator inset />
+                <q-item clickable v-close-popup @click="changePassword">
+                  <q-item-section>
+                    <q-item-label> Change Password </q-item-label>
+                  </q-item-section>
+                </q-item>
+                <q-separator inset />
+                <q-item clickable v-close-popup @click="logout">
+                  <q-item-section>
+                    <q-item-label> Sign out </q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-btn-dropdown>
           </div>
         </div>
       </q-toolbar>
@@ -84,5 +99,8 @@ function logout() {
   store.logout().then((res) => {
     router.push({ name: "sign-in" });
   });
+}
+function changePassword() {
+  router.push({ name: "change-password" });
 }
 </script>

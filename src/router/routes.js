@@ -128,6 +128,20 @@ const routes = [
         },
       },
       {
+        path: "/change-password",
+        name: "change-password",
+        component: () =>
+          import(
+            /* webpackChunkName: "change-password" */
+            /* webpackMode: "lazy" */
+            /* webpackInclude: /\.vue$/ */
+            "src/pages/auth/ChangePassword.vue"
+          ),
+        meta: {
+          requiresAuth: true,
+        },
+      },
+      {
         path: "/writer-dashboard",
         name: "writer-dashboard",
         component: () =>
