@@ -21,7 +21,6 @@ export default boot(({ app, store }) => {
           return dependentField
             ? (val && val.length > 0) || "Please enter a " + fieldName
             : false;
-
         return false;
       },
       isEmail(val) {

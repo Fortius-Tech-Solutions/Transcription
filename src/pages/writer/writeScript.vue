@@ -1,7 +1,4 @@
 <template>
-  <!-- <form autocorrect="on" autocapitalize="off" autocomplete="off" spellcheck="true">
-    <q-editor model="editor" />
-  </form> -->
   <div class="home_user_header">
     <h3 class="comman-title">
       {{
@@ -60,6 +57,12 @@
               :error-message="serverValidationError(errors, 'Transcription')" :disable="data.isNew" />
           </form>
         </div>
+        <label for=""> Comment</label>
+        <q-input type="textarea" outlined v-model="comment" :dense="dense" placeholder="Please Enter Comment"
+          :disable="data.isNew || user.usertype.name == 'Doctor'" class="create-user-field-box"
+          :rules="[(val) => required(val, 'Comment')]" :error="errors.length > 0 ? true : false"
+          :error-message="serverValidationError(errors, 'Comment')" />
+
       </div>
       <div class="form_comon_btn q-mt-md q-mr-md q-mb-md" v-if="router.currentRoute.value.name !== 'confirm-script'">
         <q-btn outline color="primary" label="Cancel" @click="cancel" />
@@ -105,6 +108,7 @@ const selectModel = ref(null);
 const patient_name = ref(null);
 const gender = ref(null);
 const transcription = ref(null);
+const comment = ref(null);
 const audioRef = ref(null);
 const otherType = ref('')
 const user = computed(() => authStore.getUser);
@@ -140,12 +144,14 @@ if (draftStatus.value == 1) {
       console.log(res.data);
       if (res.success == true) {
         selectModel.value = {
-          label: res.data[0].transcript_name,
-          value: res.data[0].TSType_id
+          label: res.data[0].TSType_name ?? res.data[0].trascript_types.name,
+          value: res.data[0].TSType_id ?? res.data[0].trascript_types.id
         };
         patient_name.value = res.data[0].patient_name;
         gender.value = res.data[0].gender;
         transcription.value = res.data[0].transcription;
+        comment.value = res.data[0].comment
+        dateRange.value = res.data[0].date_of_service
         Loading.hide();
       } else if (res.success == false) {
         notification.error(res.message);
@@ -167,7 +173,8 @@ if (draftStatus.value == 1) {
   patient_name.value = data.value.patient_name;
   gender.value = data.value.gender;
   transcription.value = data.value.transcription;
-  dateRange.value = data.value.date_of_service.split('T')[0]
+  comment.value = data.value.comment;
+  dateRange.value = data.value.date_of_service
   options.value.forEach(element => {
     if (element.value == data.value.TSType_id) {
       selectModel.value = element
@@ -185,7 +192,8 @@ function onSubmit(type) {
     gender: gender.value,
     transcription: transcription.value,
     TSType_id: selectModel.value.value,
-    date_of_service: dateRange.value
+    date_of_service: dateRange.value,
+    comment: comment.value
   };
   if (type === "Draft") {
     data.draft = "draft";
@@ -217,6 +225,7 @@ function confirmScript() {
     hospital_id: data.value.hospital_id,
     status_id: "3",
     patient_name: patient_name.value,
+    comment: comment.value,
     gender: gender.value,
     transcription: transcription.value,
     TSType_id: selectModel.value.value,
