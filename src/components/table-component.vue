@@ -397,8 +397,7 @@ async function onRequest(events) {
     await apis
       .getWithParam(props.apiUrl, params)
       .then((res) => {
-        rows.value.splice(0, rows.value.length, ...res.data);
-
+        rows.value.splice(0, rows.value.length, ...res.data.data ?? res.data);
         rows.value.forEach((row) => {
           row.index = previousTotal.value;
           previousTotal.value++;

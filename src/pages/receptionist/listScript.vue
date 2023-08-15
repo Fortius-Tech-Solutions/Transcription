@@ -3,18 +3,17 @@
     <div class="q-pa-md main-wrapper">
       <div class="custom-tabel-box">
         <table-component ref="userTableComponent" :apiUrl="'receptionist/' + route.params.slug" :columns="columns"
-          rowKey="id" title="List" type="report" @delete="deleteItem" @edit="editItem" :reportData="fetchReportData"
-          @view="showItem" @lock="lockUser" :extra-filter="{
+          rowKey="id" title="List" @delete="deleteItem" @edit="editItem" :reportData="fetchReportData" @view="showItem"
+          @lock="lockUser" :extra-filter="{
             accountStatus: status,
             group: userGroup,
           }">
 
           <template v-slot:filter>
-            <q-btn color="primary" @click="calender = true" :label="
-              dateRange?.from
+            <q-btn color="primary" @click="calender = true" :label="dateRange?.from
                 ? dateRange.from + ' to ' + dateRange.to
                 : dateRange ?? 'Select Date'
-            " />
+              " />
             <q-btn v-if="dateRange" @click="clearFilter" icon="la la-times" />
           </template>
         </table-component>
