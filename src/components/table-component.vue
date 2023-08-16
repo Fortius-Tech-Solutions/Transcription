@@ -191,8 +191,8 @@ const pagination = ref({
   sortBy: "desc",
   descending: false,
   page: 1,
-  rowsPerPage: 10,
-  rowsNumber: 10,
+  rowsPerPage: 25,
+  rowsNumber: 0,
 });
 const master = useMasterStore();
 const selected = ref([{ id: 3 }]);
@@ -408,7 +408,7 @@ async function onRequest(events) {
         pagination.value.rowsPerPage = rowsPerPage;
         pagination.value.sortBy = sortBy;
         pagination.value.descending = descending;
-        pagination.value.rowsNumber = res.meta.total;
+        pagination.value.rowsNumber = res.data.meta.total ?? res.meta.total;
         loading.value = false;
       })
       .catch((err) => {
