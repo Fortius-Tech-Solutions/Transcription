@@ -57,12 +57,14 @@
               :error-message="serverValidationError(errors, 'Transcription')" :disable="data.isNew" />
           </form>
         </div>
-        <label for=""> Comment</label>
-        <q-input type="textarea" outlined v-model="comment" :dense="dense" placeholder="Please Enter Comment"
-          :disable="data.isNew || user.usertype.name == 'Doctor'" class="create-user-field-box"
-          :rules="[(val) => required(val, 'Comment')]" :error="errors.length > 0 ? true : false"
-          :error-message="serverValidationError(errors, 'Comment')" />
+        <div class="q-mt-lg">
+          <label for=""> Comment</label>
+          <q-input type="textarea" outlined v-model="comment" :dense="dense" placeholder="Please Enter Comment"
+            :disable="data.isNew || user.usertype.name == 'Doctor'" class="create-user-field-box"
+            :rules="[(val) => required(val, 'Comment')]" :error="errors.length > 0 ? true : false"
+            :error-message="serverValidationError(errors, 'Comment')" />
 
+        </div>
       </div>
       <div class="form_comon_btn q-mt-md q-mr-md q-mb-md" v-if="router.currentRoute.value.name !== 'confirm-script'">
         <q-btn outline color="primary" label="Cancel" @click="cancel" />

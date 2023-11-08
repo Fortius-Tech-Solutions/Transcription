@@ -11,8 +11,8 @@
 
           <template v-slot:filter>
             <q-btn color="primary" @click="calender = true" :label="dateRange?.from
-                ? dateRange.from + ' to ' + dateRange.to
-                : dateRange ?? 'Select Date'
+              ? dateRange.from + ' to ' + dateRange.to
+              : dateRange ?? 'Select Date'
               " />
             <q-btn v-if="dateRange" @click="clearFilter" icon="la la-times" />
           </template>
@@ -80,6 +80,14 @@ const columns = [
     field: (row) => row.audio_duration,
     format: (val) => `${val}`,
 
+  },
+  {
+    name: "date_of_service",
+    required: true,
+    label: "Date of Service",
+    align: "left",
+    field: (row) => row.date_of_service,
+    format: (val) => `${val}`,
   },
   {
     name: "actions",

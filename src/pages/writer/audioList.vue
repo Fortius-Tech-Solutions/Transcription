@@ -14,6 +14,7 @@
             <div class="td_col1">Audio Name</div>
             <div class="td_col2">Patient Name</div>
             <div class="td_col3">Hospital Name</div>
+            <div class="td_col4">Service Date</div>
           </div>
           <div class="col2">Action</div>
         </div>
@@ -37,11 +38,14 @@
                     </div>
                   </div>
                   <div class="audo_patient_name">
-                    <p><b>{{ item.patient_name }}</b></p>
+                    <p :title="item.patient_name"><b>{{ item.patient_name }}</b></p>
 
                   </div>
                   <div class="audo_hospital_name">
                     <p>{{ item.hospital_name }}</p>
+                  </div>
+                  <div class="audo_service_date">
+                    <p>{{ date.formatDate(item.date_of_service, 'DD-MM-YYYY') }}</p>
                   </div>
                 </div>
               </div>
@@ -453,11 +457,19 @@ h3.comman-title {
 
   display: flex;
   align-items: center;
-  min-width: 150px;
 
   p {
     margin: 0;
     text-transform: capitalize;
+
+    b {
+
+      width: 95px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      display: inline-block;
+    }
   }
 }
 
@@ -491,6 +503,10 @@ h3.comman-title {
     .td_col3 {
       padding-left: 60px;
     }
+
+    .td_col4 {
+      padding-left: 60px;
+    }
   }
 
   .col2 {
@@ -504,6 +520,16 @@ h3.comman-title {
 
   display: flex;
   align-items: center;
+
+  p {
+    margin: 0;
+  }
+}
+
+.audo_service_date {
+  display: flex;
+  align-items: center;
+  padding-left: 75px;
 
   p {
     margin: 0;
