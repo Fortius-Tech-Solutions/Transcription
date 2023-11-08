@@ -523,6 +523,10 @@ h3.comman-title {
 
   p {
     margin: 0;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 77px;
   }
 }
 
@@ -533,6 +537,24 @@ h3.comman-title {
 
   p {
     margin: 0;
+  }
+}
+
+@media(min-width:1200px) and (max-width:1299px) {
+  .audo_hospital_name {
+    padding-left: 16px;
+  }
+}
+
+@media(min-width:1300px) and (max-width:1399px) {
+  .audo_hospital_name {
+    padding-left: 22px;
+  }
+}
+
+@media(min-width:1400px) and (max-width:1499px) {
+  .audo_hospital_name {
+    padding-left: 28px;
   }
 }
 </style>

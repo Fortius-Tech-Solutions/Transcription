@@ -178,18 +178,17 @@ const storeUser = userStore();
 const userType = computed(() => {
   return storeUser.getUserType;
 });
-const userTypeModel = ref({ label: "All", value: "" });
+const userTypeModel = ref({ label: "All", value: null });
 const tableRef = ref();
 const rows = ref([]);
-const filter = ref("");
+const filter = ref(null);
 const loading = ref(false);
 const deleteDialog = ref(false);
 const previousTotal = ref(1);
 const total = ref();
 const totalLimit = ref();
 const pagination = ref({
-  sortBy: "desc",
-  descending: false,
+  descending: true,
   page: 1,
   rowsPerPage: 25,
   rowsNumber: 0,
@@ -323,9 +322,12 @@ async function onRequest(events) {
     page: page,
     limit: fetchCount,
     q: filter,
-    sortBy: sortBy,
-    orderBy: descending,
   };
+
+  if (route.name !== "user-dashboard" && route.name !== "hospital-dashboard") {
+    params.order = "date_of_service"
+    params.direction = descending ? "desc" : "asc"
+  }
 
   if (route.name == "user-dashboard") {
     params.type = userTypeModel.value.value;

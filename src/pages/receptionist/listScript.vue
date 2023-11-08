@@ -31,6 +31,7 @@
 import { computed, defineAsyncComponent, ref } from "vue";
 import { DOCTOR, RECEPT, TRANSCRIPTION } from "src/apis/constant";
 import { useRoute } from "vue-router";
+import { date } from "quasar";
 const userTableComponent = ref();
 const tableComponent = defineAsyncComponent(() =>
   import("src/components/table-component")
@@ -41,13 +42,14 @@ const dateRange = ref(null);
 const columns = [
   {
     name: "id",
+    key: "id",
     label: "NO.",
     field: "index",
-
     align: "left",
   },
   {
     name: "Patient Name",
+    key: "patient_name",
     required: true,
     label: "Name",
     align: "left",
@@ -57,6 +59,7 @@ const columns = [
   },
   {
     name: "type",
+    key: "type",
     align: "center",
     label: "Type",
     field: (row) => row.TSType_name,
@@ -65,6 +68,7 @@ const columns = [
   },
   {
     name: "audio name",
+    key: "audio_name",
     required: true,
     label: "Audio Name",
     align: "left",
@@ -74,6 +78,7 @@ const columns = [
   },
   {
     name: "duration",
+    key: "duration",
     required: true,
     label: "Duration",
     align: "left",
@@ -83,14 +88,16 @@ const columns = [
   },
   {
     name: "date_of_service",
+    key: "date",
     required: true,
     label: "Date of Service",
     align: "left",
-    field: (row) => row.date_of_service,
+    field: (row) => date.formatDate(row.date_of_service, "DD-MM-YYYY"),
     format: (val) => `${val}`,
   },
   {
     name: "actions",
+    key: "actions",
     label: "Actions",
     field: "actions",
   },

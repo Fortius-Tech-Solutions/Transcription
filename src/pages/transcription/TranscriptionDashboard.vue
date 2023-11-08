@@ -13,11 +13,10 @@
             group: userGroup,
           }">
           <template v-slot:filter>
-            <q-btn color="primary" @click="calender = true" :label="
-              dateRange?.from
+            <q-btn color="primary" @click="calender = true" :label="dateRange?.from
                 ? dateRange.from + ' to ' + dateRange.to
                 : dateRange ?? 'Select Date'
-            " />
+              " />
             <q-btn v-if="dateRange" @click="clearFilter" icon="la la-times" />
           </template>
         </table-component>
@@ -100,10 +99,10 @@ const columns = [
 
   },
   {
-    name: "created at",
+    name: "date_of_service",
     align: "center",
-    label: "Created At",
-    field: (row) => date.formatDate(row.created_at, "DD-MM-YYYY"),
+    label: "Date of Service",
+    field: (row) => date.formatDate(row.date_of_service, "DD-MM-YYYY"),
     format: (val) => `${val}`,
 
   },
