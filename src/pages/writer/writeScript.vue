@@ -105,9 +105,15 @@ const authStore = useAuthStore();
 const doctorStore = useDoctorStore();
 const { errors, serverValidationError } = useServerError();
 const options = computed(() => store.getTsTypeList)
-console.log(options.value);
+const data = computed(() => {
+  if (router.currentRoute.value.name == "confirm-script") {
+    return doctorStore.getData;
+  } else {
+    return store.getData;
+  }
+});
 const selectModel = ref(null);
-const patient_name = ref(null);
+const patient_name = ref(data.value.patient_name);
 const gender = ref(null);
 const transcription = ref(null);
 const comment = ref(null);
@@ -127,13 +133,7 @@ onMounted(() => {
     Loading.hide();
   });
 })
-const data = computed(() => {
-  if (router.currentRoute.value.name == "confirm-script") {
-    return doctorStore.getData;
-  } else {
-    return store.getData;
-  }
-});
+
 if (draftStatus.value == 1) {
   Loading.show({
     message: "Loading...",

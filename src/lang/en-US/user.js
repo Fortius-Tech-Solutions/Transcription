@@ -33,6 +33,10 @@ export default {
       label: "Phone Number",
       placeHolder: "Enter Phone Number"
     },
+    specialty: {
+      label: "Specialty",
+      placeHolder: "Enter your Specialty"
+    },
     cancel_btn: "Cancel",
     submit_btn: "Save"
   },

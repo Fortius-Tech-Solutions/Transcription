@@ -51,7 +51,7 @@
               </div>
               <div class="audio_list_action">
                 <q-btn v-if="item.name == 'Published'" title="Report Download" round color="primary"
-                  icon="las la-download" class="q-ml-sm" padding="sm" @click="downloadPDF(item)" />
+                  icon="las la-download" class="q-ml-sm" padding="sm" @click="goToPdf(item)" />
                 <q-btn round color="blue" icon="las la-download" title="Audio Download" class="q-ml-sm" padding="sm"
                   :href="item.audio_filepath" download />
                 <q-btn v-if="item.name == 'Confirmed'" color="green" label="Publish" class="q-ml-sm"
@@ -80,15 +80,18 @@
 
 
   </div>
-  <!-- style="display: none" -->
-  <div style="display: none">
-    <pdfComponent v-if="showPDF" :items="pdfData" id="downloadPDF" />
-  </div>
+
   <q-dialog v-model="calender">
     <q-date v-model="dateRange" range>
       <q-btn label="Submit" @click="selectDate" v-close-popup type="submit" color="primary" />
     </q-date>
   </q-dialog>
+
+  <!-- style="display: none" -->
+  <!-- <q-dialog v-model="showPDF" full-height full-width>
+    <pdfComponent :items="pdfData" id="downloadPDF" /> -->
+  <!-- <q-btn color="primary" label="Print" @click="printPDF()" /> -->
+  <!-- </q-dialog> -->
 </template>
 
 <script setup>
@@ -102,6 +105,7 @@ import { Loading, QSpinnerGears, date, LocalStorage } from "quasar";
 
 import moment from "moment";
 import html2pdf from "html2pdf.js";
+import { useMasterStore } from "src/stores/master";
 
 const pdfComponent = defineAsyncComponent(() =>
   import("src/components/dowloadPDF.vue")
@@ -123,7 +127,7 @@ const scrollList = ref(null);
 const currentPage = ref(1);
 const limit = ref(6);
 const loading = ref(true);
-
+const master = useMasterStore();
 function fetchAudio() {
   const data = {
     from_date: dateRange.value?.from,
@@ -182,73 +186,80 @@ function publishAudio(item) {
     });
 }
 
-async function downloadPDF(res) {
-  Loading.show({
-    message: "Loading...",
-    spinner: QSpinnerGears,
-  });
-  showPDF.value = true;
-  fetchPdf(res);
+async function goToPdf(data) {
+  // showPDF.value = true;
+  // pdfData.value = data;
+  master.pdfData = data
+  router.push({ name: 'transcription-pdf' })
 }
 
-function ExportToDoc(element, filename = '') {
-  var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Export HTML to Word Document with JavaScript</title></head><body>";
+// async function downloadPDF(res) {
+//   Loading.show({
+//     message: "Loading...",
+//     spinner: QSpinnerGears,
+//   });
+//   showPDF.value = true;
+//   fetchPdf(res);
+// }
 
-  var footer = "</body></html>";
+// function ExportToDoc(element, filename = '') {
+//   var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Export HTML to Word Document with JavaScript</title></head><body>";
 
-  var html = header + document.getElementById(element).innerHTML + footer;
+//   var footer = "</body></html>";
 
-  var blob = new Blob(['\ufeff', html], {
-    type: 'application/msword'
-  });
+//   var html = header + document.getElementById(element).innerHTML + footer;
 
-  // Specify link url
-  var url = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(html);
+//   var blob = new Blob(['\ufeff', html], {
+//     type: 'application/msword'
+//   });
 
-  // Specify file name
-  filename = filename ? filename + '.doc' : 'document.doc';
+//   // Specify link url
+//   var url = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(html);
 
-  // Create download link element
-  var downloadLink = document.createElement("a");
+//   // Specify file name
+//   filename = filename ? filename + '.doc' : 'document.doc';
 
-  document.body.appendChild(downloadLink);
+//   // Create download link element
+//   var downloadLink = document.createElement("a");
 
-  if (navigator.msSaveOrOpenBlob) {
-    navigator.msSaveOrOpenBlob(blob, filename);
-  } else {
-    // Create a link to the file
-    downloadLink.href = url;
+//   document.body.appendChild(downloadLink);
 
-    // Setting the file name
-    downloadLink.download = filename;
+//   if (navigator.msSaveOrOpenBlob) {
+//     navigator.msSaveOrOpenBlob(blob, filename);
+//   } else {
+//     // Create a link to the file
+//     downloadLink.href = url;
 
-    //triggering the function
-    downloadLink.click();
-  }
+//     // Setting the file name
+//     downloadLink.download = filename;
 
-  document.body.removeChild(downloadLink);
-}
+//     //triggering the function
+//     downloadLink.click();
+//   }
 
-async function fetchPdf(res) {
-  pdfData.value = res;
-  setTimeout(() => {
-    ExportToDoc("downloadPDF", `${pdfData.value.patient_name}_${date.formatDate(pdfData.value.date_of_service, 'DD-MM-YYYY')}`);
-    // exportToPDF(document.getElementById("downloadPDF"));
-    Loading.hide();
-  }, 4000);
-}
+//   document.body.removeChild(downloadLink);
+// }
+
+// async function fetchPdf(res) {
+//   pdfData.value = res;
+//   setTimeout(() => {
+//     ExportToDoc("downloadPDF", `${pdfData.value.patient_name}_${date.formatDate(pdfData.value.date_of_service, 'DD-MM-YYYY')}`);
+//     // exportToPDF(document.getElementById("downloadPDF"));
+//     Loading.hide();
+//   }, 4000);
+// }
 
 
 
-function exportToPDF(data) {
-  html2pdf(data, {
-    margin: 0,
-    filename: `${pdfData.value.patient_name}_${date.formatDate(pdfData.value.date_of_service, 'DD-MM-YYYY')}.pdf`,
-    image: { type: "jpeg", quality: 0.98 },
-    html2canvas: { scale: 1, letterRendering: true },
-    jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
-  });
-}
+// function exportToPDF(data) {
+//   html2pdf(data, {
+//     margin: 0,
+//     filename: `${pdfData.value.patient_name}_${date.formatDate(pdfData.value.date_of_service, 'DD-MM-YYYY')}.pdf`,
+//     image: { type: "jpeg", quality: 0.98 },
+//     html2canvas: { scale: 1, letterRendering: true },
+//     jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
+//   });
+// }
 
 function selectDate() {
   Loading.show({

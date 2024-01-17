@@ -24,7 +24,7 @@
                 <ul class="date_time">
                   <li>
                     <q-btn v-if="item.name == 'Published'" round color="primary" icon="las la-download" class="q-ml-sm"
-                      padding="sm" @click="downloadPDF(item)" title="Report Download" />
+                      padding="sm" @click="goToPdf(item)" title="Report Download" />
                   </li>
                   <li>
                     <q-chip :color="item.name == 'Confirmed' || item.name == 'Published'
@@ -64,9 +64,14 @@
     </q-infinite-scroll>
   </div>
 
-  <div style="display: none">
+  <!-- <div style="display: none">
     <pdfComponent v-if="showPDF" :items="pdfData" id="downloadPDF" />
-  </div>
+  </div> -->
+  <!-- style="display: none" -->
+  <!-- <q-dialog v-model="showPDF" full-height full-width>
+    <pdfComponent @callHeader="fetchPdf" :items="pdfData" id="downloadPDF" /> -->
+  <!-- <q-btn color="primary" label="Print" @click="printPDF()" /> -->
+  <!-- </q-dialog> -->
 </template>
 
 <script setup>
@@ -79,6 +84,7 @@ import { useDoctorStore } from "src/stores/doctor";
 import { useAuthStore } from "src/stores/auth";
 import moment from "moment";
 import html2pdf from "html2pdf.js";
+import { useMasterStore } from "src/stores/master";
 const pdfComponent = defineAsyncComponent(() =>
   import("src/components/dowloadPDF.vue")
 );
@@ -88,6 +94,7 @@ const router = useRouter();
 const route = useRoute();
 const store = useDoctorStore();
 const authStore = useAuthStore();
+const master = useMasterStore();
 const scrollList = ref(null);
 const currentPage = ref(1);
 const limit = ref(6);
@@ -142,73 +149,76 @@ function confirmScript(item) {
   router.push({ name: "confirm-script", params: { slug: item.id } });
 }
 
-async function downloadPDF(res) {
-  Loading.show({
-    message: "Loading...",
-    spinner: QSpinnerGears,
-  });
-  showPDF.value = true;
-  fetchPdf(res);
+// async function downloadPDF(res) {
+//   Loading.show({
+//     message: "Loading...",
+//     spinner: QSpinnerGears,
+//   });
+//   showPDF.value = true;
+//   fetchPdf(res);
+// }
+
+// async function goToPdf(data) {
+//   master.pdfData = data
+//   router.push({ name: 'transcription-pdf' })
+// }
+
+async function goToPdf(data) {
+  // showPDF.value = true;
+  // pdfData.value = data;
+  master.pdfData = data
+  router.push({ name: 'transcription-pdf' })
 }
 
-async function fetchPdf(res) {
-  pdfData.value = res;
-  setTimeout(() => {
-    // exportToPDF(document.getElementById("downloadPDF"));
-    ExportToDoc("downloadPDF", `${pdfData.value.patient_name}_${date.formatDate(pdfData.value.date_of_service, 'DD-MM-YYYY')}`);
-    Loading.hide();
-  }, 4000);
-}
+// async function fetchPdf(res, item) {
+//   pdfData.value = res;
+//   setTimeout(() => {
+//     const pageBreak = document.getElementById("mode");
+//     exportToPDF(document.getElementById("downloadPDF"), item ?? "", pageBreak);
+//     Loading.hide();
+//   }, 4000);
+// }
 
 
-function ExportToDoc(element, filename) {
-  var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Export HTML to Word Document with JavaScript</title></head><body>";
+// function ExportToDoc(element, filename = '') {
+//   var html = document.getElementById(element).innerHTML;
+//   var blob = new Blob(['\ufeff', html], {
+//     type: 'application/msword'
+//   });
+//   // Specify link url
+//   var url = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(html);
+//   // Specify file name
+//   filename = filename ? filename + '.doc' : 'document.doc';
+//   // Create download link element
+//   var downloadLink = document.createElement("a");
 
-  var footer = "</body></html>";
+//   document.body.appendChild(downloadLink);
 
-  var html = header + document.getElementById(element).innerHTML + footer;
+//   if (navigator.msSaveOrOpenBlob) {
+//     navigator.msSaveOrOpenBlob(blob, filename);
+//   } else {
+//     // Create a link to the file
+//     downloadLink.href = url;
 
-  var blob = new Blob(['\ufeff', html], {
-    type: 'application/msword'
-  });
+//     // Setting the file name
+//     downloadLink.download = filename;
 
-  // Specify link url
-  var url = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(html);
+//     //triggering the function
+//     downloadLink.click();
+//   }
+//   document.body.removeChild(downloadLink);
+// }
 
-  // Specify file name
-  filename = filename ? filename + '.doc' : 'document.doc';
+// function exportToPDF(data) {
+//   html2pdf(data, {
+//     margin: 0,
+//     filename: `${pdfData.value.patient_name}_${date.formatDate(pdfData.value.date_of_service, 'DD-MM-YYYY')}.pdf`,
+//     image: { type: "jpeg", quality: 0.98 },
+//     html2canvas: { scale: 1, letterRendering: true },
+//     jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
+//   });
+// }
 
-  // Create download link element
-  var downloadLink = document.createElement("a");
-
-  document.body.appendChild(downloadLink);
-
-  if (navigator.msSaveOrOpenBlob) {
-    navigator.msSaveOrOpenBlob(blob, filename);
-  } else {
-    // Create a link to the file
-    downloadLink.href = url;
-
-    // Setting the file name
-    downloadLink.download = filename;
-
-    //triggering the function
-    downloadLink.click();
-  }
-
-  document.body.removeChild(downloadLink);
-}
-function exportToPDF(data) {
-  ExportToDoc("downloadPDF", `${pdfData.value.patient_name}_${date.formatDate(pdfData.value.date_of_service, 'DD-MM-YYYY')}`);
-  // html2pdf(data, {
-  //   margin: 0,
-  //   filename: `${pdfData.value.patient_name}_${date.formatDate(pdfData.value.date_of_service, 'DD-MM-YYYY')}.pdf`,
-  //   image: { type: "jpeg", quality: 0.98 },
-  //   html2canvas: { scale: 1, letterRendering: true },
-  //   jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
-  // });
-  // const docx = htmlDocx.asBlob(htmlContent);
-}
 function clearFilter() {
   Loading.show({
     spinner: QSpinnerGears,

@@ -267,6 +267,20 @@ const routes = [
           requiresAuth: true,
         },
       },
+      {
+        path: "transcription/pdf",
+        name: "transcription-pdf",
+        component: () =>
+          import(
+            /* webpackChunkName: "transcription" */
+            /* webpackMode: "lazy" */
+            /* webpackInclude: /\.vue$/ */
+            "src/components/dowloadPDF.vue"
+          ),
+        meta: {
+          requiresAuth: true,
+        },
+      },
     ],
   },
 

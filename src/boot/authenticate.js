@@ -2,45 +2,41 @@ import { boot } from "quasar/wrappers";
 import { LocalStorage } from "quasar";
 import Notify from "boot/notification";
 import { useAuthStore } from "src/stores/auth";
-const store = useAuthStore()
+import { useMasterStore } from "src/stores/master";
+
+const store = useAuthStore();
+const master = useMasterStore();
+
 export default boot(({ router }) => {
   router.beforeEach((to, from, next) => {
-    if (
-      to.matched.some((record) => record.meta.requiresAuth) &&
-      !LocalStorage.getItem("access_token")
-    ) {
+    const accessToken = LocalStorage.getItem("access_token");
+    const roles = JSON.parse(LocalStorage.getItem("roles"));
+
+    const redirectTo = (routeName) => next({ name: routeName });
+
+    const checkRolesAndRedirect = () => {
+      if (roles == "Doctor ") {
+        return redirectTo("doctor-dashboard");
+      } else if (roles == "Writer") {
+        return redirectTo("writer-dashboard");
+      } else {
+        return redirectTo("home");
+      }
+    };
+
+    if (to.matched.some((record) => record.meta.requiresAuth) && !accessToken) {
       console.log("not authenticated");
       Notify.error("You must be logged in to view this page.");
-      return next({
-        name: "sign-in",
-      });
-    } else if (
-      to.matched.some((record) => record.meta.requireGuest) &&
-      LocalStorage.getItem("access_token")
-    ) {
-      // console.log(to.name == "doctor-dashboard");
-      if (JSON.parse(LocalStorage.getItem("roles")) == "Doctor "
-      ) {
-        console.log(LocalStorage.getItem("roles"));
-        return next({
-          name: "doctor-dashboard",
-        });
-      } else if (
-        JSON.parse(LocalStorage.getItem("roles")) == "Writer"
-      ) {
-        console.log(JSON.parse(LocalStorage.getItem("roles")));
-        return next({
-          name: "writer-dashboard",
-        });
-      } else {
-        console.log(JSON.parse(LocalStorage.getItem("roles")));
-        return next({
-          name: "home",
-        });
-      }
+      return redirectTo("sign-in");
+    } else if (to.matched.some((record) => record.meta.requireGuest) && accessToken) {
+      return checkRolesAndRedirect();
     } else {
-      next();
+      console.log("to.name", to.name, roles);
+      if (to.name == "transcription-pdf" && master.getPdfData.length == 0) {
+        return checkRolesAndRedirect();
+      } else {
+        next();
+      }
     }
-    // next();
   });
 });

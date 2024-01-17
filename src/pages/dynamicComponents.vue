@@ -6,9 +6,8 @@
         @lock="lockUser" :extra-filter="{
           accountStatus: status,
           group: userGroup,
-        }" :selectionType="
-  route.params.slug == 'assign-writer' ? 'single' : 'multiple'
-" :selectedItem="selectedAssign" @selected="onSelection">
+        }" :selectionType="route.params.slug == 'assign-writer' ? 'single' : 'multiple'
+  " :selectedItem="selectedAssign" @selected="onSelection">
       </table-component>
       <div class="text-right q-mt-md">
         <q-btn color="primary" type="submit" :label="$q.lang.button.submit" class="q-ml-md" @click="assign()" />

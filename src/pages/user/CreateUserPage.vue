@@ -66,7 +66,27 @@
                   class="q-ml-sm q-mr-sm">
                 </q-input>
               </div>
+              <span v-if="userTypeModel.value == 2">
+                <div class="col-md-6 col-sm-12 col-12 edit-field mob-edit-pa">
+                  <label class="lable-text q-mb-sm q-ml-sm q-mr-sm">Specialty</label>
+                  <q-input outlined hide-bottom-space v-model="specialty" :dense="dense"
+                    :placeholder="$q.lang.user.edit_profile.specialty.placeHolder"
+                    :rules="[(val) => required(val, 'Specialty')]" :error="errors.length > 0 ? true : false"
+                    :error-message="serverValidationError(errors, 'specialty')" class="q-ml-sm q-mr-sm">
+                  </q-input>
+                </div>
+                <div class="col-md-3 col-sm-12 col-12 edit-field mob-edit-pa  q-mt-xl">
+                  <div class="uploder_box">
+                    <div v-if="signatureImage" class="uploaded_img">
+                      <q-btn color="primary" rounded icon="las la-times" class="close" @click="deleteImage('sign')" />
+                      <img :src="signatureImage" />
+                    </div>
+                    <q-uploader v-else color="teal" label="Signature Image" url="" @added="filesAdded($event, 'sign')" />
+                  </div>
+                </div>
+              </span>
             </div>
+
 
             <div class="text-right q-pt-lg mob-action-btn">
               <q-btn outline @click="cancel" color="primary" :label="$q.lang.user.edit_profile.cancel_btn"
@@ -120,6 +140,8 @@ const first_name = ref("");
 const last_name = ref("");
 const email = ref("");
 const password = ref("");
+const specialty = ref("");
+const signatureImage = ref("");
 
 function generate() {
   const s1 = new RandExp(/[A-Z]{1}/gm).gen();
@@ -171,6 +193,20 @@ async function setImage(e) {
   render.readAsDataURL(file);
 }
 
+const filesAdded = (files, type) => {
+  console.log(files);
+  files.forEach((file) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      if (type == 'sign') {
+        signatureImage.value = e.target.result;
+      }
+      console.log(e.target.result);
+    };
+    reader.readAsDataURL(file);
+  });
+};
+
 
 if (route.name == "edit-user") {
   Loading.show({
@@ -192,6 +228,11 @@ if (route.name == "edit-user") {
         last_name.value = res.data[0].last_name;
         email.value = res.data[0].email;
         imgSrc.value = res.data[0].avtar;
+        specialty.value = res.data[0].speciality;
+        // headerImage.value = res.data[0].header_file;
+        // footerImage.value = res.data[0].footer_file;
+        // waterMarkImage.value = res.data[0].water_mark;
+        signatureImage.value = res.data[0].signature;
         Loading.hide();
       } else if (res.success == false) {
         notification.error(res.message);
@@ -218,6 +259,12 @@ function cancel() {
   history.go(-1);
 }
 
+const deleteImage = (type) => {
+  if (type == 'sign') {
+    signatureImage.value = '';
+  }
+};
+
 async function onSubmit() {
   Loading.show({
     message: "Loading...",
@@ -241,6 +288,18 @@ async function onSubmit() {
     const blob = await response.blob();
     const image = new File([blob], `image${uid()}.png`);
     formData.append("avtar", image, `image${uid()}.png`);
+  }
+
+  if (userTypeModel.value.value == 2) {
+    formData.append("speciality", specialty.value);
+    if (signatureImage.value?.startsWith('https://')) {
+      formData.append("signature", signatureImage.value);
+    } else if (signatureImage.value) {
+      const response = await fetch(signatureImage.value);
+      const blob = await response.blob();
+      const signature = new File([blob], `signature${uid()}.png`);
+      formData.append("signature", signature, `signature${uid()}.png`);
+    }
   }
 
   if (route.name == "edit-user") {
@@ -360,5 +419,58 @@ h3.comman-title {
 
 .profile-card .q-field__marginal {
   height: auto;
+}
+
+.uploder_box {
+  padding-left: 8px;
+  padding-right: 8px;
+  position: relative;
+
+  .q-uploader {
+    width: 100%;
+
+    .q-uploader__subtitle {
+      display: none;
+    }
+
+    .q-uploader__list {
+      min-height: auto;
+      padding: 0;
+
+      .q-uploader__file {
+        padding: 8px;
+      }
+    }
+  }
+
+  .close {
+    position: absolute;
+    top: -12px;
+    right: -4px;
+    padding: 0;
+    width: 25px;
+    height: 25px;
+    min-height: auto;
+  }
+}
+
+.uploaded_img {
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    max-height: 100%;
+  }
+
+  &:hover {
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+  }
 }
 </style>

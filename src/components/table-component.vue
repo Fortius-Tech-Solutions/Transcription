@@ -1,5 +1,6 @@
 <template>
   <div class="">
+
     <q-table ref="tableRef" :title="title" :rows="rows" :columns="columns" :row-key="rowKey"
       v-model:pagination="pagination" :loading="loading" :filter="filter" binary-state-sort @request="onRequest"
       :selection="selectionType" v-model:selected="selected" :selected-rows-label="getSelectedString"
@@ -80,13 +81,13 @@
 
           <q-btn
             v-if="user.user_type_id == 4 && route.name == 'transcription-list' || user.user_type_id == 1 && route.name == 'transcription-dashboard'"
-            color="secondary" icon="las la-download" @click="downloadPDF(props.row)" size="sm" no-caps
+            color="secondary" icon="las la-download" @click="goToPdf(props.row)" size="sm" no-caps
             title="Report Download"></q-btn>
         </q-td>
       </template>
       <template #body-cell-download="props">
         <q-td key="actions" :props="props">
-          <q-btn color="secondary" icon="las la-download" @click="downloadPDF(props.row)" size="sm" no-caps
+          <q-btn color="secondary" icon="las la-download" @click="goToPdf(props.row)" size="sm" no-caps
             title="Report Download"></q-btn>
         </q-td>
       </template>
@@ -116,9 +117,10 @@
     </q-card>
   </q-dialog>
   <!-- style="display: none" -->
-  <div style="display: none">
-    <pdfComponent v-if="showPDF" :items="pdfData" id="downloadPDF" />
-  </div>
+  <!-- <q-dialog v-model="showPDF" full-height full-width>
+    <pdfComponent :items="pdfData" id="downloadPDF" /> -->
+  <!-- <q-btn color="primary" label="Print" @click="printPDF()" /> -->
+  <!-- </q-dialog> -->
 </template>
 
 <script setup>
@@ -140,6 +142,7 @@ import moment from "moment";
 import html2pdf from "html2pdf.js";
 import { LocalStorage } from "quasar";
 import { useWriterStore } from "src/stores/writer";
+import axios from "axios";
 const pdfComponent = defineAsyncComponent(() =>
   import("src/components/dowloadPDF.vue")
 );
@@ -200,6 +203,7 @@ function selectType(val) {
   refresh();
 }
 const pdfData = ref([]);
+const images = ref([]);
 // ************* DATE FORMATE FUNCTION ******************//
 
 function formatDate(date) {
@@ -218,74 +222,49 @@ function formatDate(date) {
 
 /////////// *************** EXPORT TO PDF *************** ///////////
 
-function exportToPDF(data) {
-  html2pdf(data, {
+async function exportToPDF(data) {
+  await html2pdf(data, {
     margin: 0,
     filename: `${pdfData.value.patient_name}_${date.formatDate(pdfData.value.date_of_service, 'DD-MM-YYYY')}.pdf`,
-    image: { type: "jpeg", quality: 0.98 },
+    image: { type: "png", quality: 0.98 },
     html2canvas: { scale: 1, letterRendering: true },
     jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
   });
 }
-async function downloadPDF(res) {
-  Loading.show({
-    message: "Loading...",
-    spinner: QSpinnerGears,
+
+function getBase64Image(imgUrl) {
+  return new Promise((resolve, reject) => {
+    let img = new Image();
+    img.setAttribute('crossOrigin', 'anonymous');
+    img.onload = function () {
+      let canvas = document.createElement('canvas');
+      canvas.width = this.width;
+      canvas.height = this.height;
+      let ctx = canvas.getContext('2d');
+      ctx.drawImage(this, 0, 0);
+      let dataURL = canvas.toDataURL('image/png');
+      resolve(dataURL);
+    };
+    img.onerror = reject;
+    img.src = imgUrl;
   });
-  showPDF.value = true;
-  fetchPdf(res);
 }
+
 async function showTrans(data) {
   writerStore.data = data
   router.push({ name: 'script-view' })
 }
-function ExportToDoc(element, filename = '') {
-  var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Export HTML to Word Document with JavaScript</title></head><body>";
 
-  var footer = "</body></html>";
-
-  var html = header + document.getElementById(element).innerHTML + footer;
-
-  var blob = new Blob(['\ufeff', html], {
-    type: 'application/msword'
-  });
-
-  // Specify link url
-  var url = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(html);
-
-  // Specify file name
-  filename = filename ? filename + '.doc' : 'document.doc';
-
-  // Create download link element
-  var downloadLink = document.createElement("a");
-
-  document.body.appendChild(downloadLink);
-
-  if (navigator.msSaveOrOpenBlob) {
-    navigator.msSaveOrOpenBlob(blob, filename);
-  } else {
-    // Create a link to the file
-    downloadLink.href = url;
-
-    // Setting the file name
-    downloadLink.download = filename;
-
-    //triggering the function
-    downloadLink.click();
-  }
-
-  document.body.removeChild(downloadLink);
+async function goToPdf(data) {
+  // showPDF.value = true;
+  // pdfData.value = data;
+  master.pdfData = data
+  router.push({ name: 'transcription-pdf' })
 }
-function fetchPdf(res, item) {
-  pdfData.value = res;
-  setTimeout(() => {
-    const pageBreak = document.getElementById("mode");
-    ExportToDoc("downloadPDF", `${pdfData.value.patient_name}_${date.formatDate(pdfData.value.date_of_service, 'DD-MM-YYYY')}`);
 
-    // exportToPDF(document.getElementById("downloadPDF"), item ?? "", pageBreak);
-    Loading.hide();
-  }, 2000);
-}
+
+
+
 /////////// ***************************** ///////////
 
 function imagePreview(val) {
@@ -364,27 +343,23 @@ async function onRequest(events) {
         rows.value.splice(
           0,
           rows.value.length,
-          ...(res.data.data.data ?? res.data.data ?? res.data.res.data)
+          ...(res.data.data ?? res.data.data.data ?? res.data.res.data)
         );
 
-        total.value = res.data.total;
+        total.value = res.data.meta.total ?? res.data.data.meta.total
 
         rows.value.forEach((row) => {
           row.index = previousTotal.value;
           previousTotal.value++;
         });
-
-
-
-        totalLimit.value = res.data.meta.total;
+        totalLimit.value = res.meta.total ?? res.data.meta.total ?? res.data.data.meta.total;
 
         // don't forget to update local pagination object
         pagination.value.page = page;
         pagination.value.rowsPerPage = rowsPerPage;
         pagination.value.sortBy = sortBy;
         pagination.value.descending = descending;
-        pagination.value.rowsNumber =
-          res.data.meta.total ?? res.data.res.meta.total;
+        pagination.value.rowsNumber = res.meta.total ?? res.data.meta.total ?? res.data.data.meta.total;
         loading.value = false;
       })
       .catch((err) => {
@@ -404,13 +379,12 @@ async function onRequest(events) {
           row.index = previousTotal.value;
           previousTotal.value++;
         });
-
         // don't forget to update local pagination object
         pagination.value.page = page;
         pagination.value.rowsPerPage = rowsPerPage;
         pagination.value.sortBy = sortBy;
         pagination.value.descending = descending;
-        pagination.value.rowsNumber = res.data.meta.total ?? res.meta.total;
+        pagination.value.rowsNumber = res.meta.total ?? res.data.meta.total ?? res.data.data.meta.total;
         loading.value = false;
       })
       .catch((err) => {
@@ -511,3 +485,7 @@ function deleteItem(item) {
   deleteDialog.value = true;
 }
 </script>
+
+<style lang="scss" scoped></style>
+
+

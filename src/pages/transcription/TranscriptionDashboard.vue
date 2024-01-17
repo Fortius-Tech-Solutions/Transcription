@@ -14,8 +14,8 @@
           }">
           <template v-slot:filter>
             <q-btn color="primary" @click="calender = true" :label="dateRange?.from
-                ? dateRange.from + ' to ' + dateRange.to
-                : dateRange ?? 'Select Date'
+              ? dateRange.from + ' to ' + dateRange.to
+              : dateRange ?? 'Select Date'
               " />
             <q-btn v-if="dateRange" @click="clearFilter" icon="la la-times" />
           </template>
@@ -70,7 +70,7 @@ const columns = [
     name: "TS Type",
     align: "center",
     label: "TS Type",
-    field: (row) => row.name,
+    field: (row) => row?.name,
     format: (val) => `${val}`,
 
   },

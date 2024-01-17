@@ -22,6 +22,37 @@
             :rules="[(val) => required(val, 'Address')]" :error="errors.length > 0 ? true : false"
             :error-message="serverValidationError(errors, 'Address')" />
         </div>
+
+        <div class="row">
+          <div class="col-md-3 col-sm-12 col-12 edit-field mob-edit-pa q-mt-xl">
+            <div class="uploder_box">
+              <div v-if="headerImage" class="uploaded_img">
+                <q-btn color="primary" rounded icon="las la-times" class="close" @click="deleteImage('header')" />
+                <img :src="headerImage" />
+              </div>
+              <q-uploader v-else color="teal" label="Header Image" url="" @added="filesAdded($event, 'header')" />
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-12 col-12 edit-field mob-edit-pa q-mt-xl">
+            <div class="uploder_box">
+              <div v-if="footerImage" class="uploaded_img">
+                <q-btn color="primary" rounded icon="las la-times" class="close" @click="deleteImage('footer')" />
+                <img :src="footerImage" />
+              </div>
+              <q-uploader v-else color="teal" label="Footer Image" url="" @added="filesAdded($event, 'footer')" />
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-12 col-12 edit-field mob-edit-pa  q-mt-xl">
+            <div class="uploder_box">
+              <div v-if="waterMarkImage" class="uploaded_img">
+                <q-btn color="primary" rounded icon="las la-times" class="close" @click="deleteImage('water-mark')" />
+                <img :src="waterMarkImage" />
+              </div>
+              <q-uploader v-else color="teal" label="Water Mark Image" url="" @added="filesAdded($event, 'water-mark')" />
+            </div>
+          </div>
+
+        </div>
       </div>
       <div class="form_comon_btn q-mt-md q-mr-md q-mb-md">
         <q-btn outline color="primary" label="Cancel" @click="cancel" />
@@ -35,7 +66,7 @@ import { ref, computed, onMounted, defineAsyncComponent } from "vue";
 import { HOSPITAL } from "src/apis/constant";
 import { hospitalStore } from "src/stores/hospital";
 import notification from "src/boot/notification";
-import { Loading, QSpinnerGears } from "quasar";
+import { Loading, QSpinnerGears, uid } from "quasar";
 import useServerError from "src/composables/useServerError";
 
 import { useRoute, useRouter } from "vue-router";
@@ -57,6 +88,9 @@ const size = ref(12);
 const name = ref("");
 const city = ref("");
 const address = ref("");
+const headerImage = ref("");
+const footerImage = ref("");
+const waterMarkImage = ref("");
 
 function onSelection(rows, added) {
   if (added) {
@@ -73,6 +107,33 @@ function onSelection(rows, added) {
     });
   }
 }
+
+const filesAdded = (files, type) => {
+  console.log(files);
+  files.forEach((file) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      if (type == 'header') {
+        headerImage.value = e.target.result;
+      } else if (type == 'footer') {
+        footerImage.value = e.target.result;
+      } else if (type == 'water-mark') {
+        waterMarkImage.value = e.target.result;
+      }
+    };
+    reader.readAsDataURL(file);
+  });
+};
+
+const deleteImage = (type) => {
+  if (type == 'header') {
+    headerImage.value = '';
+  } else if (type == 'footer') {
+    footerImage.value = '';
+  } else if (type == 'water-mark') {
+    waterMarkImage.value = '';
+  }
+};
 
 const slug = ref(null);
 const edit_id = ref(null);
@@ -93,6 +154,9 @@ if (route.name == "edit-hospital") {
         name.value = res.data.name;
         address.value = res.data.address;
         city.value = res.data.city;
+        headerImage.value = res.data.header_file;
+        footerImage.value = res.data.footer_file;
+        waterMarkImage.value = res.data.water_mark;
         Loading.hide();
       } else if (res.success == false) {
         notification.error(res.message);
@@ -123,20 +187,46 @@ function cancel() {
   history.go(-1);
 }
 
-function onSubmit() {
+async function onSubmit() {
   Loading.show({
     message: "Loading...",
     spinner: QSpinnerGears,
   });
-  const data = {
-    name: name.value,
-    address: address.value,
-    city: city.value,
-  };
+  const formData = new FormData();
+  formData.append("name", name.value);
+  formData.append("address", address.value);
+  formData.append("city", city.value);
+
+  if (headerImage.value?.startsWith('https://')) {
+    formData.append("header_file", headerImage.value);
+  } else if (headerImage.value) {
+    const response = await fetch(headerImage.value);
+    const blob = await response.blob();
+    const header = new File([blob], `${name.value}header.png`);
+    formData.append("header_file", header, `${name.value}header.png`);
+  }
+  if (footerImage.value?.startsWith('https://')) {
+    formData.append("footer_file", footerImage.value);
+  } else if (footerImage.value) {
+    const response = await fetch(footerImage.value);
+    const blob = await response.blob();
+    const footer = new File([blob], `${name.value}footer.png`);
+    formData.append("footer_file", footer, `${name.value}footer.png`);
+
+  }
+
+  if (waterMarkImage.value?.startsWith('https://')) {
+    formData.append("water_mark", waterMarkImage.value);
+  } else if (waterMarkImage.value) {
+    const response = await fetch(waterMarkImage.value);
+    const blob = await response.blob();
+    const waterMark = new File([blob], `${name.value}waterMark.png`);
+    formData.append("water_mark", waterMark, `${name.value}waterMark.png`);
+  }
 
   if (route.name == "edit-hospital") {
     store
-      .updateHospital(data, edit_id.value)
+      .updateHospital(formData, edit_id.value)
       .then((res) => {
         if (res.success == true) {
           notification.success(
@@ -154,7 +244,7 @@ function onSubmit() {
       });
   } else {
     store
-      .saveNewHospital(data)
+      .saveNewHospital(formData)
       .then((res) => {
 
         if (res.success == true) {
@@ -233,6 +323,59 @@ h3.comman-title {
     .q-field__control {
       height: $value-45;
     }
+  }
+}
+
+.uploder_box {
+  padding-left: 8px;
+  padding-right: 8px;
+  position: relative;
+
+  .q-uploader {
+    width: 100%;
+
+    .q-uploader__subtitle {
+      display: none;
+    }
+
+    .q-uploader__list {
+      min-height: auto;
+      padding: 0;
+
+      .q-uploader__file {
+        padding: 8px;
+      }
+    }
+  }
+
+  .close {
+    position: absolute;
+    top: -12px;
+    right: -4px;
+    padding: 0;
+    width: 25px;
+    height: 25px;
+    min-height: auto;
+  }
+}
+
+.uploaded_img {
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    max-height: 100%;
+  }
+
+  &:hover {
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
   }
 }
 </style>
