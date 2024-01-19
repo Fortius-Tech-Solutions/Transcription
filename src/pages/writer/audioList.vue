@@ -86,12 +86,9 @@
       <q-btn label="Submit" @click="selectDate" v-close-popup type="submit" color="primary" />
     </q-date>
   </q-dialog>
-
-  <!-- style="display: none" -->
-  <!-- <q-dialog v-model="showPDF" full-height full-width>
-    <pdfComponent :items="pdfData" id="downloadPDF" /> -->
-  <!-- <q-btn color="primary" label="Print" @click="printPDF()" /> -->
-  <!-- </q-dialog> -->
+  <div style="display: none">
+    <pdfComponent v-if="showPDF" id="downloadPDF" />
+  </div>
 </template>
 
 <script setup>
@@ -102,18 +99,13 @@ import { ref, computed, defineAsyncComponent } from "vue";
 import { onBeforeRouteLeave, useRoute, useRouter } from "vue-router";
 import { useWriterStore } from "src/stores/writer";
 import { Loading, QSpinnerGears, date, LocalStorage } from "quasar";
-
 import moment from "moment";
-import html2pdf from "html2pdf.js";
 import { useMasterStore } from "src/stores/master";
+import { ExportToDoc } from "src/composables/utility";
 
-const pdfComponent = defineAsyncComponent(() =>
-  import("src/components/dowloadPDF.vue")
-);
+const pdfComponent = defineAsyncComponent(() => import("src/components/dowloadPDF.vue"));
 const router = useRouter();
 const route = useRoute();
-const showPDF = ref(false);
-const pdfData = ref([]);
 const calender = ref(false);
 const dateRange = ref(null);
 const store = useWriterStore();
@@ -185,81 +177,27 @@ function publishAudio(item) {
       Loading.hide();
     });
 }
-
+const showPDF = ref(false);
 async function goToPdf(data) {
-  // showPDF.value = true;
-  // pdfData.value = data;
+  Loading.show({
+    spinner: QSpinnerGears,
+    spinnerSize: 140,
+    spinnerColor: "primary",
+  });
+  let hospital_name = data.hospital_name ?? data.hospitalname.name;
   master.pdfData = data
-  router.push({ name: 'transcription-pdf' })
+  showPDF.value = true;
+  if (hospital_name == "Kyabram District Hostpial") {
+    setTimeout(() => {
+      Loading.hide();
+      ExportToDoc("downloadPDF", `${data.patient_name}`);
+    }, 2000);
+  } else {
+    router.push({ name: 'transcription-pdf' })
+    Loading.hide();
+  }
 }
 
-// async function downloadPDF(res) {
-//   Loading.show({
-//     message: "Loading...",
-//     spinner: QSpinnerGears,
-//   });
-//   showPDF.value = true;
-//   fetchPdf(res);
-// }
-
-// function ExportToDoc(element, filename = '') {
-//   var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Export HTML to Word Document with JavaScript</title></head><body>";
-
-//   var footer = "</body></html>";
-
-//   var html = header + document.getElementById(element).innerHTML + footer;
-
-//   var blob = new Blob(['\ufeff', html], {
-//     type: 'application/msword'
-//   });
-
-//   // Specify link url
-//   var url = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(html);
-
-//   // Specify file name
-//   filename = filename ? filename + '.doc' : 'document.doc';
-
-//   // Create download link element
-//   var downloadLink = document.createElement("a");
-
-//   document.body.appendChild(downloadLink);
-
-//   if (navigator.msSaveOrOpenBlob) {
-//     navigator.msSaveOrOpenBlob(blob, filename);
-//   } else {
-//     // Create a link to the file
-//     downloadLink.href = url;
-
-//     // Setting the file name
-//     downloadLink.download = filename;
-
-//     //triggering the function
-//     downloadLink.click();
-//   }
-
-//   document.body.removeChild(downloadLink);
-// }
-
-// async function fetchPdf(res) {
-//   pdfData.value = res;
-//   setTimeout(() => {
-//     ExportToDoc("downloadPDF", `${pdfData.value.patient_name}_${date.formatDate(pdfData.value.date_of_service, 'DD-MM-YYYY')}`);
-//     // exportToPDF(document.getElementById("downloadPDF"));
-//     Loading.hide();
-//   }, 4000);
-// }
-
-
-
-// function exportToPDF(data) {
-//   html2pdf(data, {
-//     margin: 0,
-//     filename: `${pdfData.value.patient_name}_${date.formatDate(pdfData.value.date_of_service, 'DD-MM-YYYY')}.pdf`,
-//     image: { type: "jpeg", quality: 0.98 },
-//     html2canvas: { scale: 1, letterRendering: true },
-//     jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
-//   });
-// }
 
 function selectDate() {
   Loading.show({

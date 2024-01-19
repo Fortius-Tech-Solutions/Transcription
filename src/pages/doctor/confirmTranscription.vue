@@ -62,16 +62,11 @@
         </div>
       </template>
     </q-infinite-scroll>
-  </div>
 
-  <!-- <div style="display: none">
-    <pdfComponent v-if="showPDF" :items="pdfData" id="downloadPDF" />
-  </div> -->
-  <!-- style="display: none" -->
-  <!-- <q-dialog v-model="showPDF" full-height full-width>
-    <pdfComponent @callHeader="fetchPdf" :items="pdfData" id="downloadPDF" /> -->
-  <!-- <q-btn color="primary" label="Print" @click="printPDF()" /> -->
-  <!-- </q-dialog> -->
+    <div style="display: none">
+      <pdfComponent v-if="showPDF" id="downloadPDF" />
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -83,13 +78,10 @@ import { Loading, QSpinnerGears, date } from "quasar";
 import { useDoctorStore } from "src/stores/doctor";
 import { useAuthStore } from "src/stores/auth";
 import moment from "moment";
-import html2pdf from "html2pdf.js";
 import { useMasterStore } from "src/stores/master";
-const pdfComponent = defineAsyncComponent(() =>
-  import("src/components/dowloadPDF.vue")
-);
-const showPDF = ref(false);
-const pdfData = ref([]);
+import { ExportToDoc } from "src/composables/utility";
+const pdfComponent = defineAsyncComponent(() => import("src/components/dowloadPDF.vue"));
+
 const router = useRouter();
 const route = useRoute();
 const store = useDoctorStore();
@@ -148,76 +140,26 @@ function confirmScript(item) {
   store.data = item;
   router.push({ name: "confirm-script", params: { slug: item.id } });
 }
-
-// async function downloadPDF(res) {
-//   Loading.show({
-//     message: "Loading...",
-//     spinner: QSpinnerGears,
-//   });
-//   showPDF.value = true;
-//   fetchPdf(res);
-// }
-
-// async function goToPdf(data) {
-//   master.pdfData = data
-//   router.push({ name: 'transcription-pdf' })
-// }
-
+const showPDF = ref(false);
 async function goToPdf(data) {
-  // showPDF.value = true;
-  // pdfData.value = data;
+  Loading.show({
+    spinner: QSpinnerGears,
+    spinnerSize: 140,
+    spinnerColor: "primary",
+  });
+  let hospital_name = data.hospital_name ?? data.hospitalname.name;
   master.pdfData = data
-  router.push({ name: 'transcription-pdf' })
+  showPDF.value = true;
+  if (hospital_name == "Kyabram District Hostpial") {
+    setTimeout(() => {
+      Loading.hide();
+      ExportToDoc("downloadPDF", `${data.patient_name}`);
+    }, 2000);
+  } else {
+    router.push({ name: 'transcription-pdf' })
+    Loading.hide();
+  }
 }
-
-// async function fetchPdf(res, item) {
-//   pdfData.value = res;
-//   setTimeout(() => {
-//     const pageBreak = document.getElementById("mode");
-//     exportToPDF(document.getElementById("downloadPDF"), item ?? "", pageBreak);
-//     Loading.hide();
-//   }, 4000);
-// }
-
-
-// function ExportToDoc(element, filename = '') {
-//   var html = document.getElementById(element).innerHTML;
-//   var blob = new Blob(['\ufeff', html], {
-//     type: 'application/msword'
-//   });
-//   // Specify link url
-//   var url = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(html);
-//   // Specify file name
-//   filename = filename ? filename + '.doc' : 'document.doc';
-//   // Create download link element
-//   var downloadLink = document.createElement("a");
-
-//   document.body.appendChild(downloadLink);
-
-//   if (navigator.msSaveOrOpenBlob) {
-//     navigator.msSaveOrOpenBlob(blob, filename);
-//   } else {
-//     // Create a link to the file
-//     downloadLink.href = url;
-
-//     // Setting the file name
-//     downloadLink.download = filename;
-
-//     //triggering the function
-//     downloadLink.click();
-//   }
-//   document.body.removeChild(downloadLink);
-// }
-
-// function exportToPDF(data) {
-//   html2pdf(data, {
-//     margin: 0,
-//     filename: `${pdfData.value.patient_name}_${date.formatDate(pdfData.value.date_of_service, 'DD-MM-YYYY')}.pdf`,
-//     image: { type: "jpeg", quality: 0.98 },
-//     html2canvas: { scale: 1, letterRendering: true },
-//     jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
-//   });
-// }
 
 function clearFilter() {
   Loading.show({

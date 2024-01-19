@@ -69,15 +69,6 @@ const pdfData = computed(() => {
   return master.pdfData;
 })
 
-// const props = defineProps({
-//   items: {
-//     type: Object,
-//     required: true,
-//   },
-// });
-// console.log(props.items);
-// const pdfData = ref(props.items);
-
 const doctorName = computed(() => {
   if (pdfData.value.first_name) {
     return pdfData.value.first_name + " " + pdfData.value.last_name;
@@ -85,7 +76,7 @@ const doctorName = computed(() => {
     return pdfData.value.doctorname.first_name + " " + pdfData.value.doctorname.last_name;
   }
 });
-
+const hospitalName = ref(pdfData.value.hospital_name ?? pdfData.value.hospitalname.name);
 const headerImage = ref(pdfData.value.header_file ?? pdfData.value.hospitalname.header_file);
 const footerImage = ref(pdfData.value.footer_file ?? pdfData.value.hospitalname.footer_file);
 const waterMark = ref(pdfData.value.water_mark ?? pdfData.value.hospitalname.water_mark);
@@ -115,10 +106,10 @@ const splitContent = computed(() => {
   return pages;
 });
 
-
-
 setTimeout(() => {
-  print();
+  if (hospitalName.value !== "Kyabram District Hostpial") {
+    print();
+  }
 }, 2000);
 
 </script>

@@ -116,11 +116,9 @@
       </q-card-section>
     </q-card>
   </q-dialog>
-  <!-- style="display: none" -->
-  <!-- <q-dialog v-model="showPDF" full-height full-width>
-    <pdfComponent :items="pdfData" id="downloadPDF" /> -->
-  <!-- <q-btn color="primary" label="Print" @click="printPDF()" /> -->
-  <!-- </q-dialog> -->
+  <div style="display: none">
+    <pdfComponent v-if="showPDF" id="downloadPDF" />
+  </div>
 </template>
 
 <script setup>
@@ -139,13 +137,11 @@ import { useMasterStore } from "src/stores/master";
 import { useAuthStore } from "src/stores/auth";
 import { date, exportFile, Loading, QSpinnerGears } from "quasar";
 import moment from "moment";
-import html2pdf from "html2pdf.js";
 import { LocalStorage } from "quasar";
 import { useWriterStore } from "src/stores/writer";
 import axios from "axios";
-const pdfComponent = defineAsyncComponent(() =>
-  import("src/components/dowloadPDF.vue")
-);
+import { ExportToDoc } from "src/composables/utility";
+const pdfComponent = defineAsyncComponent(() => import("src/components/dowloadPDF.vue"));
 const props = defineProps({
   columns: Array,
   apiUrl: String,
@@ -175,7 +171,6 @@ const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
 const emit = defineEmits(["delete", "edit", "selected", "view", "lock"]);
 
 const showPDF = ref(false);
-const showImage = ref(false);
 const route = useRoute();
 const storeUser = userStore();
 const userType = computed(() => {
@@ -198,12 +193,11 @@ const pagination = ref({
 });
 const master = useMasterStore();
 const selected = ref([{ id: 3 }]);
-const image = ref();
 function selectType(val) {
   refresh();
 }
-const pdfData = ref([]);
-const images = ref([]);
+
+
 // ************* DATE FORMATE FUNCTION ******************//
 
 function formatDate(date) {
@@ -220,46 +214,34 @@ function formatDate(date) {
 
 //             *********************
 
-/////////// *************** EXPORT TO PDF *************** ///////////
 
-async function exportToPDF(data) {
-  await html2pdf(data, {
-    margin: 0,
-    filename: `${pdfData.value.patient_name}_${date.formatDate(pdfData.value.date_of_service, 'DD-MM-YYYY')}.pdf`,
-    image: { type: "png", quality: 0.98 },
-    html2canvas: { scale: 1, letterRendering: true },
-    jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
-  });
-}
 
-function getBase64Image(imgUrl) {
-  return new Promise((resolve, reject) => {
-    let img = new Image();
-    img.setAttribute('crossOrigin', 'anonymous');
-    img.onload = function () {
-      let canvas = document.createElement('canvas');
-      canvas.width = this.width;
-      canvas.height = this.height;
-      let ctx = canvas.getContext('2d');
-      ctx.drawImage(this, 0, 0);
-      let dataURL = canvas.toDataURL('image/png');
-      resolve(dataURL);
-    };
-    img.onerror = reject;
-    img.src = imgUrl;
-  });
-}
+
 
 async function showTrans(data) {
   writerStore.data = data
   router.push({ name: 'script-view' })
 }
 
+
 async function goToPdf(data) {
-  // showPDF.value = true;
-  // pdfData.value = data;
+  Loading.show({
+    spinner: QSpinnerGears,
+    spinnerSize: 140,
+    spinnerColor: "primary",
+  });
+  let hospital_name = data.hospital_name ?? data.hospitalname.name;
   master.pdfData = data
-  router.push({ name: 'transcription-pdf' })
+  showPDF.value = true;
+  if (hospital_name == "Kyabram District Hostpial") {
+    setTimeout(() => {
+      Loading.hide();
+      ExportToDoc("downloadPDF", `${data.patient_name}`);
+    }, 2000);
+  } else {
+    router.push({ name: 'transcription-pdf' })
+    Loading.hide();
+  }
 }
 
 
@@ -267,10 +249,6 @@ async function goToPdf(data) {
 
 /////////// ***************************** ///////////
 
-function imagePreview(val) {
-  image.value = val;
-  showImage.value = true;
-}
 
 /////////// *************** EXPORT TO CSV *************** ///////////
 
