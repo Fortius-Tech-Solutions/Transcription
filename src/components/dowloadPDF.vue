@@ -1,7 +1,10 @@
 <template>
   <div id="downloadPDF" class="dialogpdf"
     style="width: 100%; height: 100%; display: inline-block; background-color: white;">
-    <div style="
+    <div v-if="pdfData.hospital_id === 2">
+      <span v-html="pdfData.transcription" />
+    </div>
+    <div v-else style="
         margin: 0 auto;
         width: 100%;
         z-index: 1;
@@ -63,12 +66,12 @@
 <script setup>
 import { computed, ref, defineProps } from "vue";
 import { useMasterStore } from "src/stores/master";
+import { date } from "quasar";
 
 const master = useMasterStore();
 const pdfData = computed(() => {
   return master.pdfData;
 })
-
 const doctorName = computed(() => {
   if (pdfData.value.first_name) {
     return pdfData.value.first_name + " " + pdfData.value.last_name;
@@ -76,11 +79,10 @@ const doctorName = computed(() => {
     return pdfData.value.doctorname.first_name + " " + pdfData.value.doctorname.last_name;
   }
 });
-const hospitalName = ref(pdfData.value.hospital_name ?? pdfData.value.hospitalname.name);
-const headerImage = ref(pdfData.value.header_file ?? pdfData.value.hospitalname.header_file);
-const footerImage = ref(pdfData.value.footer_file ?? pdfData.value.hospitalname.footer_file);
-const waterMark = ref(pdfData.value.water_mark ?? pdfData.value.hospitalname.water_mark);
-const signature = ref(pdfData.value.signature ?? pdfData.value.doctorname.signature);
+const headerImage = ref(pdfData.value?.header_file ?? pdfData.value?.hospitalname?.header_file);
+const footerImage = ref(pdfData.value?.footer_file ?? pdfData.value?.hospitalname?.footer_file);
+const waterMark = ref(pdfData.value?.water_mark ?? pdfData.value?.hospitalname?.water_mark);
+const signature = ref(pdfData.value?.signature ?? pdfData.value?.doctorname?.signature);
 
 const splitContent = computed(() => {
   const content = pdfData.value.transcription;
@@ -107,7 +109,7 @@ const splitContent = computed(() => {
 });
 
 setTimeout(() => {
-  if (hospitalName.value !== "Kyabram District Hostpial") {
+  if (pdfData.value.hospital_id !== 2) {
     print();
   }
 }, 2000);

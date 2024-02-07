@@ -1,6 +1,5 @@
 <template>
   <div class="">
-
     <q-table ref="tableRef" :title="title" :rows="rows" :columns="columns" :row-key="rowKey"
       v-model:pagination="pagination" :loading="loading" :filter="filter" binary-state-sort @request="onRequest"
       :selection="selectionType" v-model:selected="selected" :selected-rows-label="getSelectedString"
@@ -116,6 +115,7 @@
       </q-card-section>
     </q-card>
   </q-dialog>
+  <!-- style="display: none" -->
   <div style="display: none">
     <pdfComponent v-if="showPDF" id="downloadPDF" />
   </div>
@@ -223,17 +223,13 @@ async function showTrans(data) {
   router.push({ name: 'script-view' })
 }
 
-
 async function goToPdf(data) {
   Loading.show({
     spinner: QSpinnerGears,
-    spinnerSize: 140,
-    spinnerColor: "primary",
   });
-  let hospital_name = data.hospital_name ?? data.hospitalname.name;
   master.pdfData = data
   showPDF.value = true;
-  if (hospital_name == "Kyabram District Hostpial") {
+  if (data.hospital_id === 2) {
     setTimeout(() => {
       Loading.hide();
       ExportToDoc("downloadPDF", `${data.patient_name}`);

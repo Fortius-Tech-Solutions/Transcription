@@ -1,9 +1,7 @@
 function ExportToDoc(element, filename = '') {
-  var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Export HTML to Word Document with JavaScript</title></head><body>";
-
-  var footer = "</body></html>";
-
-  var html = header + document.getElementById(element).innerHTML + footer;
+  var preHtml = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Export Doc</title></head><body>";
+  var postHtml = "</body></html>";
+  var html = preHtml + document.getElementById(element).innerHTML + postHtml;
 
   var blob = new Blob(['\ufeff', html], {
     type: 'application/msword'
@@ -35,5 +33,4 @@ function ExportToDoc(element, filename = '') {
 
   document.body.removeChild(downloadLink);
 }
-
 export { ExportToDoc };

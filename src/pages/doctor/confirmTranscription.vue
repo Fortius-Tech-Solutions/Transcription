@@ -147,10 +147,9 @@ async function goToPdf(data) {
     spinnerSize: 140,
     spinnerColor: "primary",
   });
-  let hospital_name = data.hospital_name ?? data.hospitalname.name;
   master.pdfData = data
   showPDF.value = true;
-  if (hospital_name == "Kyabram District Hostpial") {
+  if (data.hospital_id === 2) {
     setTimeout(() => {
       Loading.hide();
       ExportToDoc("downloadPDF", `${data.patient_name}`);
