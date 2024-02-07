@@ -1,11 +1,20 @@
 <template>
   <div class="q-pa-md main-wrapper">
-    <div class="datefilter_box">
-      <q-btn color="primary" @click="calender = true" :label="dateRange?.from
-        ? dateRange.from + ' to ' + dateRange.to
-        : dateRange ?? 'Select Date'
-        " />
-      <q-btn v-if="dateRange" @click="clearFilter" icon="la la-times" />
+    <div class="text-right d-flex filter_search_box">
+      <div class="search">
+        <q-input v-model="search" debounce="500" outlined dense placeholder="Search" @update:model-value="filterSearch">
+          <template v-slot:append>
+            <q-icon name="search" />
+          </template>
+        </q-input>
+      </div>
+      <div>
+        <q-btn color="primary" @click="calender = true" :label="dateRange?.from
+          ? dateRange.from + ' to ' + dateRange.to
+          : dateRange ?? 'Select Date'
+          " />
+        <q-btn v-if="dateRange" @click="clearFilter" icon="la la-times" />
+      </div>
     </div>
     <q-infinite-scroll @load="onLoadAudioList" :offset="250" scroll-target="body" ref="scrollList">
       <q-card class="q-pa-lg" v-if="audioList.length !== 0">
@@ -117,6 +126,7 @@ Loading.show({
 const audioList = computed(() => store.getAudioList)
 const scrollList = ref(null);
 const currentPage = ref(1);
+const search = ref(null)
 const limit = ref(6);
 const loading = ref(true);
 const master = useMasterStore();
@@ -127,7 +137,8 @@ function fetchAudio() {
     limit: limit.value,
     page: currentPage.value,
     userId: route.params.slug.split('/')[0],
-    statusId: route.params.slug.split('/')[1]
+    statusId: route.params.slug.split('/')[1],
+    q: search.value,
   };
   return store.fetchAudioList(data)
 }
@@ -214,6 +225,19 @@ function clearFilter() {
     message: "Loading...",
   });
   dateRange.value = null;
+  store.audioList = []
+  currentPage.value = 1;
+  loading.value = true;
+  scrollList.value.reset();
+  scrollList.value.resume();
+  scrollList.value.trigger();
+}
+
+function filterSearch() {
+  Loading.show({
+    spinner: QSpinnerGears,
+    message: "Loading...",
+  });
   store.audioList = []
   currentPage.value = 1;
   loading.value = true;
@@ -503,6 +527,21 @@ h3.comman-title {
 @media(min-width:1400px) and (max-width:1499px) {
   .audo_hospital_name {
     padding-left: 28px;
+  }
+}
+
+.filter_search_box {
+  display: flex;
+  margin-bottom: 20px;
+  justify-content: space-between;
+  align-items: center;
+
+  .search {
+    width: 240px;
+
+    .q-field__control {
+      height: 35px;
+    }
   }
 }
 </style>

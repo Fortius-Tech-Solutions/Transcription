@@ -1,5 +1,21 @@
 <template>
   <div class="q-pa-md main-wrapper">
+    <div class="text-right d-flex filter_search_box">
+      <div class="search">
+        <q-input v-model="search" debounce="500" outlined dense placeholder="Search" @update:model-value="filterSearch">
+          <template v-slot:append>
+            <q-icon name="search" />
+          </template>
+        </q-input>
+      </div>
+      <div>
+        <q-btn color="primary" @click="calender = true" :label="dateRange?.from
+          ? dateRange.from + ' to ' + dateRange.to
+          : dateRange ?? 'Select Date'
+          " />
+        <q-btn v-if="dateRange" @click="clearFilter" icon="la la-times" />
+      </div>
+    </div>
     <q-infinite-scroll @load="onLoadList" :offset="250" scroll-target="body" ref="scrollList">
       <q-card class="q-pa-lg" v-if="verifyList.length !== 0">
         <div class="patient_trans_list_bg" v-for="item in verifyList" :key="item">
@@ -67,6 +83,11 @@
       <pdfComponent v-if="showPDF" id="downloadPDF" />
     </div>
   </div>
+  <q-dialog v-model="calender">
+    <q-date v-model="dateRange" range>
+      <q-btn label="Submit" @click="selectDate" v-close-popup type="submit" color="primary" />
+    </q-date>
+  </q-dialog>
 </template>
 
 <script setup>
@@ -97,7 +118,9 @@ const verifyList = computed(() => {
 const user = computed(() => {
   return authStore.getUser;
 });
-
+const calender = ref(false);
+const dateRange = ref(null);
+const search = ref(null)
 const data = ref({
   hospitalId: route.params.slug.split('/')[0],
   statusId: route.params.slug.split('/')[1]
@@ -125,10 +148,12 @@ function onLoadList(index, done) {
 
 function fetchList() {
   const data = {
+    ...fetchReportData.value,
     hospitalId: route.params.slug.split('/')[0],
     statusId: route.params.slug.split('/')[1],
     limit: limit.value,
     page: currentPage.value,
+    q: search.value,
   };
   return store.fetchTranscriptionList(data)
 }
@@ -144,8 +169,6 @@ const showPDF = ref(false);
 async function goToPdf(data) {
   Loading.show({
     spinner: QSpinnerGears,
-    spinnerSize: 140,
-    spinnerColor: "primary",
   });
   master.pdfData = data
   showPDF.value = true;
@@ -160,12 +183,46 @@ async function goToPdf(data) {
   }
 }
 
+function selectDate() {
+  applyFilter();
+}
+const fetchReportData = ref();
+function applyFilter() {
+  Loading.show({
+    spinner: QSpinnerGears,
+    message: "Loading...",
+  });
+  fetchReportData.value = {
+    from_date: dateRange.value?.from ?? dateRange.value,
+    to_date: dateRange.value?.to ?? dateRange.value,
+  };
+  store.transcriptionList = []
+  currentPage.value = 1;
+  loading.value = true;
+  scrollList.value.reset();
+  scrollList.value.resume();
+  scrollList.value.trigger();
+}
+
 function clearFilter() {
   Loading.show({
     spinner: QSpinnerGears,
     message: "Loading...",
   });
-  // dateRange.value = null;
+  dateRange.value = null;
+  fetchReportData.value = {}
+  store.transcriptionList = []
+  currentPage.value = 1;
+  loading.value = true;
+  scrollList.value.reset();
+  scrollList.value.resume();
+  scrollList.value.trigger();
+}
+function filterSearch() {
+  Loading.show({
+    spinner: QSpinnerGears,
+    message: "Loading...",
+  });
   store.transcriptionList = []
   currentPage.value = 1;
   loading.value = true;
@@ -176,7 +233,6 @@ function clearFilter() {
 onBeforeRouteLeave((to, from, next) => {
   console.log("leave");
   store.resetList()
-
   next();
 });
 </script>
@@ -422,5 +478,20 @@ h3.comman-title {
   font-size: 18px;
   font-weight: 500;
   color: #000;
+}
+
+.filter_search_box {
+  display: flex;
+  margin-bottom: 20px;
+  justify-content: space-between;
+  align-items: center;
+
+  .search {
+    width: 240px;
+
+    .q-field__control {
+      height: 35px;
+    }
+  }
 }
 </style>
