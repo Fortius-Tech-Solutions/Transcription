@@ -40,7 +40,8 @@
                   <div v-if="index === splitContent.length - 1">
                     <img v-if="signature" :src="signature" style="width: 100px;" alt="signature"><br />
                     <span style="padding-bottom: 10px; display: inline-block;">
-                      {{ doctorName }}
+                      {{ doctorName }}<br />
+                      {{ speciality }}
                     </span>
 
                   </div>
@@ -79,10 +80,12 @@ const doctorName = computed(() => {
     return pdfData.value.doctorname.first_name + " " + pdfData.value.doctorname.last_name;
   }
 });
+const patientName = ref(pdfData.value?.patient_name ?? "");
 const headerImage = ref(pdfData.value?.header_file ?? pdfData.value?.hospitalname?.header_file);
 const footerImage = ref(pdfData.value?.footer_file ?? pdfData.value?.hospitalname?.footer_file);
 const waterMark = ref(pdfData.value?.water_mark ?? pdfData.value?.hospitalname?.water_mark);
 const signature = ref(pdfData.value?.signature ?? pdfData.value?.doctorname?.signature);
+const speciality = ref(pdfData.value?.speciality ?? pdfData.value?.doctorname?.speciality)
 
 const splitContent = computed(() => {
   const content = pdfData.value.transcription;
@@ -110,7 +113,10 @@ const splitContent = computed(() => {
 
 setTimeout(() => {
   if (pdfData.value.hospital_id !== 2) {
-    print();
+    var tempTitle = document.title;
+    document.title = `${patientName.value}_${date.formatDate(pdfData.value?.date_of_service, "DD-MM-YYYY")}`;
+    window.print();
+    document.title = tempTitle;
   }
 }, 2000);
 
