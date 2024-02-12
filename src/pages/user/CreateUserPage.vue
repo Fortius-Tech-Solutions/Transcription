@@ -286,8 +286,10 @@ async function onSubmit() {
   } else if (imgSrc.value) {
     const response = await fetch(imgSrc.value);
     const blob = await response.blob();
-    const image = new File([blob], `image${uid()}.png`);
-    formData.append("avtar", image, `image${uid()}.png`);
+    const image = new File([blob], `profile`);
+    formData.append("avtar", image, `profile`);
+  } else {
+    formData.append("avtar", "");
   }
 
   if (userTypeModel.value.value == 2) {
@@ -297,8 +299,10 @@ async function onSubmit() {
     } else if (signatureImage.value) {
       const response = await fetch(signatureImage.value);
       const blob = await response.blob();
-      const signature = new File([blob], `signature${uid()}.png`);
-      formData.append("signature", signature, `signature${uid()}.png`);
+      const signature = new File([blob], `signature`);
+      formData.append("signature", signature, `signature`);
+    } else {
+      formData.append("signature", "");
     }
   }
 

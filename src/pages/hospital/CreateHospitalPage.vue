@@ -202,17 +202,21 @@ async function onSubmit() {
   } else if (headerImage.value) {
     const response = await fetch(headerImage.value);
     const blob = await response.blob();
-    const header = new File([blob], `${name.value}header.png`);
-    formData.append("header_file", header, `${name.value}header.png`);
+    const header = new File([blob], `header`);
+    formData.append("header_file", header, `header`);
+  } else {
+    formData.append("header_file", "");
+
   }
   if (footerImage.value?.startsWith('https://')) {
     formData.append("footer_file", footerImage.value);
   } else if (footerImage.value) {
     const response = await fetch(footerImage.value);
     const blob = await response.blob();
-    const footer = new File([blob], `${name.value}footer.png`);
-    formData.append("footer_file", footer, `${name.value}footer.png`);
-
+    const footer = new File([blob], `footer`);
+    formData.append("footer_file", footer, `footer`);
+  } else {
+    formData.append("footer_file", "");
   }
 
   if (waterMarkImage.value?.startsWith('https://')) {
@@ -220,8 +224,10 @@ async function onSubmit() {
   } else if (waterMarkImage.value) {
     const response = await fetch(waterMarkImage.value);
     const blob = await response.blob();
-    const waterMark = new File([blob], `${name.value}waterMark.png`);
-    formData.append("water_mark", waterMark, `${name.value}waterMark.png`);
+    const waterMark = new File([blob], `waterMark.png`);
+    formData.append("water_mark", waterMark, `waterMark.png`);
+  } else {
+    formData.append("water_mark", "");
   }
 
   if (route.name == "edit-hospital") {
