@@ -24,6 +24,7 @@
             <div class="td_col2">Patient Name</div>
             <div class="td_col3">Hospital Name</div>
             <div class="td_col4">Service Date</div>
+            <div class="td_col5">Created Date</div>
           </div>
           <div class="col2">Action</div>
         </div>
@@ -50,11 +51,14 @@
                     <p :title="item.patient_name"><b>{{ item.patient_name }}</b></p>
 
                   </div>
-                  <div class="audo_hospital_name">
+                  <div class="audo_hospital_name" :title="item.hospital_name">
                     <p>{{ item.hospital_name }}</p>
                   </div>
                   <div class="audo_service_date">
                     <p>{{ date.formatDate(item.date_of_service, 'DD-MM-YYYY') }}</p>
+                  </div>
+                  <div class="audo_created_date">
+                    <p>{{ date.formatDate(item.created_at, 'DD-MM-YYYY') }}</p>
                   </div>
                 </div>
               </div>
@@ -479,6 +483,10 @@ h3.comman-title {
     .td_col4 {
       padding-left: 60px;
     }
+
+    .td_col5 {
+      padding-left: 60px;
+    }
   }
 
   .col2 {
@@ -511,6 +519,17 @@ h3.comman-title {
     margin: 0;
   }
 }
+
+.audo_created_date {
+  display: flex;
+  align-items: center;
+  padding-left: 75px;
+
+  p {
+    margin: 0;
+  }
+}
+
 
 @media(min-width:1200px) and (max-width:1299px) {
   .audo_hospital_name {
