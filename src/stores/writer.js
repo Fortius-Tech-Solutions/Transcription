@@ -122,7 +122,7 @@ export const useWriterStore = defineStore("writer", {
                 this.tsType.push({ value: element.id, label: element.name })
               });
               this.tsType.push({ value: 'other', label: 'other' })
-              LocalStorage.set('ts-type', this.tsType)
+              // LocalStorage.set('ts-type', this.tsType)
               resolve(res);
             }
             resolve(res);

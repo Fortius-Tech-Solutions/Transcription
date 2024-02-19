@@ -177,11 +177,10 @@ if (draftStatus.value == 1) {
   transcription.value = data.value.transcription;
   comment.value = data.value.comment;
   dateRange.value = data.value.date_of_service
-  options.value.forEach(element => {
-    if (element.value == data.value.TSType_id) {
-      selectModel.value = element
-    }
-  });
+  selectModel.value = {
+    label: data.value.TSType_name,
+    value: data.value.TSType_id
+  };
 }
 
 function onSubmit(type) {
