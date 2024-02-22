@@ -13,7 +13,10 @@
       ">
       <div style="display: flex; height: 100%; width:100%; flex-direction: column;">
         <div style="width:100%; padding: 38px 60px 0 60px;" v-for="(content, index) in splitContent" :key="index"
-          class="page water_mark" :style="{ backgroundImage: `url(${waterMark})` }">
+          class="page water_mark split_content_loop" :style="{ backgroundImage: `url(${waterMark})` }">
+          <div class="pdf_header">
+            <img style="width:100%;" v-if="headerImage" :src="headerImage" alt="header image" />
+          </div>
           <table border="0" style="
             margin: 0;
             width: 100%;
@@ -26,13 +29,13 @@
             border: none;
             vertical-align: top;
           ">
-            <thead>
+            <!-- <thead>
               <tr>
                 <th colspan="2">
                   <img style="width:100%;" v-if="headerImage" :src="headerImage" alt="header image" />
                 </th>
               </tr>
-            </thead>
+            </thead> -->
             <tbody style="vertical-align: top; height: 800px;">
               <tr>
                 <td colspan="2" style="padding-top: 5px; vertical-align: text-top">
@@ -43,21 +46,22 @@
                       {{ doctorName }}<br />
                       {{ speciality }}
                     </span>
-
                   </div>
                 </td>
-
               </tr>
             </tbody>
-            <tfoot style="page-break-inside:auto; width: 100%; ">
+            <!-- <tfoot style="page-break-inside:auto; width: 100%; ">
               <tr>
                 <td>
                   <img v-if="footerImage" :src="footerImage" alt="footer image"
                     style="width: 100%; margin-bottom: 40px;" />
                 </td>
               </tr>
-            </tfoot>
+            </tfoot> -->
           </table>
+          <div class="pdf_footer">
+            <img v-if="footerImage" :src="footerImage" alt="footer image" style="width: 100%; margin-bottom: 40px;" />
+          </div>
         </div>
       </div>
     </div>
@@ -91,7 +95,7 @@ const splitContent = computed(() => {
   const content = pdfData.value.transcription;
   const pages = [];
   let currentPage = '';
-  const pageHeight = 1300;
+  const pageHeight = 1020;
   const lineHeight = 20;
   const linesPerPage = Math.floor(pageHeight / lineHeight);
   const lines = content.split('\n');
@@ -155,7 +159,31 @@ setTimeout(() => {
     margin: 0;
   }
 
+  .split_content_loop {
+
+    padding-top: 150px !important;
+  }
+
+  .pdf_header {
+    position: fixed;
+    top: 10px;
+    left: 0;
+    width: 100%;
+    padding: 0 60px;
+  }
+
+  .pdf_footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 0 60px;
+  }
+
+
 }
+
+
 
 .water_mark {
   // background: url("../assets/images/water-mark-pdf.png") bottom left no-repeat;
