@@ -2,13 +2,15 @@
   <div class="q-pa-md main-wrapper">
     <div class="text-right d-flex filter_search_box">
       <div class="search">
-        <q-input v-model="search" debounce="500" outlined dense placeholder="Search" @update:model-value="filterSearch">
+        <q-input v-model="search" debounce="500" outlined dense placeholder="Search" @update:model-value="onFilter">
           <template v-slot:append>
             <q-icon name="search" />
           </template>
         </q-input>
       </div>
-      <div>
+      <div class="filter_right_box">
+        <q-select outlined dense v-model="selectHospital" label="Select Hospital" :options="hospitalList"
+          style="width: 250px" @update:model-value="onFilter" />
         <q-btn color="primary" @click="calender = true" :label="dateRange?.from
           ? dateRange.from + ' to ' + dateRange.to
           : dateRange ?? 'Select Date'
@@ -84,6 +86,7 @@
           <h5>Data Not Found</h5>
         </div>
       </q-card>
+
       <template v-slot:loading>
         <div class="row justify-center q-my-md">
           <q-spinner-dots color="primary" size="40px" />
@@ -108,13 +111,14 @@
 import AudioPlayer from "vue3-audio-player";
 import api from "src/apis/index";
 import { TRANSCRIPTION, DOCTOR } from "src/apis/constant";
-import { ref, computed, defineAsyncComponent } from "vue";
+import { ref, computed, defineAsyncComponent, onMounted } from "vue";
 import { onBeforeRouteLeave, useRoute, useRouter } from "vue-router";
 import { useWriterStore } from "src/stores/writer";
 import { Loading, QSpinnerGears, date, LocalStorage } from "quasar";
 import moment from "moment";
 import { useMasterStore } from "src/stores/master";
 import { ExportToDoc } from "src/composables/utility";
+import { hospitalStore } from "src/stores/hospital";
 
 const pdfComponent = defineAsyncComponent(() => import("src/components/dowloadPDF.vue"));
 const router = useRouter();
@@ -127,13 +131,18 @@ Loading.show({
   spinner: QSpinnerGears,
   message: "Loading...",
 });
+
 const audioList = computed(() => store.getAudioList)
 const scrollList = ref(null);
 const currentPage = ref(1);
 const search = ref(null)
+const selectHospital = ref(null);
 const limit = ref(6);
 const loading = ref(true);
 const master = useMasterStore();
+const hospital = hospitalStore()
+const hospitalList = computed(() => hospital.getHospitalList)
+console.log(hospitalList);
 function fetchAudio() {
   const data = {
     from_date: dateRange.value?.from,
@@ -142,6 +151,7 @@ function fetchAudio() {
     page: currentPage.value,
     userId: route.params.slug.split('/')[0],
     statusId: route.params.slug.split('/')[1],
+    hospital_id: selectHospital.value?.value,
     q: search.value,
   };
   return store.fetchAudioList(data)
@@ -237,7 +247,7 @@ function clearFilter() {
   scrollList.value.trigger();
 }
 
-function filterSearch() {
+function onFilter() {
   Loading.show({
     spinner: QSpinnerGears,
     message: "Loading...",
@@ -249,6 +259,8 @@ function filterSearch() {
   scrollList.value.resume();
   scrollList.value.trigger();
 }
+
+onMounted(() => hospital.fetchHospitalList())
 
 onBeforeRouteLeave((to, from, next) => {
   console.log("leave");
@@ -561,6 +573,15 @@ h3.comman-title {
     .q-field__control {
       height: 35px;
     }
+  }
+}
+
+.filter_right_box {
+  display: flex;
+  align-items: center;
+
+  .q-select {
+    margin-right: 15px;
   }
 }
 </style>

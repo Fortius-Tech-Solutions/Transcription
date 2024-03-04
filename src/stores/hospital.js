@@ -13,6 +13,13 @@ export const hospitalStore = defineStore("hospital", {
     getHospital() {
       return this.currentHospital;
     },
+    getHospitalList() {
+      let data = []
+      this.hospitalList.forEach(h => {
+        data.push({ value: h.id, label: h.name })
+      })
+      return data
+    },
   },
 
   actions: {
