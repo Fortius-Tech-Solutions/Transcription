@@ -9,7 +9,8 @@ export const useWriterStore = defineStore("writer", {
     draft: '',
     audioList: [],
     list: [],
-    tsType: LocalStorage.getItem('ts-type') ?? []
+    tsType: LocalStorage.getItem('ts-type') ?? [],
+    wrtHospitals: [],
   }),
   getters: {
     getData() {
@@ -26,7 +27,10 @@ export const useWriterStore = defineStore("writer", {
     },
     getTsTypeList() {
       return this.tsType
-    }
+    },
+    getWrtHospitals() {
+      return this.wrtHospitals
+    },
   },
 
   actions: {
@@ -122,7 +126,6 @@ export const useWriterStore = defineStore("writer", {
                 this.tsType.push({ value: element.id, label: element.name })
               });
               this.tsType.push({ value: 'other', label: 'other' })
-              // LocalStorage.set('ts-type', this.tsType)
               resolve(res);
             }
             resolve(res);

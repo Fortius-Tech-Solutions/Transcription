@@ -19,7 +19,8 @@
                   <input style="display: none" ref="imgInput" type="file" name="image" :accept="accept"
                     @change="setImage" />
 
-                  <q-btn color="primary" icon="las la-pen" class="edit-pro-btn-avtar" @click.prevent="showFileChooser" />
+                  <q-btn color="primary" icon="las la-pen" class="edit-pro-btn-avtar"
+                    @click.prevent="showFileChooser" />
                 </div>
               </div>
             </div>
@@ -40,18 +41,18 @@
               <div class="col-md-6 col-sm-12 col-12 edit-field mob-edit-pa">
                 <label class="lable-text q-mb-sm q-ml-sm q-mr-sm">Last Name</label>
                 <q-input outlined hide-bottom-space v-model="last_name" :dense="dense"
-                  :placeholder="$q.lang.user.edit_profile.name.placeHolder" :rules="[(val) => required(val, 'Last Name')]"
-                  :error="errors.length > 0 ? true : false" :error-message="serverValidationError(errors, 'last_name')"
-                  class="q-ml-sm q-mr-sm">
+                  :placeholder="$q.lang.user.edit_profile.name.placeHolder"
+                  :rules="[(val) => required(val, 'Last Name')]" :error="errors.length > 0 ? true : false"
+                  :error-message="serverValidationError(errors, 'last_name')" class="q-ml-sm q-mr-sm">
                 </q-input>
               </div>
 
               <div class="col-md-6 col-sm-12 col-12 edit-field mob-edit-pa">
                 <label class="lable-text q-mb-sm q-ml-sm q-mr-sm">Email</label>
                 <q-input outlined hide-bottom-space v-model="email" :dense="dense" class="q-ml-sm q-mr-sm" :rules="[
-                  (val) => required(val, 'Email'),
-                  (val) => isEmail(val),
-                ]" :error="errors.length > 0 ? true : false" :error-message="serverValidationError(errors, 'email')">
+    (val) => required(val, 'Email'),
+    (val) => isEmail(val),
+  ]" :error="errors.length > 0 ? true : false" :error-message="serverValidationError(errors, 'email')">
                 </q-input>
               </div>
               <div v-if="!slug" class="col-md-6 col-sm-12 col-12 edit-field mob-edit-pa mob_digit">
@@ -60,9 +61,9 @@
                   <q-btn label="Generate" @click="generate()" />
                 </div>
                 <q-input outlined hide-bottom-space v-model="password" :dense="dense" :rules="[
-                  (val) => required(val, 'Password'),
-                  (val) => validatePassword(val),
-                ]" :error="errors.length > 0 ? true : false" :error-message="serverValidationError(errors, 'password')"
+    (val) => required(val, 'Password'),
+    (val) => validatePassword(val),
+  ]" :error="errors.length > 0 ? true : false" :error-message="serverValidationError(errors, 'password')"
                   class="q-ml-sm q-mr-sm">
                 </q-input>
               </div>
@@ -81,7 +82,8 @@
                       <q-btn color="primary" rounded icon="las la-times" class="close" @click="deleteImage('sign')" />
                       <img :src="signatureImage" />
                     </div>
-                    <q-uploader v-else color="teal" label="Signature Image" url="" @added="filesAdded($event, 'sign')" />
+                    <q-uploader v-else color="teal" label="Signature Image" url=""
+                      @added="filesAdded($event, 'sign')" />
                   </div>
                 </div>
               </span>
@@ -100,6 +102,7 @@
     </div>
   </q-form>
 </template>
+
 <script setup>
 import { uid, copyToClipboard } from 'quasar'
 import { ref, computed, onMounted, defineAsyncComponent } from "vue";
@@ -194,14 +197,12 @@ async function setImage(e) {
 }
 
 const filesAdded = (files, type) => {
-  console.log(files);
   files.forEach((file) => {
     const reader = new FileReader();
     reader.onload = (e) => {
       if (type == 'sign') {
         signatureImage.value = e.target.result;
       }
-      console.log(e.target.result);
     };
     reader.readAsDataURL(file);
   });
@@ -335,7 +336,6 @@ async function onSubmit() {
           router.push({ name: "user-dashboard" });
           Loading.hide();
         } else {
-          console.log(res);
           errors.value = res.errors;
         }
       })

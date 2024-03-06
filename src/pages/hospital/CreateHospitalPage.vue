@@ -48,7 +48,8 @@
                 <q-btn color="primary" rounded icon="las la-times" class="close" @click="deleteImage('water-mark')" />
                 <img :src="waterMarkImage" />
               </div>
-              <q-uploader v-else color="teal" label="Water Mark Image" url="" @added="filesAdded($event, 'water-mark')" />
+              <q-uploader v-else color="teal" label="Water Mark Image" url=""
+                @added="filesAdded($event, 'water-mark')" />
             </div>
           </div>
 
@@ -61,6 +62,7 @@
     </div>
   </q-form>
 </template>
+
 <script setup>
 import { ref, computed, onMounted, defineAsyncComponent } from "vue";
 import { HOSPITAL } from "src/apis/constant";
@@ -109,7 +111,6 @@ function onSelection(rows, added) {
 }
 
 const filesAdded = (files, type) => {
-  console.log(files);
   files.forEach((file) => {
     const reader = new FileReader();
     reader.onload = (e) => {

@@ -20,6 +20,5 @@ export default boot(({ router }) => {
         name: "home",
       });
     }
-    // next();
   });
 });

@@ -43,11 +43,11 @@
                         <h6>{{ item.verify_status ?? 0 }}</h6>
                       </router-link>
                     </div>
-                    <div class="number_counter_item bg3">
-                      <router-link :to="{ name: 'audio-list', params: { slug: item.user_id + '/' + 3 } }">
-                        <p>Published</p>
-                        <h6>{{ item.confirm_status ?? 0 }}</h6>
-                      </router-link>
+                    <div class="number_counter_item bg3" @click="goToAudioList(3, item)">
+                      <!-- <router-link :to="{ name: 'audio-list', params: { slug: item.user_id + '/' + 3 } }"> -->
+                      <p>Published</p>
+                      <h6>{{ item.confirm_status ?? 0 }}</h6>
+                      <!-- </router-link> -->
                     </div>
                   </div>
                 </div>
@@ -76,8 +76,9 @@ import { computed, defineAsyncComponent, ref } from "vue";
 import { useAuthStore } from "src/stores/auth";
 import { Loading, QSpinnerGears, date, LocalStorage } from "quasar";
 import { useWriterStore } from "src/stores/writer";
-import { onBeforeRouteLeave } from "vue-router";
+import { onBeforeRouteLeave, useRouter } from "vue-router";
 const store = useAuthStore();
+const router = useRouter()
 const writer = useWriterStore()
 const user = computed(() => {
   return store.getUser;
@@ -106,6 +107,13 @@ function onLoadList(index, done) {
     done(true);
   }).finally(() => {
     Loading.hide();
+  });
+}
+
+const goToAudioList = (status, data) => {
+  router.push({ name: 'audio-list', params: { slug: data.user_id + '/' + status } })
+  data.hospital_id.split(',').forEach((id, index) => {
+    writer.wrtHospitals.push({ label: data.hospital_name.split(',')[index], value: id });
   });
 }
 
@@ -146,7 +154,6 @@ function clearFilter() {
 }
 
 onBeforeRouteLeave((to, from, next) => {
-  console.log("leave");
   writer.resetList()
   next();
 });
@@ -178,6 +185,10 @@ onBeforeRouteLeave((to, from, next) => {
   border: 1px solid #ddd;
   border-radius: 10px;
   padding: 20px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 
   &:hover {
     box-shadow: 0 5px 15px #ddd;
@@ -186,7 +197,7 @@ onBeforeRouteLeave((to, from, next) => {
   .header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
   }
 }
 

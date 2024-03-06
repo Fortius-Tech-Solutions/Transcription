@@ -3,21 +3,21 @@
     <h3 class="comman-title">
       {{
         router.currentRoute.value.name !== "confirm-script"
-        ? "Create"
-        : "Confirm"
+          ? "Create"
+          : "Confirm"
       }}
       Transcription
     </h3>
   </div>
   <AudioPlayer ref="audioRef" :option="{
-        src: data.audio_filepath,
-        title: data.audio_name,
-        coverImage: '',
-        coverRotate: '',
-        progressBarColor: '',
-        indicatorColor: '',
-        autoplay: false
-      }" />
+          src: data.audio_filepath,
+          title: data.audio_name,
+          coverImage: '',
+          coverRotate: '',
+          progressBarColor: '',
+          indicatorColor: '',
+          autoplay: false
+        }" />
   <q-form>
     <div class="q-pa-md main-wrapper">
       <div class="bg-box">
@@ -52,8 +52,8 @@
           <label for="">Transcription</label>
           <form autocorrect="on" autocapitalize="off" autocomplete="off" spellcheck="true">
             <q-editor v-model="transcription" :dense="dense" :definitions="{
-              bold: { label: 'Bold', icon: null, tip: 'My bold tooltip' }
-            }" :rules="[(val) => required(val, 'Transcription')]" :error="errors.length > 0 ? true : false"
+        bold: { label: 'Bold', icon: null, tip: 'My bold tooltip' }
+      }" :rules="[(val) => required(val, 'Transcription')]" :error="errors.length > 0 ? true : false"
               :error-message="serverValidationError(errors, 'Transcription')" :disable="data.isNew" />
           </form>
         </div>
@@ -82,6 +82,7 @@
     </q-date>
   </q-dialog>
 </template>
+
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import AudioPlayer from "vue3-audio-player";
@@ -143,7 +144,6 @@ if (draftStatus.value == 1) {
   api
     .get(api.resolveApiUrl(TRANSCRIPTION.SAVE, { id: route.params.slug }))
     .then((res) => {
-      console.log(res.data);
       if (res.success == true) {
         selectModel.value = {
           label: res.data[0].TSType_name ?? res.data[0].trascript_types.name,
@@ -220,7 +220,6 @@ function onSubmit(type) {
 }
 
 function confirmScript() {
-  console.log(data.value);
   const confirmData = {
     user_id: user.value.id,
     hospital_id: data.value.hospital_id,
@@ -276,7 +275,6 @@ function cancel() {
 }
 
 onBeforeRouteLeave((to, from, next) => {
-  console.log("leave");
   store.resetList()
   doctorStore.resetList()
   next();

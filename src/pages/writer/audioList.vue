@@ -9,13 +9,13 @@
         </q-input>
       </div>
       <div class="filter_right_box">
-        <q-select outlined dense v-model="selectHospital" label="Select Hospital" :options="hospitalList"
-          style="width: 250px" @update:model-value="onFilter" />
+        <q-select v-if="hospitalList.length > 1" outlined dense v-model="selectHospital" label="Select Hospital"
+          :options="hospitalList" style="width: 250px" @update:model-value="onFilter" />
         <q-btn color="primary" @click="calender = true" :label="dateRange?.from
           ? dateRange.from + ' to ' + dateRange.to
           : dateRange ?? 'Select Date'
           " />
-        <q-btn v-if="dateRange" @click="clearFilter" icon="la la-times" />
+        <q-btn v-if="selectHospital || dateRange" @click="clearFilter" icon="la la-times" />
       </div>
     </div>
     <q-infinite-scroll @load="onLoadAudioList" :offset="250" scroll-target="body" ref="scrollList">
@@ -108,17 +108,14 @@
 </template>
 
 <script setup>
-import AudioPlayer from "vue3-audio-player";
 import api from "src/apis/index";
 import { TRANSCRIPTION, DOCTOR } from "src/apis/constant";
 import { ref, computed, defineAsyncComponent, onMounted } from "vue";
 import { onBeforeRouteLeave, useRoute, useRouter } from "vue-router";
 import { useWriterStore } from "src/stores/writer";
 import { Loading, QSpinnerGears, date, LocalStorage } from "quasar";
-import moment from "moment";
 import { useMasterStore } from "src/stores/master";
 import { ExportToDoc } from "src/composables/utility";
-import { hospitalStore } from "src/stores/hospital";
 
 const pdfComponent = defineAsyncComponent(() => import("src/components/dowloadPDF.vue"));
 const router = useRouter();
@@ -140,9 +137,7 @@ const selectHospital = ref(null);
 const limit = ref(6);
 const loading = ref(true);
 const master = useMasterStore();
-const hospital = hospitalStore()
-const hospitalList = computed(() => hospital.getHospitalList)
-console.log(hospitalList);
+const hospitalList = computed(() => store.getWrtHospitals)
 function fetchAudio() {
   const data = {
     from_date: dateRange.value?.from,
@@ -239,6 +234,7 @@ function clearFilter() {
     message: "Loading...",
   });
   dateRange.value = null;
+  selectHospital.value = null;
   store.audioList = []
   currentPage.value = 1;
   loading.value = true;
@@ -260,11 +256,9 @@ function onFilter() {
   scrollList.value.trigger();
 }
 
-onMounted(() => hospital.fetchHospitalList())
-
 onBeforeRouteLeave((to, from, next) => {
-  console.log("leave");
   store.resetList()
+  store.wrtHospitals = [];
   next();
 });
 </script>

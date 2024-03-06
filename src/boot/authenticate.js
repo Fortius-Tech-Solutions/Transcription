@@ -25,13 +25,11 @@ export default boot(({ router }) => {
     };
 
     if (to.matched.some((record) => record.meta.requiresAuth) && !accessToken) {
-      console.log("not authenticated");
       Notify.error("You must be logged in to view this page.");
       return redirectTo("sign-in");
     } else if (to.matched.some((record) => record.meta.requireGuest) && accessToken) {
       return checkRolesAndRedirect();
     } else {
-      console.log("to.name", to.name, roles);
       if (to.name == "transcription-pdf" && master.getPdfData.length == 0) {
         return checkRolesAndRedirect();
       } else {

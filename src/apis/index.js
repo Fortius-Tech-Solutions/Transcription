@@ -100,17 +100,11 @@ export default {
 
   showApiError(error) {
     if (error.response) {
-      // console.log(error.response.data.data);
-      // Request made and server responded
-      // console.log(error.response.data);
-      // console.log(error.response.status);
-      // console.log(error.response.headers);
       if (error.response.status == 401) {
         LocalStorage.remove("access_token");
         LocalStorage.remove("user");
         Notify.error("Your session has expired. Please login again.");
         location.reload();
-        // router.push({ name: "sign-in" });
       } else if (error.response.status == 419) {
         location.reload();
       } else if (error.response.status == 500) {
@@ -121,17 +115,11 @@ export default {
         if (!error.response.data.message) {
           Notify.error("The requested resource was not found.");
         }
-        // Notify.error(error.response.data.message ?? "The requested resource was not found.");
       } else {
-        // console.log(error.response.data);
         let errorMessage = error?.response?.data?.errors;
         if (errorMessage) {
           if (errorMessage.required) {
           } else {
-            // const er = [...errorMessage].shift();
-            // const [er] = errorMessage;
-            // console.log(er);
-            // Notify.error(er[0].message);
             Notify.error("Data validation failed");
             return;
           }
@@ -147,12 +135,8 @@ export default {
         }
       }
     } else if (error.request) {
-      // The request was made but no response was received
-      // console.log(error.request);
       Notify.error("The request was made but no response was received");
     } else {
-      // Something happened in setting up the request that triggered an Error
-      // console.log("Error", error?.message);
       Notify.error(error.message);
     }
   },

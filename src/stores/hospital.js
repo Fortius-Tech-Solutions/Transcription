@@ -23,10 +23,10 @@ export const hospitalStore = defineStore("hospital", {
   },
 
   actions: {
-    async fetchHospitalList(data) {
+    async fetchHospitalList() {
       return new Promise((resolve, reject) => {
         api
-          .get(HOSPITAL.LIST)
+          .getWithParam(HOSPITAL.LIST)
           .then((res) => {
             if (res.success) {
               this.hospitalList = res.data;

@@ -186,7 +186,6 @@ setTimeout(() => {
 
 
 .water_mark {
-  // background: url("../assets/images/water-mark-pdf.png") bottom left no-repeat;
   background-size: 80%;
   background-color: #fff;
   background-position: bottom left;

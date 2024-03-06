@@ -8,7 +8,6 @@ export default function useServerError() {
     if (errors.length !== 0) {
       errors.forEach(element => {
         if (element.field === fieldName) {
-          console.log(element.field === fieldName ? element.message : false)
           err = element.field === fieldName ? element.message : false;
         }
       });

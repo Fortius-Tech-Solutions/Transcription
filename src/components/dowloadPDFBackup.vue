@@ -69,8 +69,8 @@
                   <div v-if="index === splitContent.length - 1">
                     <img :src="require('assets/images/signature.png')" style="width: 100px;" alt="signature"><br />
                     <span style="padding-bottom: 10px; display: inline-block;">{{ props.items.first_name ??
-                      props.items.doctorname.first_name
-                    }}{{ " " }}{{ props.items.last_name ?? props.items.doctorname.last_name }}</span>
+          props.items.doctorname.first_name
+                      }}{{ " " }}{{ props.items.last_name ?? props.items.doctorname.last_name }}</span>
 
                   </div>
                 </td>
@@ -154,10 +154,8 @@ const splitContent = computed(() => {
   let currentPage = '';
   const pageHeight = 1300;
   const lineHeight = 20;
-  console.log(Math.floor(pageHeight / lineHeight));
   const linesPerPage = Math.floor(pageHeight / lineHeight);
   const lines = content.split('\n');
-  console.log(lines);
   let currentLine = 0;
   lines.forEach(line => {
     if (currentLine + 1 > linesPerPage) {

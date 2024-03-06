@@ -1,10 +1,7 @@
 import { boot } from "quasar/wrappers";
-// more info on params: https://v2.quasar.dev/quasar-cli/boot-files
-// import VueSocialSharing from 'vue-social-sharing';
 import { DateTime } from "luxon";
 
 export default boot(({ app, store }) => {
-  // app.use(VueSocialSharing)
   app.mixin({
     methods: {
       getHumanReadable(time) {
@@ -14,9 +11,7 @@ export default boot(({ app, store }) => {
         const base64 = /^[data]{4}[:]{1}/;
         return base64.test(str);
       },
-      // Common validations start
       required(val, fieldName = null, dependentField = true) {
-        // console.log(process.env.CLIENT_VALIDATION);
         if (process.env.CLIENT_VALIDATION)
           return dependentField
             ? (val && val.length > 0) || "Please enter a " + fieldName
@@ -80,7 +75,6 @@ export default boot(({ app, store }) => {
           "Please enter a value between " + min + " and " + max + " characters"
         );
       },
-      // Common validations end
       createFolderValidation(val, max, type) {
         if (type === "Year") {
           const regex = /^([0-9])+$/;

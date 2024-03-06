@@ -33,33 +33,33 @@
                   <div class="number_counter_row">
                     <div class="number_counter_item bg1">
                       <router-link :to="{
-                        name: 'confirm-transcript', params: {
-                          slug: item.id
-                            + '/' + 1
-                        }
-                      }">
+          name: 'confirm-transcript', params: {
+            slug: item.id
+              + '/' + 1
+          }
+        }">
                         <p>New</p>
                         <h6>{{ item.Pending ?? 0 }}</h6>
                       </router-link>
                     </div>
                     <div class="number_counter_item bg2">
                       <router-link :to="{
-                        name: 'confirm-transcript', params: {
-                          slug: item.id
-                            + '/' + 2
-                        }
-                      }">
+          name: 'confirm-transcript', params: {
+            slug: item.id
+              + '/' + 2
+          }
+        }">
                         <p>Pending</p>
                         <h6>{{ item.Verify ?? 0 }}</h6>
                       </router-link>
                     </div>
                     <div class="number_counter_item bg4">
                       <router-link :to="{
-                        name: 'confirm-transcript', params: {
-                          slug: item.id
-                            + '/' + 3
-                        }
-                      }">
+          name: 'confirm-transcript', params: {
+            slug: item.id
+              + '/' + 3
+          }
+        }">
                         <p>Published</p>
                         <h6>{{ item.Confirmed ?? 0 }}</h6>
                       </router-link>
@@ -165,7 +165,6 @@ function clearFilter() {
 }
 
 onBeforeRouteLeave((to, from, next) => {
-  console.log("leave");
   doctor.list = []
   list.value = []
   doctor.resetList()
