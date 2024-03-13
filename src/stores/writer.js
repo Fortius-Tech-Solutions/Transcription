@@ -11,6 +11,8 @@ export const useWriterStore = defineStore("writer", {
     list: [],
     tsType: LocalStorage.getItem('ts-type') ?? [],
     wrtHospitals: [],
+    selectHospital: [],
+    dateRange: null,
   }),
   getters: {
     getData() {

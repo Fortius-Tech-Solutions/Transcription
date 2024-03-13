@@ -9,13 +9,13 @@
         </q-input>
       </div>
       <div class="filter_right_box">
-        <q-select v-if="hospitalList.length > 1" outlined dense v-model="selectHospital" label="Select Hospital"
+        <q-select v-if="hospitalList.length > 1" outlined dense v-model="store.selectHospital" label="Select Hospital"
           :options="hospitalList" style="width: 250px" @update:model-value="onFilter" />
-        <q-btn color="primary" @click="calender = true" :label="dateRange?.from
-          ? dateRange.from + ' to ' + dateRange.to
-          : dateRange ?? 'Select Date'
+        <q-btn color="primary" @click="calender = true" :label="store.dateRange?.from
+          ? store.dateRange.from + ' to ' + store.dateRange.to
+          : store.dateRange ?? 'Select Date'
           " />
-        <q-btn v-if="selectHospital || dateRange" @click="clearFilter" icon="la la-times" />
+        <q-btn v-if="store.selectHospital.length != 0 || store.dateRange" @click="clearFilter" icon="la la-times" />
       </div>
     </div>
     <q-infinite-scroll @load="onLoadAudioList" :offset="250" scroll-target="body" ref="scrollList">
@@ -98,7 +98,7 @@
   </div>
 
   <q-dialog v-model="calender">
-    <q-date v-model="dateRange" range>
+    <q-date v-model="store.dateRange" range>
       <q-btn label="Submit" @click="selectDate" v-close-popup type="submit" color="primary" />
     </q-date>
   </q-dialog>
@@ -110,7 +110,7 @@
 <script setup>
 import api from "src/apis/index";
 import { TRANSCRIPTION, DOCTOR } from "src/apis/constant";
-import { ref, computed, defineAsyncComponent, onMounted } from "vue";
+import { ref, computed, defineAsyncComponent, onMounted, watch } from "vue";
 import { onBeforeRouteLeave, useRoute, useRouter } from "vue-router";
 import { useWriterStore } from "src/stores/writer";
 import { Loading, QSpinnerGears, date, LocalStorage } from "quasar";
@@ -121,7 +121,6 @@ const pdfComponent = defineAsyncComponent(() => import("src/components/dowloadPD
 const router = useRouter();
 const route = useRoute();
 const calender = ref(false);
-const dateRange = ref(null);
 const store = useWriterStore();
 
 Loading.show({
@@ -133,20 +132,19 @@ const audioList = computed(() => store.getAudioList)
 const scrollList = ref(null);
 const currentPage = ref(1);
 const search = ref(null)
-const selectHospital = ref(null);
 const limit = ref(6);
 const loading = ref(true);
 const master = useMasterStore();
 const hospitalList = computed(() => store.getWrtHospitals)
 function fetchAudio() {
   const data = {
-    from_date: dateRange.value?.from,
-    to_date: dateRange.value?.to,
+    from_date: store.dateRange?.from,
+    to_date: store.dateRange?.to,
     limit: limit.value,
     page: currentPage.value,
     userId: route.params.slug.split('/')[0],
     statusId: route.params.slug.split('/')[1],
-    hospital_id: selectHospital.value?.value,
+    hospital_id: store.selectHospital?.value,
     q: search.value,
   };
   return store.fetchAudioList(data)
@@ -233,8 +231,8 @@ function clearFilter() {
     spinner: QSpinnerGears,
     message: "Loading...",
   });
-  dateRange.value = null;
-  selectHospital.value = null;
+  store.dateRange = null;
+  store.selectHospital = [];
   store.audioList = []
   currentPage.value = 1;
   loading.value = true;
@@ -256,9 +254,13 @@ function onFilter() {
   scrollList.value.trigger();
 }
 
+watch(() => store.selectHospital, (newValue, oldValue) => {
+  store.selectHospital = newValue
+},);
+
+
 onBeforeRouteLeave((to, from, next) => {
   store.resetList()
-  store.wrtHospitals = [];
   next();
 });
 </script>

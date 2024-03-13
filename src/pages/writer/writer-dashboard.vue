@@ -111,9 +111,13 @@ function onLoadList(index, done) {
 }
 
 const goToAudioList = (status, data) => {
+  writer.wrtHospitals = [];
+  writer.selectHospital = [];
+  writer.dateRange = null;
   router.push({ name: 'audio-list', params: { slug: data.user_id + '/' + status } })
   data.hospital_id.split(',').forEach((id, index) => {
     writer.wrtHospitals.push({ label: data.hospital_name.split(',')[index], value: id });
+    LocalStorage.set('wrtHospitals', writer.wrtHospitals);
   });
 }
 
