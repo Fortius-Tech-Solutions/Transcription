@@ -20,10 +20,10 @@
       <q-card class="q-pa-lg" v-if="verifyList.length !== 0">
         <div class="patient_trans_list_bg" v-for="item in verifyList" :key="item">
           <div class="patient_trans_list" @click="
-          item.name == 'Confirmed' || item.name == 'Published'
-            ? null
-            : confirmScript(item)
-          ">
+            item.name == 'Confirmed' || item.name == 'Published'
+              ? null
+              : confirmScript(item)
+            ">
             <div class="paient_trans_head">
               <div class="left">
                 <h2>
@@ -44,11 +44,11 @@
                   </li>
                   <li>
                     <q-chip :color="item.name == 'Confirmed' || item.name == 'Published'
-          ? 'green'
-          : item.name == 'Pending'
-            ? 'red'
-            : 'yellow'
-          " :label="item.name" />
+                      ? 'green'
+                      : item.name == 'Pending'
+                        ? 'red'
+                        : 'yellow'
+                      " :label="item.name" />
                   </li>
                   <li>
                     Duration: <b>{{ item.audio_duration }}</b>

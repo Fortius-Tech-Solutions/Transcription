@@ -31,9 +31,10 @@
           <div class="col2">Action</div>
         </div>
         <div class="audio_list_body">
-          <div class="audio_list_bg caption" v-for="item in audioList" :key="item">
+          <div class="audio_list_bg caption" v-for="(item, index) in audioList" :key="item">
             <div class="audio_list_item">
               <div class="audio_list_col1">
+                <span class="audio_list_no">{{ index + 1 }}</span>
                 <div class="audioplayer_col">
                   <span class="play_icon"><i class="las la-play"></i></span>
                   <div class="audio_info">
@@ -288,6 +289,7 @@ h3.comman-title {
 
 .audio_list_col1 {
   display: flex;
+  align-items: center;
 
   .play_btn {
     flex: 0 0 auto;
@@ -304,6 +306,10 @@ h3.comman-title {
       color: #666;
     }
   }
+
+  .audio_list_no {
+    margin-right: 10px;
+  }
 }
 
 .audio_list_col1 {
@@ -313,6 +319,7 @@ h3.comman-title {
 .audioplayer_col {
   width: 100%;
   display: flex;
+  align-items: center;
 
   .audio__player {
     flex-direction: column;

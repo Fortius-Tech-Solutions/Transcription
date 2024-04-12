@@ -30,11 +30,11 @@
       <template #body-cell-image="props">
         <q-td key="image" :props="props">
           <q-img style="height: 80px; max-width: 80px" :src="props.row.image ??
-      props.row.category_icon ??
-      props.row.icon ??
-      props.row.quote_img ??
-      props.row.platform.icon
-      " />
+            props.row.category_icon ??
+            props.row.icon ??
+            props.row.quote_img ??
+            props.row.platform.icon
+            " />
         </q-td>
       </template>
 
@@ -47,19 +47,18 @@
       <template #body-cell-url="props">
         <q-td key="url" :props="props">
           <a class="text-black" :href="props.row.url" target="_blank">{{
-      props.row.url
-    }}</a>
+            props.row.url
+          }}</a>
         </q-td>
       </template>
 
       <template #body-cell-actions="props">
         <q-td key="actions" :props="props">
           <q-btn v-if="(route.name == 'user-dashboard' && userTypeModel.value == 2) ||
-      userTypeModel.value == 4
-      " color="primary" label="Assign Hospital" size="sm" no-caps
-            @click="assign(props.row, 'assign-hospital')" />
+            userTypeModel.value == 4
+          " color="primary" label="Assign Hospital" size="sm" no-caps @click="assign(props.row, 'assign-hospital')" />
           <q-btn v-if="route.name == 'hospital-dashboard' || userTypeModel.value == 3
-      " color="primary" label="Assign Doctor" size="sm" no-caps @click="assign(props.row, 'assign-doctor')" />
+          " color="primary" label="Assign Doctor" size="sm" no-caps @click="assign(props.row, 'assign-doctor')" />
           <q-btn v-if="route.name == 'hospital-dashboard'" color="primary" label="Assign Receptionist" size="sm" no-caps
             @click="assign(props.row, 'assign-receptionist')" />
           <q-btn v-if="route.name == 'user-dashboard' && userTypeModel.value == 2" color="primary" label="Assign Writer"
@@ -70,14 +69,14 @@
           <q-btn v-if="user.user_type_id == 1 && route.name !== 'transcription-dashboard'" color="red"
             icon="las la-trash-alt" @click="deleteItem(props.row)" size="sm" no-caps></q-btn>
           <q-btn v-if="user.user_type_id == 2" color="primary" label="Transcription" :to="{
-      name: 'confirm-transcript',
-      params: { slug: props.row?.hospital_id },
-    }" size="sm" no-caps></q-btn>
+            name: 'confirm-transcript',
+            params: { slug: props.row?.hospital_id },
+          }" size="sm" no-caps></q-btn>
           <q-btn v-if="user.user_type_id == 4 && route.name !== 'transcription-list'" color="primary"
             label="Transcription" size="sm" no-caps :to="{
-      name: 'transcription-list',
-      params: { slug: props.row?.hospital_id },
-    }"></q-btn>
+              name: 'transcription-list',
+              params: { slug: props.row?.hospital_id },
+            }"></q-btn>
 
           <q-btn v-if="user.user_type_id == 1 && route.name == 'transcription-dashboard'" color="primary" label="View"
             @click="showTrans(props.row)" size="sm" no-caps></q-btn>

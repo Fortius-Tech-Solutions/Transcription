@@ -10,14 +10,14 @@
     </h3>
   </div>
   <AudioPlayer ref="audioRef" :option="{
-          src: data.audio_filepath,
-          title: data.audio_name,
-          coverImage: '',
-          coverRotate: '',
-          progressBarColor: '',
-          indicatorColor: '',
-          autoplay: false
-        }" />
+    src: data.audio_filepath,
+    title: data.audio_name,
+    coverImage: '',
+    coverRotate: '',
+    progressBarColor: '',
+    indicatorColor: '',
+    autoplay: false,
+  }" />
   <q-form>
     <div class="q-pa-md main-wrapper">
       <div class="bg-box">
@@ -43,7 +43,7 @@
           </div>
         </div>
         <div class="q-mb-md q-mt-md">
-          <label class=" q-mr-md" for="">Date of Service</label>
+          <label class="q-mr-md" for="">Date of Service</label>
           <q-btn color="primary" icon="las la-calendar" @click="calender = true" :label="dateRange ?? 'Select Date'"
             :disable="data.isNew" />
           <q-btn v-if="dateRange" @click="clearFilter" icon="la la-times" />
@@ -52,9 +52,17 @@
           <label for="">Transcription</label>
           <form autocorrect="on" autocapitalize="off" autocomplete="off" spellcheck="true">
             <q-editor v-model="transcription" :dense="dense" :definitions="{
-        bold: { label: 'Bold', icon: null, tip: 'My bold tooltip' }
-      }" :rules="[(val) => required(val, 'Transcription')]" :error="errors.length > 0 ? true : false"
+              bold: { label: 'Bold', icon: null, tip: 'My bold tooltip' },
+            }" :rules="[(val) => required(val, 'Transcription')]" :error="errors.length > 0 ? true : false"
               :error-message="serverValidationError(errors, 'Transcription')" :disable="data.isNew" />
+          </form>
+        </div>
+        <div class="q-mt-lg">
+          <label for="">Extra Transcription</label>
+          <form autocorrect="on" autocapitalize="off" autocomplete="off" spellcheck="true">
+            <q-editor v-model="cc_mail" :dense="dense" :definitions="{
+              bold: { label: 'Bold', icon: null, tip: 'My bold tooltip' },
+            }" :disable="data.isNew" />
           </form>
         </div>
         <div class="q-mt-lg">
@@ -63,11 +71,12 @@
             :disable="data.isNew || user.usertype.name == 'Doctor'" class="create-user-field-box"
             :rules="[(val) => required(val, 'Comment')]" :error="errors.length > 0 ? true : false"
             :error-message="serverValidationError(errors, 'Comment')" />
-
         </div>
       </div>
       <div class="form_comon_btn q-mt-md q-mr-md q-mb-md" v-if="router.currentRoute.value.name !== 'confirm-script'">
         <q-btn outline color="primary" label="Cancel" @click="cancel" />
+        <q-btn outline color="primary" class="q-ml-md" label="Preview" @click="previewPdf" />
+
         <q-btn color="primary" label="Save as Draft" class="q-ml-md" @click="onSubmit('Draft')" />
         <q-btn color="primary" label="Save & Confirmed" class="q-ml-md" @click="onSubmit('Confirmed')" />
       </div>
@@ -88,7 +97,7 @@ import { ref, computed, onMounted } from "vue";
 import AudioPlayer from "vue3-audio-player";
 import notification from "src/boot/notification";
 import { Loading, QSpinnerGears } from "quasar";
-import { date } from 'quasar'
+import { date } from "quasar";
 import useServerError from "src/composables/useServerError";
 import { onBeforeRouteLeave, useRoute, useRouter } from "vue-router";
 import { useWriterStore } from "src/stores/writer";
@@ -96,16 +105,17 @@ import { DOCTOR, TRANSCRIPTION } from "src/apis/constant";
 import api from "src/apis/index";
 import { useDoctorStore } from "src/stores/doctor";
 import { useAuthStore } from "src/stores/auth";
+import { useMasterStore } from "src/stores/master";
 const router = useRouter();
 const route = useRoute();
-const editor = ref('');
+const editor = ref("");
 const calender = ref(false);
 const dateRange = ref(null);
 const store = useWriterStore();
 const authStore = useAuthStore();
 const doctorStore = useDoctorStore();
 const { errors, serverValidationError } = useServerError();
-const options = computed(() => store.getTsTypeList)
+const options = computed(() => store.getTsTypeList);
 const data = computed(() => {
   if (router.currentRoute.value.name == "confirm-script") {
     return doctorStore.getData;
@@ -117,9 +127,10 @@ const selectModel = ref(null);
 const patient_name = ref(data.value.patient_name);
 const gender = ref(null);
 const transcription = ref(null);
+const cc_mail = ref(null);
 const comment = ref(null);
 const audioRef = ref(null);
-const otherType = ref('')
+const otherType = ref("");
 const user = computed(() => authStore.getUser);
 const draftStatus = computed(() => {
   return store.getDraftStatus;
@@ -133,27 +144,23 @@ onMounted(() => {
   store.fetchTsType().finally(() => {
     Loading.hide();
   });
-})
+});
 
-if (draftStatus.value == 1) {
-  Loading.show({
-    message: "Loading...",
-    spinner: QSpinnerGears,
-  });
-
+function getDraft() {
   api
     .get(api.resolveApiUrl(TRANSCRIPTION.SAVE, { id: route.params.slug }))
     .then((res) => {
       if (res.success == true) {
         selectModel.value = {
           label: res.data[0].TSType_name ?? res.data[0].trascript_types.name,
-          value: res.data[0].TSType_id ?? res.data[0].trascript_types.id
+          value: res.data[0].TSType_id ?? res.data[0].trascript_types.id,
         };
         patient_name.value = res.data[0].patient_name;
         gender.value = res.data[0].gender;
         transcription.value = res.data[0].transcription;
-        comment.value = res.data[0].comment
-        dateRange.value = res.data[0].date_of_service
+        cc_mail.value = res.data[0].cc_mail;
+        comment.value = res.data[0].comment;
+        dateRange.value = res.data[0].date_of_service;
         Loading.hide();
       } else if (res.success == false) {
         notification.error(res.message);
@@ -171,15 +178,25 @@ if (draftStatus.value == 1) {
     .finally(() => {
       Loading.hide();
     });
+}
+
+if (draftStatus.value == 1) {
+  Loading.show({
+    message: "Loading...",
+    spinner: QSpinnerGears,
+  });
+
+  getDraft()
 } else if (router.currentRoute.value.name == "confirm-script") {
   patient_name.value = data.value.patient_name;
   gender.value = data.value.gender;
   transcription.value = data.value.transcription;
+  cc_mail.value = data.value.cc_mail;
   comment.value = data.value.comment;
-  dateRange.value = data.value.date_of_service
+  dateRange.value = data.value.date_of_service;
   selectModel.value = {
     label: data.value.TSType_name,
-    value: data.value.TSType_id
+    value: data.value.TSType_id,
   };
 }
 
@@ -192,12 +209,14 @@ function onSubmit(type) {
     patient_name: patient_name.value,
     gender: gender.value,
     transcription: transcription.value,
-    TSType_id: selectModel.value.value,
+    cc_mail: cc_mail.value,
+    TSType_id: selectModel?.value?.value,
     date_of_service: dateRange.value,
-    comment: comment.value
+    comment: comment.value,
   };
   if (type === "Draft") {
     data.draft = "draft";
+
   }
 
   store
@@ -207,6 +226,11 @@ function onSubmit(type) {
         notification.success(
           res.message ? res.message : "Transcription Created Successfully !"
         );
+        // if (type == "Draft") {
+
+        //   return;
+
+        // }
         history.go(-1);
         Loading.hide();
       } else if (res.success == false) {
@@ -219,6 +243,13 @@ function onSubmit(type) {
     });
 }
 
+const master = useMasterStore();
+
+function previewPdf() {
+  master.pdfData = data.value;
+  router.push({ name: "transcription-pdf" });
+}
+
 function confirmScript() {
   const confirmData = {
     user_id: user.value.id,
@@ -228,8 +259,9 @@ function confirmScript() {
     comment: comment.value,
     gender: gender.value,
     transcription: transcription.value,
+    cc_mail: cc_mail.value,
     TSType_id: selectModel.value.value,
-    date_of_service: dateRange.value
+    date_of_service: dateRange.value,
   };
   api
     .post(
@@ -243,7 +275,7 @@ function confirmScript() {
     });
 }
 function dateOptions(dateRange) {
-  return dateRange <= date.formatDate(Date.now(), 'YYYY/MM/DD')
+  return dateRange <= date.formatDate(Date.now(), "YYYY/MM/DD");
 }
 function onSubmitType() {
   Loading.show({
@@ -251,19 +283,20 @@ function onSubmitType() {
     spinner: QSpinnerGears,
   });
   const data = {
-    name: otherType.value
-  }
+    name: otherType.value,
+  };
   api
-    .post('writer/add-ts-type', data)
+    .post("writer/add-ts-type", data)
     .then((res) => {
       if (res.success) {
         store.tsType = [];
-        store.fetchTsType()
-        selectModel.value = ''
+        store.fetchTsType();
+        selectModel.value = "";
       }
-    }).finally(() => {
+    })
+    .finally(() => {
       Loading.hide();
-    });;
+    });
 }
 
 function clearFilter() {
@@ -275,8 +308,8 @@ function cancel() {
 }
 
 onBeforeRouteLeave((to, from, next) => {
-  store.resetList()
-  doctorStore.resetList()
+  store.resetList();
+  doctorStore.resetList();
   next();
 });
 </script>

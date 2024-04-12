@@ -1,8 +1,10 @@
 <template>
+
   <div id="downloadPDF" class="dialogpdf"
     style="width: 100%; height: 100%; display: inline-block; background-color: white;">
     <div v-if="pdfData.hospital_id === 2">
-      <span v-html="pdfData.transcription" />
+      <span v-html="pdfData.transcription ?? pdfData" />
+      <div v-if="cc_mail" v-html="cc_mail"></div>
     </div>
     <div v-else style="
         margin: 0 auto;
@@ -29,17 +31,11 @@
             border: none;
             vertical-align: top;
           ">
-            <!-- <thead>
-              <tr>
-                <th colspan="2">
-                  <img style="width:100%;" v-if="headerImage" :src="headerImage" alt="header image" />
-                </th>
-              </tr>
-            </thead> -->
             <tbody style="vertical-align: top; height: 800px;">
               <tr>
                 <td colspan="2" style="padding-top: 5px; vertical-align: text-top">
                   <div v-html="content"></div><br />
+
                   <div v-if="index === splitContent.length - 1">
                     <img v-if="signature" :src="signature" style="width: 100px;" alt="signature"><br />
                     <span style="padding-bottom: 10px; display: inline-block;">
@@ -47,17 +43,10 @@
                       {{ speciality }}
                     </span>
                   </div>
+                  <div style="width:100%; padding: 30px 60px 0 0;" v-if="cc_mail" v-html="cc_mail"></div>
                 </td>
               </tr>
             </tbody>
-            <!-- <tfoot style="page-break-inside:auto; width: 100%; ">
-              <tr>
-                <td>
-                  <img v-if="footerImage" :src="footerImage" alt="footer image"
-                    style="width: 100%; margin-bottom: 40px;" />
-                </td>
-              </tr>
-            </tfoot> -->
           </table>
           <div class="pdf_footer">
             <img v-if="footerImage" :src="footerImage" alt="footer image" style="width: 100%; margin-bottom: 40px;" />
@@ -65,7 +54,9 @@
         </div>
       </div>
     </div>
+
   </div>
+
 </template>
 
 <script setup>
@@ -90,17 +81,19 @@ const footerImage = ref(pdfData.value?.footer_file ?? pdfData.value?.hospitalnam
 const waterMark = ref(pdfData.value?.water_mark ?? pdfData.value?.hospitalname?.water_mark);
 const signature = ref(pdfData.value?.signature ?? pdfData.value?.doctorname?.signature);
 const speciality = ref(pdfData.value?.speciality ?? pdfData.value?.doctorname?.speciality)
+const cc_mail = ref(pdfData.value?.cc_mail ?? "")
 
 const splitContent = computed(() => {
-  const content = pdfData.value.transcription;
+  const content = pdfData.value.transcription ?? pdfData.value;
+
   const pages = [];
   let currentPage = '';
   const pageHeight = 1020;
   const lineHeight = 20;
   const linesPerPage = Math.floor(pageHeight / lineHeight);
-  const lines = content.split('\n');
+  const lines = content?.split('\n');
   let currentLine = 0;
-  lines.forEach(line => {
+  lines?.forEach(line => {
     if (currentLine + 1 > linesPerPage) {
       pages.push(currentPage);
       currentPage = '';
@@ -112,6 +105,7 @@ const splitContent = computed(() => {
   if (currentPage) {
     pages.push(currentPage);
   }
+
   return pages;
 });
 
