@@ -110,7 +110,7 @@ const splitContent = computed(() => {
 });
 
 setTimeout(() => {
-  if (pdfData.value.hospital_id !== 2) {
+  if (![2, 9].includes(pdfData.value.hospital_id)) {
     var tempTitle = document.title;
     document.title = `${patientName.value}_${date.formatDate(pdfData.value?.date_of_service, "DD-MM-YYYY")}`;
     window.print();

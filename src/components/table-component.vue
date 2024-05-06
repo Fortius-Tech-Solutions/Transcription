@@ -48,7 +48,7 @@
         <q-td key="url" :props="props">
           <a class="text-black" :href="props.row.url" target="_blank">{{
             props.row.url
-          }}</a>
+            }}</a>
         </q-td>
       </template>
 
@@ -223,7 +223,7 @@ async function goToPdf(data) {
   });
   master.pdfData = data
   showPDF.value = true;
-  if (data.hospital_id === 2) {
+  if (data.hospital_id === 2 || data.hospital_id == 9) {
     setTimeout(() => {
       Loading.hide();
       ExportToDoc("downloadPDF", `${data.patient_name}`);
