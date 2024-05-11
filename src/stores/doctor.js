@@ -6,20 +6,20 @@ import notification from "src/boot/notification";
 export const useDoctorStore = defineStore("doctor", {
   state: () => ({
     data: LocalStorage.getItem("data") ?? [],
-    draft: '',
+    draft: "",
     list: [],
-    transcriptionList: []
+    transcriptionList: [],
   }),
   getters: {
     getData() {
-      return this.data
+      return this.data;
     },
     getList() {
-      return this.list
+      return this.list;
     },
     getTranscriptionList() {
-      return this.transcriptionList
-    }
+      return this.transcriptionList;
+    },
   },
 
   actions: {
@@ -41,7 +41,21 @@ export const useDoctorStore = defineStore("doctor", {
           });
       });
     },
-
+    async saveDoctor(data, id) {
+      return new Promise((resolve, reject) => {
+        api
+          .post(api.resolveApiUrl(DOCTOR.SAVE, { id: id }), data)
+          .then((res) => {
+            if (res.success) {
+              resolve(res);
+            }
+            resolve(res);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
     async fetchTranscriptionList(data) {
       return new Promise((resolve, reject) => {
         api
@@ -64,8 +78,6 @@ export const useDoctorStore = defineStore("doctor", {
     async resetList() {
       this.list = [];
       this.transcriptionList = [];
-    }
-
-
+    },
   },
 });

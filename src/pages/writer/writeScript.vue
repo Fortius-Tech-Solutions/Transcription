@@ -73,14 +73,15 @@
             :error-message="serverValidationError(errors, 'Comment')" />
         </div>
       </div>
-      <div class="form_comon_btn q-mt-md q-mr-md q-mb-md" v-if="router.currentRoute.value.name !== 'confirm-script'">
+      <div class="form_comon_btn q-mt-md q-mr-md q-mb-md">
         <q-btn outline color="primary" label="Cancel" @click="cancel" />
         <q-btn outline color="primary" class="q-ml-md" label="Preview" @click="previewPdf" />
 
         <q-btn color="primary" label="Save as Draft" class="q-ml-md" @click="onSubmit('Draft')" />
-        <q-btn color="primary" label="Save & Confirmed" class="q-ml-md" @click="onSubmit('Confirmed')" />
+        <q-btn v-if="router.currentRoute.value.name != 'confirm-script'" color="primary" label="Save & Confirmed"
+          class="q-ml-md" @click="onSubmit('Confirmed')" />
       </div>
-      <div v-else class="form_comon_btn q-mt-md q-mr-md q-mb-md">
+      <div v-if="router.currentRoute.value.name == 'confirm-script'" class="form_comon_btn q-mt-md q-mr-md q-mb-md">
         <q-btn color="primary" label="Confirmed" class="q-ml-md" @click="confirmScript()" />
       </div>
     </div>
@@ -215,13 +216,13 @@ function onSubmit(type) {
     comment: comment.value,
   };
   if (type === "Draft") {
-    data.draft = "draft";
+    data.draft = 1;
 
   }
-
-  store
-    .saveTranscription(data, route.params.slug)
-    .then((res) => {
+  if (router.currentRoute.value.name == 'confirm-script') {
+    console.log(audioRef, this.data)
+    data.id = route.params.slug
+    doctorStore.saveDoctor(data, route.params.slug).then((res) => {
       if (res.success == true) {
         notification.success(
           res.message ? res.message : "Transcription Created Successfully !"
@@ -238,9 +239,33 @@ function onSubmit(type) {
         Loading.hide();
       }
     })
-    .finally(() => {
-      Loading.hide();
-    });
+      .finally(() => {
+        Loading.hide();
+      });
+  }
+  else
+    store
+      .saveTranscription(data, route.params.slug)
+      .then((res) => {
+        if (res.success == true) {
+          notification.success(
+            res.message ? res.message : "Transcription Created Successfully !"
+          );
+          // if (type == "Draft") {
+
+          //   return;
+
+          // }
+          history.go(-1);
+          Loading.hide();
+        } else if (res.success == false) {
+          notification.error(res.message);
+          Loading.hide();
+        }
+      })
+      .finally(() => {
+        Loading.hide();
+      });
 }
 
 const master = useMasterStore();
